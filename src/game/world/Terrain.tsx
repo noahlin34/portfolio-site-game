@@ -15,9 +15,40 @@ const grassIslands = [
   { position: [52, 0.03, 38], size: [28, 24], rotation: 0.35, color: '#8ea147' },
 ]
 
+const curbSegments = Array.from({ length: 22 }, (_, index) => ({
+  x: -36 + index * 3.3,
+  color: index % 2 === 0 ? '#de4d36' : '#f6e5e3',
+}))
+
+const chevrons = [
+  { x: -4, z: 4.2 },
+  { x: 11, z: 2.8 },
+  { x: 26, z: 1.6 },
+  { x: 41, z: 0.2 },
+]
+
+function TrackChevron({ x, z }: { x: number; z: number }) {
+  return (
+    <group position={[x, 0.058, z]}>
+      <mesh rotation={[0, Math.PI * 0.25, 0]}>
+        <boxGeometry args={[1.85, 0.02, 0.3]} />
+        <meshStandardMaterial color="#f4ebf4" roughness={0.44} metalness={0.02} />
+      </mesh>
+      <mesh position={[0, 0, -1.24]} rotation={[0, -Math.PI * 0.25, 0]}>
+        <boxGeometry args={[1.85, 0.02, 0.3]} />
+        <meshStandardMaterial color="#f4ebf4" roughness={0.44} metalness={0.02} />
+      </mesh>
+    </group>
+  )
+}
+
 export function Terrain({ config }: TerrainProps) {
   const asphaltTexture = useMemo(
     () => createAsphaltTexture({ seed: config.world.seed + 11, repeat: 46 }),
+    [config.world.seed],
+  )
+  const trackTexture = useMemo(
+    () => createAsphaltTexture({ seed: config.world.seed + 31, repeat: 24 }),
     [config.world.seed],
   )
   const pathTexture = useMemo(
@@ -53,6 +84,35 @@ export function Terrain({ config }: TerrainProps) {
         <circleGeometry args={[8.6, 28]} />
         <meshStandardMaterial map={pathTexture ?? undefined} color={config.palette.path} roughness={0.88} metalness={0.03} />
       </mesh>
+
+      <group position={[13.5, 0, 6]} rotation={[0, -0.21, 0]}>
+        <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.04, 0]}>
+          <planeGeometry args={[82, 33, 1, 1]} />
+          <meshStandardMaterial
+            map={trackTexture ?? undefined}
+            color="#3d344f"
+            roughness={0.9}
+            metalness={0.03}
+          />
+        </mesh>
+
+        {curbSegments.map((segment) => (
+          <mesh
+            key={`curb-${segment.x}`}
+            receiveShadow
+            castShadow
+            position={[segment.x, 0.048, -17]}
+            rotation={[-Math.PI / 2, 0, 0]}
+          >
+            <planeGeometry args={[3.18, 1.5]} />
+            <meshStandardMaterial color={segment.color} roughness={0.66} metalness={0.02} />
+          </mesh>
+        ))}
+
+        {chevrons.map((chevron) => (
+          <TrackChevron key={`chevron-${chevron.x}`} x={chevron.x} z={chevron.z} />
+        ))}
+      </group>
 
       <mesh rotation={[-Math.PI / 2, 0.12, 0]} position={[-45, -0.02, 58]}>
         <planeGeometry args={[78, 46, 1, 1]} />
