@@ -45,6 +45,12 @@ export interface ArtDirectionConfig {
   }
   post: {
     exposure: number
+    aoIntensity: number
+    aoRadius: number
+    aoDistanceFalloff: number
+    aoSamples: number
+    aoDenoiseSamples: number
+    aoDenoiseRadius: number
     bloomIntensity: number
     bloomThreshold: number
     bloomRadius: number
@@ -121,6 +127,12 @@ export const artDirectionDefaults: ArtDirectionConfig = {
   },
   post: {
     exposure: 1.08,
+    aoIntensity: 2.3,
+    aoRadius: 2.05,
+    aoDistanceFalloff: 1.7,
+    aoSamples: 16,
+    aoDenoiseSamples: 6,
+    aoDenoiseRadius: 8,
     bloomIntensity: 1.02,
     bloomThreshold: 0.66,
     bloomRadius: 0.9,

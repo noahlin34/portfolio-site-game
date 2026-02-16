@@ -1,5 +1,5 @@
 import type { MutableRefObject } from 'react'
-import { Bloom, EffectComposer, Vignette } from '@react-three/postprocessing'
+import { Bloom, EffectComposer, N8AO, Vignette } from '@react-three/postprocessing'
 import { Canvas } from '@react-three/fiber'
 import { ACESFilmicToneMapping, PCFSoftShadowMap } from 'three'
 import type { DriveControlsState } from '../hooks/useDriveControls'
@@ -36,6 +36,16 @@ export function DrivingScene({ controlsRef, level }: SceneProps) {
       <EnvironmentScene controlsRef={controlsRef} config={config} level={level} />
 
       <EffectComposer multisampling={2} enableNormalPass={false}>
+        <N8AO
+          quality="medium"
+          aoRadius={config.post.aoRadius}
+          distanceFalloff={config.post.aoDistanceFalloff}
+          intensity={config.post.aoIntensity}
+          aoSamples={config.post.aoSamples}
+          denoiseSamples={config.post.aoDenoiseSamples}
+          denoiseRadius={config.post.aoDenoiseRadius}
+          screenSpaceRadius
+        />
         <Bloom
           intensity={config.post.bloomIntensity}
           luminanceThreshold={config.post.bloomThreshold}

@@ -1,4 +1,5 @@
 import { Canvas } from '@react-three/fiber'
+import { Bloom, EffectComposer, N8AO, Vignette } from '@react-three/postprocessing'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { ACESFilmicToneMapping, PCFSoftShadowMap } from 'three'
 import { artDirectionDefaults } from '../game/config/artDirection'
@@ -376,6 +377,30 @@ export function EditorApp({ initialLevel, onSaveLevel, onReloadLevel }: EditorAp
               })
             }}
           />
+          <EffectComposer multisampling={2} enableNormalPass={false}>
+            <N8AO
+              quality="medium"
+              aoRadius={artDirectionDefaults.post.aoRadius}
+              distanceFalloff={artDirectionDefaults.post.aoDistanceFalloff}
+              intensity={artDirectionDefaults.post.aoIntensity}
+              aoSamples={artDirectionDefaults.post.aoSamples}
+              denoiseSamples={artDirectionDefaults.post.aoDenoiseSamples}
+              denoiseRadius={artDirectionDefaults.post.aoDenoiseRadius}
+              screenSpaceRadius
+            />
+            <Bloom
+              intensity={artDirectionDefaults.post.bloomIntensity * 0.84}
+              luminanceThreshold={artDirectionDefaults.post.bloomThreshold}
+              luminanceSmoothing={0.35}
+              mipmapBlur
+              radius={artDirectionDefaults.post.bloomRadius}
+            />
+            <Vignette
+              eskil={false}
+              offset={artDirectionDefaults.post.vignetteOffset}
+              darkness={artDirectionDefaults.post.vignetteDarkness}
+            />
+          </EffectComposer>
         </Canvas>
       </section>
 
