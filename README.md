@@ -7,6 +7,8 @@ A stylized Three.js driving game prototype built with Vite + React + TypeScript,
 - Locked isometric camera with smooth follow
 - Front-wheel steering vehicle model (bicycle/Ackermann-style behavior)
 - Pushable dynamic world objects via Rapier physics
+- Dev-only in-browser level editor (`/editor`) with paint placement and transform gizmos
+- Persistent level saves to `src/game/level/level.json` through a Vite dev API
 - Golden-hour stylized lighting and soft dynamic shadows
 - Layered stylized world composition:
   - tiled paths
@@ -23,12 +25,22 @@ A stylized Three.js driving game prototype built with Vite + React + TypeScript,
 - `D` / `ArrowRight`: steer right
 - `Space`: brake
 
+## Level Editor
+
+- Open `http://localhost:5173/editor`
+- Use left panel to pick terrain/entities and paint them into the scene
+- Select objects to move/rotate/scale with gizmos
+- Save writes directly to `src/game/level/level.json` (dev server only)
+- Use Export/Import for quick snapshots and backups
+
 ## Project Structure
 
 - `src/game/config/artDirection.ts`: centralized art direction + gameplay tuning
-- `src/game/world/*`: terrain, foliage, props, effects, lighting composition
+- `src/game/level/*`: canonical level schema, prefab catalog, and persisted level data
+- `src/game/world/*`: data-driven terrain/entity rendering, effects, lighting composition
 - `src/game/vehicle/*`: vehicle visuals + physics controller
 - `src/game/materials/*`: procedural texture/material generators
+- `src/editor/*`: in-browser editor route, viewport, and tooling UI
 
 ## Tech Stack
 
