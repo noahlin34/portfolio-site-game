@@ -1,7 +1,7 @@
 import { Suspense, type MutableRefObject, useMemo, useRef } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { BallCollider, CuboidCollider, Physics, type RapierRigidBody, RigidBody } from '@react-three/rapier'
-import { ACESFilmicToneMapping, Color, PCFSoftShadowMap, Quaternion, ShaderMaterial, Vector3, type Group } from 'three'
+import { ACESFilmicToneMapping, Color, PCFSoftShadowMap, Quaternion, Vector3, type Group } from 'three'
 import type { DriveControlsState } from '../hooks/useDriveControls'
 
 const GROUND_SIZE = 160
@@ -23,30 +23,67 @@ const CAMERA_POSITION_DAMPING = 9
 const CAMERA_LOOK_Y = 1
 const UP_AXIS = new Vector3(0, 1, 0)
 const GROUND_VERTEX_SHADER = `
-  uniform float uTime;
   varying vec2 vUv;
-  varying float vWave;
 
   void main() {
-    vUv = uv * 8.0;
-    vec3 transformed = position;
-    float wave = sin((position.x + uTime * 0.8) * 0.24) * cos((position.y + uTime * 0.7) * 0.3);
-    transformed.z += wave * 0.6;
-    vWave = wave;
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(transformed, 1.0);
+    vUv = uv * 130.0;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
   }
 `
 const GROUND_FRAGMENT_SHADER = `
-  uniform vec3 uColorA;
-  uniform vec3 uColorB;
+  uniform vec3 uBaseColor;
+  uniform vec3 uStoneColor;
+  uniform vec3 uOilColor;
   varying vec2 vUv;
-  varying float vWave;
+
+  float hash(vec2 p) {
+    p = fract(p * vec2(123.34, 456.21));
+    p += dot(p, p + 45.32);
+    return fract(p.x * p.y);
+  }
+
+  float noise(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    vec2 u = f * f * (3.0 - 2.0 * f);
+
+    float a = hash(i);
+    float b = hash(i + vec2(1.0, 0.0));
+    float c = hash(i + vec2(0.0, 1.0));
+    float d = hash(i + vec2(1.0, 1.0));
+
+    return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
+  }
+
+  float fbm(vec2 p) {
+    float value = 0.0;
+    float amplitude = 0.5;
+    for (int i = 0; i < 5; i++) {
+      value += noise(p) * amplitude;
+      p *= 2.02;
+      amplitude *= 0.5;
+    }
+    return value;
+  }
 
   void main() {
-    float stripe = 0.5 + 0.5 * sin(vUv.x + vUv.y * 0.7);
-    float checker = 0.5 + 0.5 * cos(vUv.x * 0.6) * sin(vUv.y * 0.6);
-    float blend = clamp((stripe * 0.7 + checker * 0.3) + (vWave * 0.2), 0.0, 1.0);
-    vec3 color = mix(uColorA, uColorB, blend);
+    float macro = fbm(vUv * 0.045);
+    float mid = fbm(vUv * 0.16 + 12.0);
+    float grain = noise(vUv * 1.9);
+
+    float aggregateA = smoothstep(0.58, 0.93, hash(floor(vUv * 1.25)));
+    float aggregateB = smoothstep(0.72, 0.97, hash(floor(vUv * 2.45) + 18.3));
+    float aggregate = clamp(aggregateA * 0.45 + aggregateB * 0.4, 0.0, 1.0);
+
+    float tarPatch = smoothstep(0.62, 0.93, fbm(vUv * 0.09 + 42.0)) * 0.32;
+    float seam = smoothstep(0.47, 0.53, fract((vUv.y + sin(vUv.x * 0.035) * 1.1) * 0.085)) * 0.08;
+
+    vec3 color = mix(uBaseColor, uStoneColor, aggregate);
+    color *= 0.78 + macro * 0.28 + mid * 0.1;
+    color = mix(color, uOilColor, tarPatch);
+    color += (grain - 0.5) * 0.06;
+    color *= 1.0 - seam;
+
     gl_FragColor = vec4(color, 1.0);
   }
 `
@@ -71,25 +108,14 @@ const pseudoRandom = (seed: number) => {
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value))
 
 function GroundMaterial() {
-  const materialRef = useRef<ShaderMaterial>(null)
   const uniforms = useMemo(() => ({
-    uTime: { value: 0 },
-    uColorA: { value: new Color('#27512c') },
-    uColorB: { value: new Color('#4d9862') },
+    uBaseColor: { value: new Color('#2f3136') },
+    uStoneColor: { value: new Color('#44474d') },
+    uOilColor: { value: new Color('#202327') },
   }), [])
-
-  useFrame((_, delta) => {
-    const material = materialRef.current
-    if (!material) {
-      return
-    }
-
-    material.uniforms.uTime.value += delta
-  })
 
   return (
     <shaderMaterial
-      ref={materialRef}
       uniforms={uniforms}
       vertexShader={GROUND_VERTEX_SHADER}
       fragmentShader={GROUND_FRAGMENT_SHADER}
@@ -102,7 +128,7 @@ function Ground() {
     <RigidBody type="fixed" colliders={false}>
       <CuboidCollider args={[GROUND_SIZE / 2, 0.3, GROUND_SIZE / 2]} friction={1.2} />
       <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[GROUND_SIZE, GROUND_SIZE, 220, 220]} />
+        <planeGeometry args={[GROUND_SIZE, GROUND_SIZE, 1, 1]} />
         <GroundMaterial />
       </mesh>
     </RigidBody>
@@ -413,38 +439,157 @@ function Car({ controlsRef }: SceneProps) {
       <CuboidCollider args={[0.86, 0.38, 1.7]} />
       <group ref={chassisRef} position={[0, 0.55, 0]}>
         <mesh castShadow receiveShadow>
-          <boxGeometry args={[1.7, 0.5, 3.4]} />
-          <meshStandardMaterial color="#b52f33" roughness={0.38} metalness={0.25} />
+          <boxGeometry args={[1.78, 0.43, 3.52]} />
+          <meshStandardMaterial color="#ba3636" roughness={0.35} metalness={0.28} />
         </mesh>
 
-        <mesh position={[0, 0.42, -0.28]} castShadow>
-          <boxGeometry args={[1.2, 0.36, 1.4]} />
-          <meshStandardMaterial color="#f7f5ef" roughness={0.22} metalness={0.1} />
+        <mesh position={[0, 0.26, -0.23]} castShadow receiveShadow>
+          <boxGeometry args={[1.58, 0.28, 2.72]} />
+          <meshStandardMaterial color="#c7403f" roughness={0.34} metalness={0.24} />
         </mesh>
 
-        <mesh position={[0, 0.58, -0.3]}>
-          <boxGeometry args={[0.98, 0.22, 1.14]} />
-          <meshStandardMaterial color="#96bcd9" roughness={0.08} metalness={0.85} />
+        <mesh position={[0, 0.54, -0.32]} castShadow>
+          <boxGeometry args={[1.2, 0.24, 1.44]} />
+          <meshStandardMaterial color="#f7f6f2" roughness={0.19} metalness={0.1} />
         </mesh>
 
-        <mesh position={[-0.86, -0.17, 1.08]} rotation={[0, 0, Math.PI / 2]} castShadow>
-          <cylinderGeometry args={[0.31, 0.31, 0.2, 24]} />
-          <meshStandardMaterial color="#1e1e24" roughness={0.88} metalness={0.06} />
+        <mesh position={[0, 0.61, -0.32]}>
+          <boxGeometry args={[1.02, 0.2, 1.22]} />
+          <meshStandardMaterial color="#94b1c3" roughness={0.08} metalness={0.78} />
         </mesh>
-        <mesh position={[0.86, -0.17, 1.08]} rotation={[0, 0, Math.PI / 2]} castShadow>
-          <cylinderGeometry args={[0.31, 0.31, 0.2, 24]} />
-          <meshStandardMaterial color="#1e1e24" roughness={0.88} metalness={0.06} />
+
+        <mesh position={[0, -0.08, -1.77]} castShadow receiveShadow>
+          <boxGeometry args={[1.58, 0.24, 0.26]} />
+          <meshStandardMaterial color="#24252b" roughness={0.72} metalness={0.08} />
         </mesh>
-        <group ref={frontLeftSteerRef} position={[-0.86, -0.17, -1.08]}>
+        <mesh position={[0, -0.08, 1.77]} castShadow receiveShadow>
+          <boxGeometry args={[1.58, 0.24, 0.26]} />
+          <meshStandardMaterial color="#24252b" roughness={0.72} metalness={0.08} />
+        </mesh>
+
+        <mesh position={[-0.86, -0.08, 0]} castShadow>
+          <boxGeometry args={[0.07, 0.15, 2.86]} />
+          <meshStandardMaterial color="#23242a" roughness={0.7} metalness={0.08} />
+        </mesh>
+        <mesh position={[0.86, -0.08, 0]} castShadow>
+          <boxGeometry args={[0.07, 0.15, 2.86]} />
+          <meshStandardMaterial color="#23242a" roughness={0.7} metalness={0.08} />
+        </mesh>
+
+        <mesh position={[0, 0.02, -1.8]}>
+          <boxGeometry args={[0.88, 0.18, 0.05]} />
+          <meshStandardMaterial color="#121319" roughness={0.55} metalness={0.4} />
+        </mesh>
+        <mesh position={[0, 0.08, -1.8]}>
+          <boxGeometry args={[0.88, 0.03, 0.06]} />
+          <meshStandardMaterial color="#2d2f34" roughness={0.48} metalness={0.45} />
+        </mesh>
+        <mesh position={[0, -0.04, -1.8]}>
+          <boxGeometry args={[0.88, 0.03, 0.06]} />
+          <meshStandardMaterial color="#2d2f34" roughness={0.48} metalness={0.45} />
+        </mesh>
+
+        <mesh position={[-0.56, 0.08, -1.78]}>
+          <boxGeometry args={[0.22, 0.11, 0.09]} />
+          <meshStandardMaterial color="#ffe8b4" emissive="#ffce75" emissiveIntensity={0.35} roughness={0.2} />
+        </mesh>
+        <mesh position={[0.56, 0.08, -1.78]}>
+          <boxGeometry args={[0.22, 0.11, 0.09]} />
+          <meshStandardMaterial color="#ffe8b4" emissive="#ffce75" emissiveIntensity={0.35} roughness={0.2} />
+        </mesh>
+
+        <mesh position={[-0.57, 0.05, 1.78]}>
+          <boxGeometry args={[0.24, 0.1, 0.08]} />
+          <meshStandardMaterial color="#ff5d58" emissive="#a51512" emissiveIntensity={0.55} roughness={0.24} />
+        </mesh>
+        <mesh position={[0.57, 0.05, 1.78]}>
+          <boxGeometry args={[0.24, 0.1, 0.08]} />
+          <meshStandardMaterial color="#ff5d58" emissive="#a51512" emissiveIntensity={0.55} roughness={0.24} />
+        </mesh>
+
+        <mesh position={[-0.95, 0.33, -0.58]} castShadow>
+          <boxGeometry args={[0.09, 0.08, 0.2]} />
+          <meshStandardMaterial color="#191a1e" roughness={0.45} metalness={0.2} />
+        </mesh>
+        <mesh position={[0.95, 0.33, -0.58]} castShadow>
+          <boxGeometry args={[0.09, 0.08, 0.2]} />
+          <meshStandardMaterial color="#191a1e" roughness={0.45} metalness={0.2} />
+        </mesh>
+
+        <mesh position={[0, 0.34, -0.97]}>
+          <boxGeometry args={[1.12, 0.04, 0.72]} />
+          <meshStandardMaterial color="#9cb6c8" roughness={0.1} metalness={0.72} transparent opacity={0.78} />
+        </mesh>
+        <mesh position={[0, 0.34, 0.43]}>
+          <boxGeometry args={[1.02, 0.04, 0.52]} />
+          <meshStandardMaterial color="#7f98ad" roughness={0.12} metalness={0.66} transparent opacity={0.65} />
+        </mesh>
+
+        <mesh position={[-0.48, 0.16, -0.18]}>
+          <boxGeometry args={[0.24, 0.03, 0.04]} />
+          <meshStandardMaterial color="#dcdbd8" roughness={0.3} metalness={0.42} />
+        </mesh>
+        <mesh position={[0.48, 0.16, -0.18]}>
+          <boxGeometry args={[0.24, 0.03, 0.04]} />
+          <meshStandardMaterial color="#dcdbd8" roughness={0.3} metalness={0.42} />
+        </mesh>
+
+        <group position={[-0.86, -0.17, 1.08]}>
+          <mesh rotation={[0, 0, Math.PI / 2]} castShadow receiveShadow>
+            <cylinderGeometry args={[0.33, 0.33, 0.24, 28]} />
+            <meshStandardMaterial color="#14161a" roughness={0.95} metalness={0.03} />
+          </mesh>
           <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
-            <cylinderGeometry args={[0.31, 0.31, 0.2, 24]} />
-            <meshStandardMaterial color="#1e1e24" roughness={0.88} metalness={0.06} />
+            <cylinderGeometry args={[0.2, 0.2, 0.14, 22]} />
+            <meshStandardMaterial color="#d6dae2" roughness={0.24} metalness={0.9} />
+          </mesh>
+          <mesh rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.09, 0.09, 0.16, 16]} />
+            <meshStandardMaterial color="#a2a9b4" roughness={0.34} metalness={0.82} />
+          </mesh>
+        </group>
+
+        <group position={[0.86, -0.17, 1.08]}>
+          <mesh rotation={[0, 0, Math.PI / 2]} castShadow receiveShadow>
+            <cylinderGeometry args={[0.33, 0.33, 0.24, 28]} />
+            <meshStandardMaterial color="#14161a" roughness={0.95} metalness={0.03} />
+          </mesh>
+          <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
+            <cylinderGeometry args={[0.2, 0.2, 0.14, 22]} />
+            <meshStandardMaterial color="#d6dae2" roughness={0.24} metalness={0.9} />
+          </mesh>
+          <mesh rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.09, 0.09, 0.16, 16]} />
+            <meshStandardMaterial color="#a2a9b4" roughness={0.34} metalness={0.82} />
+          </mesh>
+        </group>
+
+        <group ref={frontLeftSteerRef} position={[-0.86, -0.17, -1.08]}>
+          <mesh rotation={[0, 0, Math.PI / 2]} castShadow receiveShadow>
+            <cylinderGeometry args={[0.33, 0.33, 0.24, 28]} />
+            <meshStandardMaterial color="#14161a" roughness={0.95} metalness={0.03} />
+          </mesh>
+          <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
+            <cylinderGeometry args={[0.2, 0.2, 0.14, 22]} />
+            <meshStandardMaterial color="#d6dae2" roughness={0.24} metalness={0.9} />
+          </mesh>
+          <mesh rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.09, 0.09, 0.16, 16]} />
+            <meshStandardMaterial color="#a2a9b4" roughness={0.34} metalness={0.82} />
           </mesh>
         </group>
         <group ref={frontRightSteerRef} position={[0.86, -0.17, -1.08]}>
+          <mesh rotation={[0, 0, Math.PI / 2]} castShadow receiveShadow>
+            <cylinderGeometry args={[0.33, 0.33, 0.24, 28]} />
+            <meshStandardMaterial color="#14161a" roughness={0.95} metalness={0.03} />
+          </mesh>
           <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
-            <cylinderGeometry args={[0.31, 0.31, 0.2, 24]} />
-            <meshStandardMaterial color="#1e1e24" roughness={0.88} metalness={0.06} />
+            <cylinderGeometry args={[0.2, 0.2, 0.14, 22]} />
+            <meshStandardMaterial color="#d6dae2" roughness={0.24} metalness={0.9} />
+          </mesh>
+          <mesh rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.09, 0.09, 0.16, 16]} />
+            <meshStandardMaterial color="#a2a9b4" roughness={0.34} metalness={0.82} />
           </mesh>
         </group>
       </group>
