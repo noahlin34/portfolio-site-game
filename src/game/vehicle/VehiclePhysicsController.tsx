@@ -1,8 +1,9 @@
-import { type MutableRefObject, useMemo, useRef, useState } from 'react'
+import { type MutableRefObject, useMemo, useRef } from 'react'
 import { Line } from '@react-three/drei'
 import { useFrame, useThree } from '@react-three/fiber'
 import { CuboidCollider, type RapierRigidBody, RigidBody } from '@react-three/rapier'
 import { Quaternion, Vector3, type Group } from 'three'
+import type { Line2 } from 'three-stdlib'
 import type { ArtDirectionConfig } from '../config/artDirection'
 import type { DriveControlsState } from '../../hooks/useDriveControls'
 import { VehicleVisual } from './VehicleVisual'
@@ -38,7 +39,9 @@ export function VehiclePhysicsController({ controlsRef, config }: VehiclePhysics
   const steeringAngleRef = useRef(0)
   const cameraInitializedRef = useRef(false)
   const trailTimerRef = useRef(0)
-  const [trailPoints, setTrailPoints] = useState<[number, number, number][]>([])
+  const trailPointsRef = useRef<[number, number, number][]>([])
+  const trailLineRef = useRef<Line2>(null)
+  const trailFlatRef = useRef<Float32Array>(new Float32Array(72 * 3))
   const cameraOffset = useMemo(
     () => new Vector3(config.camera.offset[0], config.camera.offset[1], config.camera.offset[2]),
     [config.camera.offset],
@@ -251,13 +254,25 @@ export function VehiclePhysicsController({ controlsRef, config }: VehiclePhysics
     trailTimerRef.current += delta
     if (trailTimerRef.current >= 0.08) {
       trailTimerRef.current = 0
-      setTrailPoints((previous) => {
-        const next = [...previous, [translation.x, 0.08, translation.z] as [number, number, number]]
-        if (next.length > 72) {
-          next.shift()
+      const points = trailPointsRef.current
+      points.push([translation.x, 0.08, translation.z])
+      if (points.length > 72) {
+        points.shift()
+      }
+      if (points.length > 1 && trailLineRef.current) {
+        const flat = trailFlatRef.current
+        let cursor = 0
+        for (let index = 0; index < points.length; index += 1) {
+          const point = points[index]
+          flat[cursor] = point[0]
+          flat[cursor + 1] = point[1]
+          flat[cursor + 2] = point[2]
+          cursor += 3
         }
-        return next
-      })
+        trailLineRef.current.geometry.setPositions(flat.subarray(0, points.length * 3))
+        trailLineRef.current.computeLineDistances()
+        trailLineRef.current.visible = true
+      }
     }
   })
 
@@ -270,12 +285,12 @@ export function VehiclePhysicsController({ controlsRef, config }: VehiclePhysics
         mass={2.1}
         linearDamping={0.32}
         angularDamping={0.72}
-      friction={1.2}
-      restitution={0.08}
-      enabledRotations={[false, true, false]}
-      ccd
-      canSleep={false}
-    >
+        friction={1.2}
+        restitution={0.08}
+        enabledRotations={[false, true, false]}
+        ccd
+        canSleep={false}
+      >
         <CuboidCollider args={[0.86, 0.38, 1.7]} />
         <VehicleVisual
           chassisRef={chassisRef}
@@ -285,16 +300,19 @@ export function VehiclePhysicsController({ controlsRef, config }: VehiclePhysics
         />
       </RigidBody>
 
-      {trailPoints.length > 1 ? (
-        <Line
-          points={trailPoints}
-          color="#fff8ee"
-          lineWidth={1.8}
-          transparent
-          opacity={0.92}
-          depthWrite={false}
-        />
-      ) : null}
+      <Line
+        ref={trailLineRef}
+        points={[
+          [0, 0.08, 0],
+          [0, 0.08, 0],
+        ]}
+        color="#fff8ee"
+        lineWidth={1.8}
+        transparent
+        opacity={0.92}
+        depthWrite={false}
+        visible={false}
+      />
     </>
   )
 }

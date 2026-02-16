@@ -1,4 +1,4 @@
-import { type MutableRefObject, type RefObject, useRef } from 'react'
+import { memo, type MutableRefObject, type RefObject, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Group, MeshStandardMaterial } from 'three'
 
@@ -9,7 +9,12 @@ export interface VehicleVisualProps {
   brakingRef: MutableRefObject<boolean>
 }
 
-export function VehicleVisual({ chassisRef, frontLeftSteerRef, frontRightSteerRef, brakingRef }: VehicleVisualProps) {
+export const VehicleVisual = memo(function VehicleVisual({
+  chassisRef,
+  frontLeftSteerRef,
+  frontRightSteerRef,
+  brakingRef,
+}: VehicleVisualProps) {
   const tailLeftMaterialRef = useRef<MeshStandardMaterial>(null)
   const tailRightMaterialRef = useRef<MeshStandardMaterial>(null)
 
@@ -189,4 +194,6 @@ export function VehicleVisual({ chassisRef, frontLeftSteerRef, frontRightSteerRe
       </group>
     </group>
   )
-}
+})
+
+VehicleVisual.displayName = 'VehicleVisual'
