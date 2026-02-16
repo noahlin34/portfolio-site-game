@@ -48,12 +48,22 @@
     {
       "id": "water-cove",
       "kind": "water",
-      "shape": "plane",
-      "position": [-45, -0.02, 58],
+      "shape": "circle",
+      "position": [-42, -0.015, 54],
       "rotation": [-1.5707963267948966, 0, 0.12],
-      "size": [78, 46],
+      "size": [33, 33],
       "collider": { "enabled": false },
       "materialVariant": "default"
+    },
+    {
+      "id": "water-cove-2",
+      "kind": "water",
+      "shape": "circle",
+      "position": [-56, -0.015, 62],
+      "rotation": [-1.5707963267948966, 0, 0],
+      "size": [17, 17],
+      "collider": { "enabled": false },
+      "materialVariant": "alt"
     },
     {
       "id": "water-lagoon-1",
@@ -114,6 +124,46 @@
       "size": [28, 24],
       "collider": { "enabled": false },
       "materialVariant": "alt"
+    },
+    {
+      "id": "grass-clump-1",
+      "kind": "grass",
+      "shape": "circle",
+      "position": [-13, 0.01, 22],
+      "rotation": [-1.5707963267948966, 0, 0],
+      "size": [7.2, 7.2],
+      "collider": { "enabled": false },
+      "materialVariant": "default"
+    },
+    {
+      "id": "grass-clump-2",
+      "kind": "grass",
+      "shape": "circle",
+      "position": [8.5, 0.01, 25],
+      "rotation": [-1.5707963267948966, 0, 0],
+      "size": [5.8, 5.8],
+      "collider": { "enabled": false },
+      "materialVariant": "alt"
+    },
+    {
+      "id": "grass-clump-3",
+      "kind": "grass",
+      "shape": "circle",
+      "position": [34, 0.01, 20],
+      "rotation": [-1.5707963267948966, 0, 0],
+      "size": [7.8, 7.8],
+      "collider": { "enabled": false },
+      "materialVariant": "default"
+    },
+    {
+      "id": "grass-clump-4",
+      "kind": "grass",
+      "shape": "circle",
+      "position": [41, 0.01, 3],
+      "rotation": [-1.5707963267948966, 0, 0],
+      "size": [5.2, 5.2],
+      "collider": { "enabled": false },
+      "materialVariant": "alt"
     }
   ],
   "entities": [
@@ -128,8 +178,13 @@
     { "id": "prop-lantern-4", "family": "prop", "prefab": "lantern", "position": [-27, 0, -14], "rotation": [0, 0, 0], "scale": [1, 1, 1] },
     { "id": "prop-cone-1", "family": "prop", "prefab": "cone", "position": [-24, 0, 13.5], "rotation": [0, 0, 0], "scale": [1, 1, 1] },
     { "id": "prop-cone-2", "family": "prop", "prefab": "cone", "position": [-27.4, 0, 10.5], "rotation": [0, 0, 0], "scale": [1, 1, 1] },
+    { "id": "prop-cone-3", "family": "prop", "prefab": "cone", "position": [-22.2, 0, 21.2], "rotation": [0, 0.4, 0], "scale": [1, 1, 1] },
+    { "id": "prop-cone-4", "family": "prop", "prefab": "cone", "position": [-19.8, 0, 18.2], "rotation": [0, -0.3, 0], "scale": [1, 1, 1] },
+    { "id": "prop-cone-5", "family": "prop", "prefab": "cone", "position": [16.3, 0, 22], "rotation": [0, 0.1, 0], "scale": [1, 1, 1] },
     { "id": "prop-sign-1", "family": "prop", "prefab": "arrow_sign", "position": [34, 0.2, 16], "rotation": [0, 0.2, 0], "scale": [1, 1, 1] },
     { "id": "prop-name-sign-1", "family": "prop", "prefab": "name_sign", "position": [-6, 0, -16], "rotation": [0, -0.06, 0], "scale": [1, 1, 1] },
+    { "id": "prop-bleachers-2", "family": "prop", "prefab": "bleachers", "position": [-6.8, 0, 28.4], "rotation": [0, -0.18, 0], "scale": [1, 1, 1] },
+    { "id": "prop-bench-3", "family": "prop", "prefab": "bench", "position": [4.8, 0, 23.6], "rotation": [0, 0.08, 0], "scale": [1, 1, 1] },
     { "id": "prop-rock-1", "family": "prop", "prefab": "rock", "position": [-46, 0.35, -30], "rotation": [0, 0.3, 0], "scale": [1.1, 0.9, 1.2] },
     { "id": "prop-rock-2", "family": "prop", "prefab": "rock", "position": [54, 0.3, 12], "rotation": [0, -0.2, 0], "scale": [0.9, 1, 1] },
 

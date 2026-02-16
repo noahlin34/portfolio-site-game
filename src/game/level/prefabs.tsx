@@ -73,6 +73,35 @@ export function EntityVisual({ entity, config }: EntityVisualProps) {
             <boxGeometry args={[0.28, 3.9, 0.28]} />
             <meshStandardMaterial color="#6f7184" roughness={0.44} metalness={0.34} />
           </mesh>
+          <Text position={[0, 2.55, 0.18]} fontSize={0.46} color="#ffffff" anchorX="center" anchorY="middle">
+            RESET
+          </Text>
+          <Text position={[0, 1.84, 0.18]} fontSize={0.26} color="#f5f2fd" anchorX="center" anchorY="middle">
+            in 2h 20m
+          </Text>
+
+          <group position={[-2.8, 0.2, 0.1]} rotation={[0, 0.18, 0]}>
+            <mesh castShadow>
+              <sphereGeometry args={[0.68, 18, 18]} />
+              <meshStandardMaterial color="#e74c3e" roughness={0.46} metalness={0.08} />
+            </mesh>
+            <mesh position={[0, 0.04, 0.64]}>
+              <cylinderGeometry args={[0.42, 0.42, 0.14, 20]} />
+              <meshStandardMaterial color="#f6edf2" roughness={0.18} metalness={0.06} />
+            </mesh>
+            <mesh position={[0, 0.07, 0.74]} rotation={[0, 0, -Math.PI * 0.24]}>
+              <boxGeometry args={[0.06, 0.24, 0.08]} />
+              <meshStandardMaterial color="#413847" roughness={0.35} metalness={0.25} />
+            </mesh>
+            <mesh position={[0.34, 0.56, 0.22]} castShadow>
+              <sphereGeometry args={[0.18, 12, 12]} />
+              <meshStandardMaterial color="#d84337" roughness={0.46} metalness={0.08} />
+            </mesh>
+            <mesh position={[-0.34, 0.56, 0.22]} castShadow>
+              <sphereGeometry args={[0.18, 12, 12]} />
+              <meshStandardMaterial color="#d84337" roughness={0.46} metalness={0.08} />
+            </mesh>
+          </group>
         </group>
       )
     case 'bench':

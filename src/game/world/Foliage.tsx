@@ -2,7 +2,7 @@ import { useLayoutEffect, useMemo, useRef } from 'react'
 import { InstancedMesh, Matrix4 } from 'three'
 import type { ArtDirectionConfig } from '../config/artDirection'
 import { composeMatrix, createRng, randomRange } from '../utils/random'
-import { isPathArea, isPlayableArea } from './layout'
+import { isPathArea, isPathEdgeArea, isPlayableArea } from './layout'
 
 interface FoliageProps {
   config: ArtDirectionConfig
@@ -82,6 +82,61 @@ export function Foliage({ config }: FoliageProps) {
             z + randomRange(rng, -0.5, 0.5),
             flowerScale,
             flowerScale * randomRange(rng, 0.7, 1.4),
+            flowerScale,
+            randomRange(rng, 0, Math.PI * 2),
+          ),
+        )
+      }
+    }
+
+    let edgeGrassAttempts = 0
+    const edgeGrassTarget = Math.round(config.density.grassTufts * 0.34)
+    while (edgeGrassAttempts < edgeGrassTarget * 14 && edgeGrassAttempts < 3600) {
+      edgeGrassAttempts += 1
+      const x = randomRange(rng, -half, half)
+      const z = randomRange(rng, -half, half)
+
+      if (!isPlayableArea(x, z, config.world.size) || isPathArea(x, z) || !isPathEdgeArea(x, z)) {
+        continue
+      }
+
+      const baseScale = randomRange(rng, 0.7, 1.7)
+      grassMatricesData.push(
+        composeMatrix(
+          x + randomRange(rng, -0.2, 0.2),
+          0.15,
+          z + randomRange(rng, -0.2, 0.2),
+          baseScale,
+          randomRange(rng, 0.9, 1.6),
+          baseScale,
+          randomRange(rng, 0, Math.PI * 2),
+        ),
+      )
+
+      if (rng() > 0.26) {
+        const tallScale = baseScale * randomRange(rng, 0.62, 1.02)
+        tallGrassMatricesData.push(
+          composeMatrix(
+            x + randomRange(rng, -0.5, 0.5),
+            0.23,
+            z + randomRange(rng, -0.5, 0.5),
+            tallScale,
+            randomRange(rng, 1.25, 2.0),
+            tallScale,
+            randomRange(rng, 0, Math.PI * 2),
+          ),
+        )
+      }
+
+      if (rng() > 0.58) {
+        const flowerScale = randomRange(rng, 0.08, 0.18)
+        flowerMatricesData.push(
+          composeMatrix(
+            x + randomRange(rng, -0.4, 0.4),
+            randomRange(rng, 0.24, 0.34),
+            z + randomRange(rng, -0.4, 0.4),
+            flowerScale,
+            flowerScale * randomRange(rng, 0.9, 1.5),
             flowerScale,
             randomRange(rng, 0, Math.PI * 2),
           ),

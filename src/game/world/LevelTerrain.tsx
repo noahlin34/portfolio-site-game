@@ -174,6 +174,23 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
                     <meshBasicMaterial color="#fff7df" transparent opacity={0.22} depthWrite={false} />
                   </mesh>
                 ) : null}
+
+                {patch.shape === 'circle' ? (
+                  <group rotation={patch.rotation} position={[patch.position[0], patch.position[1] + 0.0085, patch.position[2]]}>
+                    <mesh rotation={[0, 0, -0.35]}>
+                      <ringGeometry args={[patch.size[0] * 0.985, patch.size[0] * 1.004, 36, 1, 0.1, Math.PI * 0.58]} />
+                      <meshBasicMaterial color="#fff8e8" transparent opacity={0.42} depthWrite={false} />
+                    </mesh>
+                    <mesh rotation={[0, 0, 1.2]}>
+                      <ringGeometry args={[patch.size[0] * 0.982, patch.size[0] * 1.0, 36, 1, 0.2, Math.PI * 0.34]} />
+                      <meshBasicMaterial color="#fff8e8" transparent opacity={0.35} depthWrite={false} />
+                    </mesh>
+                    <mesh rotation={[0, 0, -2.1]}>
+                      <ringGeometry args={[patch.size[0] * 0.98, patch.size[0] * 1.002, 36, 1, 0.1, Math.PI * 0.42]} />
+                      <meshBasicMaterial color="#fef6de" transparent opacity={0.3} depthWrite={false} />
+                    </mesh>
+                  </group>
+                ) : null}
               </>
             ) : null}
           </group>
@@ -212,6 +229,19 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
                     </group>
                   )
                 })}
+
+                {[-12, 2, 16, 30].map((x, index) => (
+                  <group key={`chevron-${patch.id}-${index}`} position={[x, 0.013, 3.8 - index * 1.1]}>
+                    <mesh rotation={[0, Math.PI * 0.25, 0]}>
+                      <boxGeometry args={[1.85, 0.018, 0.3]} />
+                      <meshStandardMaterial color="#f4ebf4" roughness={0.44} metalness={0.02} />
+                    </mesh>
+                    <mesh position={[0, 0, -1.24]} rotation={[0, -Math.PI * 0.25, 0]}>
+                      <boxGeometry args={[1.85, 0.018, 0.3]} />
+                      <meshStandardMaterial color="#f4ebf4" roughness={0.44} metalness={0.02} />
+                    </mesh>
+                  </group>
+                ))}
               </group>
             )
           })
