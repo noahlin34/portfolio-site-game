@@ -34,6 +34,7 @@ export function VehiclePhysicsController({ controlsRef, config }: VehiclePhysics
   const smoothedFocusRef = useRef(new Vector3())
   const lookAtTargetRef = useRef(new Vector3())
   const quaternionRef = useRef(new Quaternion())
+  const lastSafePositionRef = useRef(new Vector3(0, 1, 0))
   const steeringAngleRef = useRef(0)
   const cameraInitializedRef = useRef(false)
   const trailTimerRef = useRef(0)
@@ -95,6 +96,23 @@ export function VehiclePhysicsController({ controlsRef, config }: VehiclePhysics
     frontRight.set(frontForward.z, 0, -frontForward.x).normalize()
 
     const translation = rigidBody.translation()
+    if (translation.y > 0.15 && translation.y < 2.5) {
+      lastSafePositionRef.current.set(translation.x, 1, translation.z)
+    }
+    if (translation.y < -1.2) {
+      const safePosition = lastSafePositionRef.current
+      rigidBody.setTranslation({ x: safePosition.x, y: safePosition.y, z: safePosition.z }, true)
+      rigidBody.setLinvel({ x: 0, y: 0, z: 0 }, true)
+      rigidBody.setAngvel({ x: 0, y: 0, z: 0 }, true)
+      steeringAngleRef.current = 0
+      if (frontLeftSteerRef.current) {
+        frontLeftSteerRef.current.rotation.y = 0
+      }
+      if (frontRightSteerRef.current) {
+        frontRightSteerRef.current.rotation.y = 0
+      }
+      return
+    }
     frontPoint.set(
       translation.x + forward.x * config.vehicle.halfWheelBase,
       translation.y,

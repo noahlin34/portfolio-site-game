@@ -72,6 +72,7 @@ export function PushableObjects({ config }: PushableObjectsProps) {
           friction={1}
           restitution={0.1}
           mass={object.kind === 'ball' ? 1.05 : 1.8}
+          ccd
         >
           {object.kind === 'ball' ? (
             <>

@@ -9,10 +9,10 @@ interface TerrainProps {
 }
 
 const grassIslands = [
-  { position: [-38, 0, 26], size: [35, 26], rotation: 0.22, color: '#95a14b' },
-  { position: [36, 0, -28], size: [40, 28], rotation: -0.28, color: '#97a54c' },
-  { position: [-44, 0, -36], size: [31, 24], rotation: -0.45, color: '#8d9a44' },
-  { position: [52, 0, 38], size: [28, 24], rotation: 0.35, color: '#8ea147' },
+  { position: [-38, 0.01, 26], size: [35, 26], rotation: 0.22, color: '#95a14b' },
+  { position: [36, 0.01, -28], size: [40, 28], rotation: -0.28, color: '#97a54c' },
+  { position: [-44, 0.01, -36], size: [31, 24], rotation: -0.45, color: '#8d9a44' },
+  { position: [52, 0.01, 38], size: [28, 24], rotation: 0.35, color: '#8ea147' },
 ]
 
 const curbSegments = Array.from({ length: 22 }, (_, index) => ({
@@ -26,12 +26,6 @@ const chevrons = [
   { x: 26, z: 1.6 },
   { x: 41, z: 0.2 },
 ]
-
-const decalMaterialProps = {
-  polygonOffset: true as const,
-  polygonOffsetFactor: -2,
-  polygonOffsetUnits: -2,
-}
 
 function TrackChevron({ x, z }: { x: number; z: number }) {
   return (
@@ -79,50 +73,46 @@ export function Terrain({ config }: TerrainProps) {
         />
       </mesh>
 
-      <mesh receiveShadow rotation={[-Math.PI / 2, 0.14, 0]} position={[0, 0, 0]}>
+      <mesh receiveShadow rotation={[-Math.PI / 2, 0.14, 0]} position={[0, 0.006, 0]}>
         <planeGeometry args={[144, 14.2, 1, 1]} />
         <meshStandardMaterial
           map={pathTexture ?? undefined}
           color={config.palette.path}
           roughness={0.88}
           metalness={0.03}
-          {...decalMaterialProps}
         />
       </mesh>
 
-      <mesh receiveShadow rotation={[-Math.PI / 2, -0.78, 0]} position={[12, 0, -7]}>
+      <mesh receiveShadow rotation={[-Math.PI / 2, -0.78, 0]} position={[12, 0.0062, -7]}>
         <planeGeometry args={[102, 10.8, 1, 1]} />
         <meshStandardMaterial
           map={pathTexture ?? undefined}
           color={config.palette.path}
           roughness={0.88}
           metalness={0.03}
-          {...decalMaterialProps}
         />
       </mesh>
 
-      <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[-2, 0, 1.5]}>
+      <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[-2, 0.0064, 1.5]}>
         <circleGeometry args={[8.6, 28]} />
         <meshStandardMaterial
           map={pathTexture ?? undefined}
           color={config.palette.path}
           roughness={0.88}
           metalness={0.03}
-          {...decalMaterialProps}
         />
       </mesh>
 
       <group position={[13.5, 0, 6]} rotation={[0, -0.21, 0]}>
         <CuboidCollider args={[82 / 2, 0.16, 33 / 2]} position={[0, -0.16, 0]} friction={1.35} />
 
-        <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
+        <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.0076, 0]}>
           <planeGeometry args={[82, 33, 1, 1]} />
           <meshStandardMaterial
             map={trackTexture ?? undefined}
             color="#3d344f"
             roughness={0.9}
             metalness={0.03}
-            {...decalMaterialProps}
           />
         </mesh>
 
@@ -165,7 +155,7 @@ export function Terrain({ config }: TerrainProps) {
           position={island.position as [number, number, number]}
         >
           <planeGeometry args={[island.size[0], island.size[1], 1, 1]} />
-          <meshStandardMaterial color={island.color} roughness={1} metalness={0} {...decalMaterialProps} />
+          <meshStandardMaterial color={island.color} roughness={1} metalness={0} />
         </mesh>
       ))}
     </RigidBody>
