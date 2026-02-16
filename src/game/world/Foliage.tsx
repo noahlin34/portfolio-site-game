@@ -252,17 +252,17 @@ export function Foliage({ config }: FoliageProps) {
 
   return (
     <group>
-      <instancedMesh ref={grassRef} args={[undefined, undefined, grassMatrices.length]} castShadow receiveShadow>
+      <instancedMesh ref={grassRef} args={[undefined, undefined, grassMatrices.length]}>
         <coneGeometry args={[0.38, 1.35, 6]} />
         <meshStandardMaterial color={config.palette.grassA} roughness={0.95} metalness={0.01} emissive={config.palette.grassA} emissiveIntensity={0.02} flatShading />
       </instancedMesh>
 
-      <instancedMesh ref={tallGrassRef} args={[undefined, undefined, tallGrassMatrices.length]} castShadow receiveShadow>
+      <instancedMesh ref={tallGrassRef} args={[undefined, undefined, tallGrassMatrices.length]}>
         <coneGeometry args={[0.2, 1.92, 5]} />
         <meshStandardMaterial color="#8f9841" roughness={0.94} metalness={0.01} emissive="#8f9841" emissiveIntensity={0.02} flatShading />
       </instancedMesh>
 
-      <instancedMesh ref={bushRef} args={[undefined, undefined, bushMatrices.length]} castShadow receiveShadow>
+      <instancedMesh ref={bushRef} args={[undefined, undefined, bushMatrices.length]}>
         <dodecahedronGeometry args={[0.75, 0]} />
         <meshStandardMaterial color={config.palette.grassB} roughness={0.84} metalness={0.03} emissive={config.palette.grassB} emissiveIntensity={0.03} flatShading />
       </instancedMesh>

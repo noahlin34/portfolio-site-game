@@ -180,7 +180,8 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
 
       {level.terrainPatches.map((patch) => {
         const materialProps = getPatchMaterialProps(patch, config)
-        const useWaterShader = !selectable && patch.kind === 'water'
+        const useWaterShader =
+          !selectable && patch.kind === 'water' && patch.shape === 'circle' && patch.size[0] <= 40
         const map =
           useWaterShader
             ? undefined

@@ -1,7 +1,6 @@
 import { Canvas } from '@react-three/fiber'
-import { Bloom, BrightnessContrast, EffectComposer, HueSaturation, N8AO, Vignette } from '@react-three/postprocessing'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { ACESFilmicToneMapping, PCFSoftShadowMap } from 'three'
+import { ACESFilmicToneMapping, PCFShadowMap } from 'three'
 import { artDirectionDefaults } from '../game/config/artDirection'
 import { createDefaultLevelData } from '../game/level/defaultLevel'
 import { entityPrefabs, getPrefabById, getPrefabsByFamily } from '../game/level/prefabCatalog'
@@ -337,7 +336,7 @@ export function EditorApp({ initialLevel, onSaveLevel, onReloadLevel }: EditorAp
             gl.toneMapping = ACESFilmicToneMapping
             gl.toneMappingExposure = artDirectionDefaults.post.exposure
             gl.shadowMap.enabled = true
-            gl.shadowMap.type = PCFSoftShadowMap
+            gl.shadowMap.type = PCFShadowMap
           }}
         >
           <EditorViewport
@@ -378,36 +377,6 @@ export function EditorApp({ initialLevel, onSaveLevel, onReloadLevel }: EditorAp
               })
             }}
           />
-          <EffectComposer multisampling={2} enableNormalPass={false}>
-            <N8AO
-              quality="medium"
-              aoRadius={artDirectionDefaults.post.aoRadius}
-              distanceFalloff={artDirectionDefaults.post.aoDistanceFalloff}
-              intensity={artDirectionDefaults.post.aoIntensity * 0.92}
-              aoSamples={artDirectionDefaults.post.aoSamples}
-              denoiseSamples={artDirectionDefaults.post.aoDenoiseSamples}
-              denoiseRadius={artDirectionDefaults.post.aoDenoiseRadius}
-              color={artDirectionDefaults.post.aoColor}
-              screenSpaceRadius
-            />
-            <Bloom
-              intensity={artDirectionDefaults.post.bloomIntensity * 0.84}
-              luminanceThreshold={artDirectionDefaults.post.bloomThreshold}
-              luminanceSmoothing={0.35}
-              mipmapBlur
-              radius={artDirectionDefaults.post.bloomRadius}
-            />
-            <BrightnessContrast
-              brightness={artDirectionDefaults.post.colorBrightness}
-              contrast={artDirectionDefaults.post.colorContrast * 0.92}
-            />
-            <HueSaturation hue={0.004} saturation={artDirectionDefaults.post.colorSaturation * 0.92} />
-            <Vignette
-              eskil={false}
-              offset={artDirectionDefaults.post.vignetteOffset}
-              darkness={artDirectionDefaults.post.vignetteDarkness}
-            />
-          </EffectComposer>
         </Canvas>
       </section>
 

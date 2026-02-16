@@ -1,7 +1,6 @@
 import type { MutableRefObject } from 'react'
-import { Bloom, BrightnessContrast, EffectComposer, HueSaturation, N8AO, Vignette } from '@react-three/postprocessing'
 import { Canvas } from '@react-three/fiber'
-import { ACESFilmicToneMapping, PCFSoftShadowMap } from 'three'
+import { ACESFilmicToneMapping, PCFShadowMap } from 'three'
 import type { DriveControlsState } from '../hooks/useDriveControls'
 import { artDirectionDefaults } from './config/artDirection'
 import type { LevelData } from './level/schema'
@@ -31,34 +30,10 @@ export function DrivingScene({ controlsRef, level }: SceneProps) {
         gl.toneMapping = ACESFilmicToneMapping
         gl.toneMappingExposure = config.post.exposure
         gl.shadowMap.enabled = true
-        gl.shadowMap.type = PCFSoftShadowMap
+        gl.shadowMap.type = PCFShadowMap
       }}
     >
       <EnvironmentScene controlsRef={controlsRef} config={config} level={level} />
-
-      <EffectComposer multisampling={2} enableNormalPass={false}>
-        <N8AO
-          quality="medium"
-          aoRadius={config.post.aoRadius}
-          distanceFalloff={config.post.aoDistanceFalloff}
-          intensity={config.post.aoIntensity}
-          aoSamples={config.post.aoSamples}
-          denoiseSamples={config.post.aoDenoiseSamples}
-          denoiseRadius={config.post.aoDenoiseRadius}
-          color={config.post.aoColor}
-          screenSpaceRadius
-        />
-        <Bloom
-          intensity={config.post.bloomIntensity}
-          luminanceThreshold={config.post.bloomThreshold}
-          luminanceSmoothing={0.35}
-          mipmapBlur
-          radius={config.post.bloomRadius}
-        />
-        <BrightnessContrast brightness={config.post.colorBrightness} contrast={config.post.colorContrast} />
-        <HueSaturation hue={0.004} saturation={config.post.colorSaturation} />
-        <Vignette eskil={false} offset={config.post.vignetteOffset} darkness={config.post.vignetteDarkness} />
-      </EffectComposer>
     </Canvas>
   )
 }

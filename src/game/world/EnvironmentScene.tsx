@@ -1,11 +1,9 @@
 import { Suspense, type MutableRefObject } from 'react'
-import { ContactShadows } from '@react-three/drei'
 import { Physics } from '@react-three/rapier'
 import type { DriveControlsState } from '../../hooks/useDriveControls'
 import type { ArtDirectionConfig } from '../config/artDirection'
 import type { LevelData } from '../level/schema'
 import { VehiclePhysicsController } from '../vehicle/VehiclePhysicsController'
-import { Effects } from './Effects'
 import { Environment } from './Environment'
 import { Foliage } from './Foliage'
 import { LevelEntities } from './LevelEntities'
@@ -30,20 +28,6 @@ export function EnvironmentScene({ controlsRef, config, level }: EnvironmentScen
           <VehiclePhysicsController controlsRef={controlsRef} config={config} />
         </Physics>
       </Suspense>
-
-      <ContactShadows
-        position={[0, 0.016, 0]}
-        opacity={0.3}
-        scale={config.world.size * 0.9}
-        blur={2.2}
-        far={config.world.size * 0.78}
-        color="#5a3457"
-        resolution={768}
-        smooth={false}
-        frames={1}
-      />
-
-      <Effects config={config} />
     </>
   )
 }
