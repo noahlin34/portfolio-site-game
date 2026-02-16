@@ -32,9 +32,9 @@ const getPatchMaterialProps = (patch: TerrainPatch, config: ArtDirectionConfig) 
       }
     case 'water':
       return {
-        color: patch.materialVariant === 'alt' ? '#2a6287' : '#244e77',
-        roughness: 0.34,
-        metalness: 0.08,
+        color: patch.materialVariant === 'alt' ? '#2f7293' : '#234e77',
+        roughness: 0.28,
+        metalness: 0.12,
       }
     case 'grass':
     default:
@@ -146,13 +146,23 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
                 color={selectedPatchId === patch.id ? '#f6d39c' : materialProps.color}
                 roughness={materialProps.roughness}
                 metalness={materialProps.metalness}
-                emissive={patch.kind === 'water' ? '#1f3867' : '#000000'}
-                emissiveIntensity={patch.kind === 'water' ? 0.12 : 0}
+                emissive={patch.kind === 'water' ? '#1b3964' : '#000000'}
+                emissiveIntensity={patch.kind === 'water' ? 0.22 : 0}
               />
             </mesh>
 
             {!selectable && patch.kind === 'water' ? (
               <>
+                {patch.shape === 'circle' ? (
+                  <mesh
+                    rotation={patch.rotation}
+                    position={[patch.position[0], patch.position[1] + 0.0018, patch.position[2]]}
+                    scale={[0.7, 0.7, 0.7]}
+                  >
+                    <circleGeometry args={[patch.size[0], 54]} />
+                    <meshBasicMaterial color="#1d325d" transparent opacity={0.34} depthWrite={false} />
+                  </mesh>
+                ) : null}
                 <mesh
                   rotation={patch.rotation}
                   position={[patch.position[0], patch.position[1] + 0.004, patch.position[2]]}
@@ -163,7 +173,7 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
                   ) : (
                     <planeGeometry args={[patch.size[0], patch.size[1], 1, 1]} />
                   )}
-                  <meshBasicMaterial color="#74d9dc" transparent opacity={0.22} depthWrite={false} />
+                  <meshBasicMaterial color="#71d8cf" transparent opacity={0.3} depthWrite={false} />
                 </mesh>
                 {patch.shape === 'circle' ? (
                   <mesh
@@ -171,7 +181,7 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
                     position={[patch.position[0], patch.position[1] + 0.0062, patch.position[2]]}
                   >
                     <ringGeometry args={[patch.size[0] * 0.965, patch.size[0] * 1.015, 64]} />
-                    <meshBasicMaterial color="#fff7df" transparent opacity={0.22} depthWrite={false} />
+                    <meshBasicMaterial color="#fff7df" transparent opacity={0.3} depthWrite={false} />
                   </mesh>
                 ) : null}
 

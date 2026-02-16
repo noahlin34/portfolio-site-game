@@ -2,224 +2,2658 @@
   "version": 1,
   "meta": {
     "name": "Bruno-Style Test Grounds",
-    "updatedAt": "2026-02-16T12:00:00.000Z"
+    "updatedAt": "2026-02-16T21:25:04.953Z"
   },
   "terrainPatches": [
     {
       "id": "path-main",
       "kind": "path",
       "shape": "plane",
-      "position": [0, 0.006, 0],
-      "rotation": [-1.5707963267948966, 0, 0.14],
-      "size": [144, 14.2],
-      "collider": { "enabled": true, "friction": 1.35 },
+      "position": [
+        0,
+        0.006,
+        0
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0.14
+      ],
+      "size": [
+        144,
+        14.2
+      ],
+      "collider": {
+        "enabled": true,
+        "friction": 1.35
+      },
       "materialVariant": "default"
     },
     {
       "id": "path-cross",
       "kind": "path",
       "shape": "plane",
-      "position": [12, 0.0062, -7],
-      "rotation": [-1.5707963267948966, 0, -0.78],
-      "size": [102, 10.8],
-      "collider": { "enabled": true, "friction": 1.35 },
+      "position": [
+        12,
+        0.0062,
+        -7
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        -0.78
+      ],
+      "size": [
+        102,
+        10.8
+      ],
+      "collider": {
+        "enabled": true,
+        "friction": 1.35
+      },
       "materialVariant": "alt"
     },
     {
       "id": "path-plaza",
       "kind": "path",
       "shape": "circle",
-      "position": [-2, 0.0064, 1.5],
-      "rotation": [-1.5707963267948966, 0, 0],
-      "size": [8.6, 8.6],
-      "collider": { "enabled": true, "friction": 1.35 },
+      "position": [
+        -2,
+        0.0064,
+        1.5
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        8.6,
+        8.6
+      ],
+      "collider": {
+        "enabled": true,
+        "friction": 1.35
+      },
       "materialVariant": "default"
     },
     {
       "id": "track-main",
       "kind": "track",
       "shape": "plane",
-      "position": [13.5, 0.0076, 6],
-      "rotation": [-1.5707963267948966, 0, -0.21],
-      "size": [82, 33],
-      "collider": { "enabled": true, "friction": 1.38 },
+      "position": [
+        13.5,
+        0.0076,
+        6
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        -0.21
+      ],
+      "size": [
+        82,
+        33
+      ],
+      "collider": {
+        "enabled": true,
+        "friction": 1.38
+      },
       "materialVariant": "default"
     },
     {
       "id": "water-cove",
       "kind": "water",
       "shape": "circle",
-      "position": [-42, -0.015, 54],
-      "rotation": [-1.5707963267948966, 0, 0.12],
-      "size": [33, 33],
-      "collider": { "enabled": false },
+      "position": [
+        -42,
+        -0.015,
+        54
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0.12
+      ],
+      "size": [
+        33,
+        33
+      ],
+      "collider": {
+        "enabled": false
+      },
       "materialVariant": "default"
     },
     {
       "id": "water-cove-2",
       "kind": "water",
       "shape": "circle",
-      "position": [-56, -0.015, 62],
-      "rotation": [-1.5707963267948966, 0, 0],
-      "size": [17, 17],
-      "collider": { "enabled": false },
+      "position": [
+        -56,
+        -0.015,
+        62
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        17,
+        17
+      ],
+      "collider": {
+        "enabled": false
+      },
       "materialVariant": "alt"
     },
     {
       "id": "water-lagoon-1",
       "kind": "water",
       "shape": "circle",
-      "position": [-20, -0.015, 24],
-      "rotation": [-1.5707963267948966, 0, 0],
-      "size": [10, 10],
-      "collider": { "enabled": false },
+      "position": [
+        -20,
+        -0.015,
+        24
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        10,
+        10
+      ],
+      "collider": {
+        "enabled": false
+      },
       "materialVariant": "alt"
     },
     {
       "id": "water-lagoon-2",
       "kind": "water",
       "shape": "circle",
-      "position": [-14, -0.015, 18],
-      "rotation": [-1.5707963267948966, 0, 0],
-      "size": [7.5, 7.5],
-      "collider": { "enabled": false },
+      "position": [
+        -14,
+        -0.015,
+        18
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        7.5,
+        7.5
+      ],
+      "collider": {
+        "enabled": false
+      },
       "materialVariant": "default"
     },
     {
       "id": "grass-1",
       "kind": "grass",
       "shape": "plane",
-      "position": [-38, 0.01, 26],
-      "rotation": [-1.5707963267948966, 0, 0.22],
-      "size": [35, 26],
-      "collider": { "enabled": false },
+      "position": [
+        -38,
+        0.01,
+        26
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0.22
+      ],
+      "size": [
+        35,
+        26
+      ],
+      "collider": {
+        "enabled": false
+      },
       "materialVariant": "default"
     },
     {
       "id": "grass-2",
       "kind": "grass",
       "shape": "plane",
-      "position": [36, 0.01, -28],
-      "rotation": [-1.5707963267948966, 0, -0.28],
-      "size": [40, 28],
-      "collider": { "enabled": false },
+      "position": [
+        36,
+        0.01,
+        -28
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        -0.28
+      ],
+      "size": [
+        40,
+        28
+      ],
+      "collider": {
+        "enabled": false
+      },
       "materialVariant": "alt"
     },
     {
       "id": "grass-3",
       "kind": "grass",
       "shape": "plane",
-      "position": [-44, 0.01, -36],
-      "rotation": [-1.5707963267948966, 0, -0.45],
-      "size": [31, 24],
-      "collider": { "enabled": false },
+      "position": [
+        -44,
+        0.01,
+        -36
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        -0.45
+      ],
+      "size": [
+        31,
+        24
+      ],
+      "collider": {
+        "enabled": false
+      },
       "materialVariant": "default"
     },
     {
       "id": "grass-4",
       "kind": "grass",
       "shape": "plane",
-      "position": [52, 0.01, 38],
-      "rotation": [-1.5707963267948966, 0, 0.35],
-      "size": [28, 24],
-      "collider": { "enabled": false },
+      "position": [
+        52,
+        0.01,
+        38
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0.35
+      ],
+      "size": [
+        28,
+        24
+      ],
+      "collider": {
+        "enabled": false
+      },
       "materialVariant": "alt"
     },
     {
       "id": "grass-clump-1",
       "kind": "grass",
       "shape": "circle",
-      "position": [-13, 0.01, 22],
-      "rotation": [-1.5707963267948966, 0, 0],
-      "size": [7.2, 7.2],
-      "collider": { "enabled": false },
+      "position": [
+        -13,
+        0.01,
+        22
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        7.2,
+        7.2
+      ],
+      "collider": {
+        "enabled": false
+      },
       "materialVariant": "default"
     },
     {
       "id": "grass-clump-2",
       "kind": "grass",
       "shape": "circle",
-      "position": [8.5, 0.01, 25],
-      "rotation": [-1.5707963267948966, 0, 0],
-      "size": [5.8, 5.8],
-      "collider": { "enabled": false },
+      "position": [
+        8.5,
+        0.01,
+        25
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        5.8,
+        5.8
+      ],
+      "collider": {
+        "enabled": false
+      },
       "materialVariant": "alt"
     },
     {
       "id": "grass-clump-3",
       "kind": "grass",
       "shape": "circle",
-      "position": [34, 0.01, 20],
-      "rotation": [-1.5707963267948966, 0, 0],
-      "size": [7.8, 7.8],
-      "collider": { "enabled": false },
+      "position": [
+        34,
+        0.01,
+        20
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        7.8,
+        7.8
+      ],
+      "collider": {
+        "enabled": false
+      },
       "materialVariant": "default"
     },
     {
       "id": "grass-clump-4",
       "kind": "grass",
       "shape": "circle",
-      "position": [41, 0.01, 3],
-      "rotation": [-1.5707963267948966, 0, 0],
-      "size": [5.2, 5.2],
-      "collider": { "enabled": false },
+      "position": [
+        41,
+        0.01,
+        3
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        5.2,
+        5.2
+      ],
+      "collider": {
+        "enabled": false
+      },
       "materialVariant": "alt"
+    },
+    {
+      "id": "patch-3j2svi-mlpokt40",
+      "kind": "water",
+      "shape": "plane",
+      "position": [
+        -40.97332291786876,
+        -0.02,
+        -4.084229611519138
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        12,
+        6
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-r9uq3r-mlpoktbx",
+      "kind": "water",
+      "shape": "plane",
+      "position": [
+        -41.058191230310065,
+        -0.02,
+        -4.009931802069861
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        12,
+        6
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-oual6o-mlpokype",
+      "kind": "water",
+      "shape": "plane",
+      "position": [
+        -43.80148418785569,
+        -0.02,
+        -6.904873316461995
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        12,
+        6
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-maxhmh-mlpokyt4",
+      "kind": "water",
+      "shape": "plane",
+      "position": [
+        -43.831464021500565,
+        -0.02,
+        -6.888583601591911
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        12,
+        6
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-p428ws-mlpol7ii",
+      "kind": "water",
+      "shape": "plane",
+      "position": [
+        -53.19709385064531,
+        -0.02,
+        -6.581907941681422
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        12,
+        6
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-0nrqzi-mlpol7mg",
+      "kind": "water",
+      "shape": "plane",
+      "position": [
+        -53.193720983805676,
+        -0.02,
+        -6.585280808521045
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        12,
+        6
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-48epq0-mlpol81h",
+      "kind": "water",
+      "shape": "plane",
+      "position": [
+        -55.089759776724314,
+        -0.02,
+        -4.560898273594088
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        12,
+        6
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-cdmb61-mlpol879",
+      "kind": "water",
+      "shape": "plane",
+      "position": [
+        -53.302793621653336,
+        -0.02,
+        -5.363754061654934
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        12,
+        6
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-dtsgpi-mlpol8fv",
+      "kind": "water",
+      "shape": "plane",
+      "position": [
+        -54.39788581570046,
+        -0.02,
+        -4.953480465429813
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        12,
+        6
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-iemzxb-mlpol8r0",
+      "kind": "water",
+      "shape": "plane",
+      "position": [
+        -48.0655697585224,
+        -0.02,
+        -7.714669214474881
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        12,
+        6
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-2r8huf-mlpol8un",
+      "kind": "water",
+      "shape": "plane",
+      "position": [
+        -48.12787287584998,
+        -0.02,
+        -7.672711879587357
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        12,
+        6
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-o9j3xt-mlpolahx",
+      "kind": "water",
+      "shape": "plane",
+      "position": [
+        -49.45727358380202,
+        -0.02,
+        -7.311770037294728
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        12,
+        6
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-j769m9-mlpole4j",
+      "kind": "water",
+      "shape": "circle",
+      "position": [
+        -48.35490782168313,
+        -0.02,
+        -4.396896614001939
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        4,
+        4
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-74de3s-mlpolekq",
+      "kind": "water",
+      "shape": "circle",
+      "position": [
+        -48.495874149002404,
+        -0.02,
+        -4.4086767743933954
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        4,
+        4
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-sxy3l8-mlpolenx",
+      "kind": "water",
+      "shape": "circle",
+      "position": [
+        -48.49117422644328,
+        -0.02,
+        -4.403889685852153
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        4,
+        4
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-c1i866-mlpolfwt",
+      "kind": "water",
+      "shape": "circle",
+      "position": [
+        -46.56181466267851,
+        -0.02,
+        -5.322437072458584
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        4,
+        4
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-s0gqno-mlpom9qw",
+      "kind": "water",
+      "shape": "circle",
+      "position": [
+        -47.70153129430996,
+        -0.02,
+        -6.750450241481509
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        4,
+        4
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-uko8o0-mlpoma5b",
+      "kind": "water",
+      "shape": "circle",
+      "position": [
+        -46.37445616354453,
+        -0.02,
+        -7.294376891599821
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        4,
+        4
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-wgfh2g-mlpomagu",
+      "kind": "water",
+      "shape": "circle",
+      "position": [
+        -44.76054866306291,
+        -0.02,
+        -7.500026391534764
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        4,
+        4
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-58hz6k-mlpome12",
+      "kind": "water",
+      "shape": "plane",
+      "position": [
+        -51.19709385064531,
+        -0.02,
+        -4.581907941681422
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        12,
+        6
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-bpevy1-mlpomexh",
+      "kind": "water",
+      "shape": "circle",
+      "position": [
+        -52.64215355642972,
+        -0.02,
+        -6.375342033314137
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        4,
+        4
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-1q071m-mlpomf1u",
+      "kind": "water",
+      "shape": "circle",
+      "position": [
+        -51.30251903522631,
+        -0.02,
+        -6.8276431538871805
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        4,
+        4
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-gz8t2k-mlpomf2d",
+      "kind": "water",
+      "shape": "circle",
+      "position": [
+        -50.07444438269159,
+        -0.02,
+        -7.260993223554433
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        4,
+        4
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-f3shih-mlpomf2t",
+      "kind": "water",
+      "shape": "circle",
+      "position": [
+        -48.97378269667897,
+        -0.02,
+        -7.661552379631225
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        4,
+        4
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-w19q30-mlpomf3p",
+      "kind": "water",
+      "shape": "circle",
+      "position": [
+        -47.60066601580888,
+        -0.02,
+        -8.069322797081547
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        4,
+        4
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-hu84iz-mlpomfr5",
+      "kind": "water",
+      "shape": "circle",
+      "position": [
+        -49.44200259529872,
+        -0.02,
+        -5.880703150980867
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        4,
+        4
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-c6plci-mlpomg5x",
+      "kind": "water",
+      "shape": "circle",
+      "position": [
+        -51.46680311413305,
+        -0.02,
+        -7.007118980045977
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        4,
+        4
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-gw1bly-mlpomghi",
+      "kind": "water",
+      "shape": "circle",
+      "position": [
+        -51.94478633995241,
+        -0.02,
+        -8.199114326711907
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        4,
+        4
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-yst4vp-mlpomi8g",
+      "kind": "water",
+      "shape": "circle",
+      "position": [
+        -52.767324285889245,
+        -0.02,
+        -5.2430504106831215
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        4,
+        4
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-7rqo78-mlpomida",
+      "kind": "water",
+      "shape": "circle",
+      "position": [
+        -52.330365781896276,
+        -0.02,
+        -3.6093965436078363
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        4,
+        4
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-wiwv0e-mlpomidr",
+      "kind": "water",
+      "shape": "circle",
+      "position": [
+        -52.01443853736733,
+        -0.02,
+        -2.48485402488998
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        4,
+        4
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-elhzbw-mlpomieo",
+      "kind": "water",
+      "shape": "circle",
+      "position": [
+        -51.53007848650337,
+        -0.02,
+        -0.57799400406088
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        4,
+        4
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-bgzdid-mlpomifl",
+      "kind": "water",
+      "shape": "circle",
+      "position": [
+        -51.28277428819405,
+        -0.02,
+        0.621211266382879
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        4,
+        4
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-sp10jq-mlpomixx",
+      "kind": "water",
+      "shape": "circle",
+      "position": [
+        -52.28747071705483,
+        -0.02,
+        -7.576086952359848
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        4,
+        4
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-wzj4sa-mlpon9wa",
+      "kind": "water",
+      "shape": "plane",
+      "position": [
+        -22.354656154873755,
+        -0.02,
+        -20.995340042797856
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        12,
+        6
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-zjecd2-mlpona04",
+      "kind": "water",
+      "shape": "plane",
+      "position": [
+        -22.330903608511306,
+        -0.02,
+        -21.006404186392842
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        12,
+        6
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-9q4tww-mlponadv",
+      "kind": "water",
+      "shape": "plane",
+      "position": [
+        -21.41497531599572,
+        -0.02,
+        -21.380671022349617
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        12,
+        6
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-srae9g-mlponaip",
+      "kind": "water",
+      "shape": "plane",
+      "position": [
+        -19.552867572743637,
+        -0.02,
+        -21.38114368627182
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        12,
+        6
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-jtl4wo-mlponaja",
+      "kind": "water",
+      "shape": "plane",
+      "position": [
+        -18.339267211414953,
+        -0.02,
+        -21.49610143425562
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        12,
+        6
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-g3zy79-mlponayp",
+      "kind": "water",
+      "shape": "plane",
+      "position": [
+        -20.40454013572672,
+        -0.02,
+        -21.52317520378798
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        12,
+        6
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-1yfen4-mlpone7u",
+      "kind": "water",
+      "shape": "plane",
+      "position": [
+        -18.45668180740954,
+        -0.02,
+        -22.755257307400107
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        12,
+        6
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-me9n5c-mlponec1",
+      "kind": "water",
+      "shape": "plane",
+      "position": [
+        -18.469473506083197,
+        -0.02,
+        -22.75325128621941
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        12,
+        6
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-23092q-mlponh6b",
+      "kind": "water",
+      "shape": "plane",
+      "position": [
+        -24.804551684043574,
+        -0.02,
+        -17.594689612004764
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        12,
+        6
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-s2z6tn-mlponhd0",
+      "kind": "water",
+      "shape": "plane",
+      "position": [
+        -22.679777712061515,
+        -0.02,
+        -19.4075621193524
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        12,
+        6
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-yti4jp-mlponhdq",
+      "kind": "water",
+      "shape": "plane",
+      "position": [
+        -17.88690958463738,
+        -0.02,
+        -21.834587927798175
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        12,
+        6
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-lygoj0-mlponhea",
+      "kind": "water",
+      "shape": "plane",
+      "position": [
+        -16.629398428750168,
+        -0.02,
+        -22.141211978829727
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        12,
+        6
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-gdhl63-mlponhgb",
+      "kind": "water",
+      "shape": "plane",
+      "position": [
+        -17.480691497509873,
+        -0.02,
+        -21.135066361830503
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        12,
+        6
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-00671k-mlponhh6",
+      "kind": "water",
+      "shape": "plane",
+      "position": [
+        -18.77707596446019,
+        -0.02,
+        -20.476854397395307
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        12,
+        6
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-q007d9-mlponhjh",
+      "kind": "water",
+      "shape": "plane",
+      "position": [
+        -20.39723496025973,
+        -0.02,
+        -19.6753190363657
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        12,
+        6
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
+    },
+    {
+      "id": "patch-ngjfg1-mlponhof",
+      "kind": "water",
+      "shape": "plane",
+      "position": [
+        -22.42301539328271,
+        -0.02,
+        -18.718979060893417
+      ],
+      "rotation": [
+        -1.5707963267948966,
+        0,
+        0
+      ],
+      "size": [
+        12,
+        6
+      ],
+      "collider": {
+        "enabled": false,
+        "friction": 1.35
+      },
+      "materialVariant": "default"
     }
   ],
   "entities": [
-    { "id": "prop-house-1", "family": "prop", "prefab": "house", "position": [24, 0.2, 13], "rotation": [0, 0.24, 0], "scale": [1, 1, 1] },
-    { "id": "prop-bleachers-1", "family": "prop", "prefab": "bleachers", "position": [-11.5, 0, 23], "rotation": [0, -0.18, 0], "scale": [1, 1, 1] },
-    { "id": "prop-board-1", "family": "prop", "prefab": "scoreboard", "position": [24.8, 0, 24.2], "rotation": [0, -0.2, 0], "scale": [1, 1, 1] },
-    { "id": "prop-bench-1", "family": "prop", "prefab": "bench", "position": [-8, 0, 20], "rotation": [0, 0, 0], "scale": [1, 1, 1] },
-    { "id": "prop-bench-2", "family": "prop", "prefab": "bench_long", "position": [-20, 0, 42], "rotation": [0, 0.18, 0], "scale": [1, 1, 1] },
-    { "id": "prop-lantern-1", "family": "prop", "prefab": "lantern", "position": [-17, 0, 23], "rotation": [0, 0, 0], "scale": [1, 1, 1] },
-    { "id": "prop-lantern-2", "family": "prop", "prefab": "lantern", "position": [12, 0, 30], "rotation": [0, 0, 0], "scale": [1, 1, 1] },
-    { "id": "prop-lantern-3", "family": "prop", "prefab": "lantern", "position": [31, 0, 6], "rotation": [0, 0, 0], "scale": [1, 1, 1] },
-    { "id": "prop-lantern-4", "family": "prop", "prefab": "lantern", "position": [-27, 0, -14], "rotation": [0, 0, 0], "scale": [1, 1, 1] },
-    { "id": "prop-cone-1", "family": "prop", "prefab": "cone", "position": [-24, 0, 13.5], "rotation": [0, 0, 0], "scale": [1, 1, 1] },
-    { "id": "prop-cone-2", "family": "prop", "prefab": "cone", "position": [-27.4, 0, 10.5], "rotation": [0, 0, 0], "scale": [1, 1, 1] },
-    { "id": "prop-cone-3", "family": "prop", "prefab": "cone", "position": [-22.2, 0, 21.2], "rotation": [0, 0.4, 0], "scale": [1, 1, 1] },
-    { "id": "prop-cone-4", "family": "prop", "prefab": "cone", "position": [-19.8, 0, 18.2], "rotation": [0, -0.3, 0], "scale": [1, 1, 1] },
-    { "id": "prop-cone-5", "family": "prop", "prefab": "cone", "position": [16.3, 0, 22], "rotation": [0, 0.1, 0], "scale": [1, 1, 1] },
-    { "id": "prop-sign-1", "family": "prop", "prefab": "arrow_sign", "position": [34, 0.2, 16], "rotation": [0, 0.2, 0], "scale": [1, 1, 1] },
-    { "id": "prop-name-sign-1", "family": "prop", "prefab": "name_sign", "position": [-6, 0, -16], "rotation": [0, -0.06, 0], "scale": [1, 1, 1] },
-    { "id": "prop-bleachers-2", "family": "prop", "prefab": "bleachers", "position": [-6.8, 0, 28.4], "rotation": [0, -0.18, 0], "scale": [1, 1, 1] },
-    { "id": "prop-bench-3", "family": "prop", "prefab": "bench", "position": [4.8, 0, 23.6], "rotation": [0, 0.08, 0], "scale": [1, 1, 1] },
-    { "id": "prop-rock-1", "family": "prop", "prefab": "rock", "position": [-46, 0.35, -30], "rotation": [0, 0.3, 0], "scale": [1.1, 0.9, 1.2] },
-    { "id": "prop-rock-2", "family": "prop", "prefab": "rock", "position": [54, 0.3, 12], "rotation": [0, -0.2, 0], "scale": [0.9, 1, 1] },
-
-    { "id": "push-ball-1", "family": "pushable", "prefab": "push_ball", "position": [-52, 0.48, -18], "rotation": [0, 0, 0], "scale": [0.95, 0.95, 0.95], "physics": { "shape": "ball", "mass": 1.05, "friction": 1, "restitution": 0.12 }, "color": "#ed9f87" },
-    { "id": "push-ball-2", "family": "pushable", "prefab": "push_ball", "position": [50, 0.52, -44], "rotation": [0, 0, 0], "scale": [1.04, 1.04, 1.04], "physics": { "shape": "ball", "mass": 1.2, "friction": 1, "restitution": 0.12 }, "color": "#f2d674" },
-    { "id": "push-ball-3", "family": "pushable", "prefab": "push_ball", "position": [34, 0.58, 42], "rotation": [0, 0, 0], "scale": [1.16, 1.16, 1.16], "physics": { "shape": "ball", "mass": 1.35, "friction": 1, "restitution": 0.12 }, "color": "#ed9f87" },
-    { "id": "push-ball-4", "family": "pushable", "prefab": "push_ball", "position": [-18, 0.45, 56], "rotation": [0, 0, 0], "scale": [0.9, 0.9, 0.9], "physics": { "shape": "ball", "mass": 1.0, "friction": 1, "restitution": 0.1 }, "color": "#f2d674" },
-    { "id": "push-box-1", "family": "pushable", "prefab": "push_box", "position": [61, 0.8, 9], "rotation": [0, 0.2, 0], "scale": [1.2, 1.6, 1.1], "physics": { "shape": "box", "mass": 1.9, "friction": 1, "restitution": 0.1 }, "color": "#9c83b5" },
-    { "id": "push-box-2", "family": "pushable", "prefab": "push_box", "position": [-58, 0.74, 12], "rotation": [0, -0.4, 0], "scale": [1, 1.48, 1], "physics": { "shape": "box", "mass": 1.75, "friction": 1, "restitution": 0.1 }, "color": "#aa7859" },
-    { "id": "push-box-3", "family": "pushable", "prefab": "push_box", "position": [30, 0.7, -60], "rotation": [0, 0.6, 0], "scale": [1.2, 1.4, 1.2], "physics": { "shape": "box", "mass": 1.8, "friction": 1, "restitution": 0.08 }, "color": "#aa7859" },
-    { "id": "push-box-4", "family": "pushable", "prefab": "push_box", "position": [-26, 0.7, -52], "rotation": [0, -0.1, 0], "scale": [1.1, 1.4, 1.15], "physics": { "shape": "box", "mass": 1.8, "friction": 1, "restitution": 0.08 }, "color": "#9c83b5" },
-
-    { "id": "foliage-tree-1", "family": "foliage", "prefab": "tree_pink", "position": [-30, 0, 18], "rotation": [0, 0.2, 0], "scale": [1.4, 1.4, 1.4] },
-    { "id": "foliage-tree-2", "family": "foliage", "prefab": "tree_pink", "position": [26, 0, 33], "rotation": [0, -0.5, 0], "scale": [1.3, 1.3, 1.3] },
-    { "id": "foliage-tree-3", "family": "foliage", "prefab": "tree_yellow", "position": [48, 0, -12], "rotation": [0, 0.8, 0], "scale": [1.3, 1.3, 1.3] },
-    { "id": "foliage-tree-4", "family": "foliage", "prefab": "tree_green", "position": [-48, 0, -22], "rotation": [0, -0.8, 0], "scale": [1.25, 1.25, 1.25] },
-    { "id": "foliage-tree-5", "family": "foliage", "prefab": "tree_green", "position": [58, 0, 44], "rotation": [0, 0.1, 0], "scale": [1.5, 1.5, 1.5] },
-    { "id": "foliage-tree-6", "family": "foliage", "prefab": "tree_yellow", "position": [-56, 0, 40], "rotation": [0, -0.2, 0], "scale": [1.35, 1.35, 1.35] },
-
-    { "id": "foliage-bush-1", "family": "foliage", "prefab": "bush", "position": [-14, 0.5, 28], "rotation": [0, 0.3, 0], "scale": [1.2, 1, 1.1] },
-    { "id": "foliage-bush-2", "family": "foliage", "prefab": "bush", "position": [8, 0.5, 36], "rotation": [0, -0.2, 0], "scale": [1.4, 1.1, 1.3] },
-    { "id": "foliage-bush-3", "family": "foliage", "prefab": "bush", "position": [40, 0.5, 24], "rotation": [0, 0.6, 0], "scale": [1.1, 0.95, 1.05] },
-    { "id": "foliage-bush-4", "family": "foliage", "prefab": "bush", "position": [-34, 0.5, -10], "rotation": [0, 0.1, 0], "scale": [1.3, 1, 1.2] },
-    { "id": "foliage-bush-5", "family": "foliage", "prefab": "bush", "position": [55, 0.5, -33], "rotation": [0, -0.5, 0], "scale": [1.5, 1.2, 1.45] },
-    { "id": "foliage-bush-6", "family": "foliage", "prefab": "bush", "position": [-42, 0.5, 52], "rotation": [0, 0.4, 0], "scale": [1.2, 1, 1.2] },
-
-    { "id": "foliage-grass-1", "family": "foliage", "prefab": "grass_tuft", "position": [-8, 0.22, 11], "rotation": [0, 0.2, 0], "scale": [1, 1.2, 1] },
-    { "id": "foliage-grass-2", "family": "foliage", "prefab": "grass_tuft", "position": [2, 0.22, 14], "rotation": [0, -0.2, 0], "scale": [1.1, 1.3, 1.1] },
-    { "id": "foliage-grass-3", "family": "foliage", "prefab": "grass_tuft", "position": [12, 0.22, 18], "rotation": [0, 0.4, 0], "scale": [0.9, 1.1, 0.9] },
-    { "id": "foliage-grass-4", "family": "foliage", "prefab": "grass_tuft", "position": [22, 0.22, 20], "rotation": [0, -0.4, 0], "scale": [1.2, 1.4, 1.2] },
-    { "id": "foliage-grass-5", "family": "foliage", "prefab": "grass_tuft", "position": [-18, 0.22, 4], "rotation": [0, 0.7, 0], "scale": [1.1, 1.2, 1.1] },
-    { "id": "foliage-grass-6", "family": "foliage", "prefab": "grass_tuft", "position": [30, 0.22, -4], "rotation": [0, -0.3, 0], "scale": [1, 1.1, 1] },
-    { "id": "foliage-grass-7", "family": "foliage", "prefab": "grass_tuft", "position": [48, 0.22, -20], "rotation": [0, 0.2, 0], "scale": [1.15, 1.45, 1.15] },
-    { "id": "foliage-grass-8", "family": "foliage", "prefab": "grass_tuft", "position": [-35, 0.22, -30], "rotation": [0, 0.3, 0], "scale": [1, 1.2, 1] },
-    { "id": "foliage-grass-9", "family": "foliage", "prefab": "grass_tuft", "position": [60, 0.22, 8], "rotation": [0, -0.6, 0], "scale": [0.9, 1, 0.9] },
-    { "id": "foliage-grass-10", "family": "foliage", "prefab": "grass_tuft", "position": [-60, 0.22, 16], "rotation": [0, 0.5, 0], "scale": [1.1, 1.3, 1.1] }
+    {
+      "id": "prop-house-1",
+      "family": "prop",
+      "prefab": "house",
+      "position": [
+        24,
+        0.2,
+        13
+      ],
+      "rotation": [
+        0,
+        0.24,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "prop-bleachers-1",
+      "family": "prop",
+      "prefab": "bleachers",
+      "position": [
+        -11.5,
+        0,
+        23
+      ],
+      "rotation": [
+        0,
+        -0.18,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "prop-board-1",
+      "family": "prop",
+      "prefab": "scoreboard",
+      "position": [
+        24.8,
+        0,
+        24.2
+      ],
+      "rotation": [
+        0,
+        -0.2,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "prop-bench-1",
+      "family": "prop",
+      "prefab": "bench",
+      "position": [
+        -8,
+        0,
+        20
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "prop-bench-2",
+      "family": "prop",
+      "prefab": "bench_long",
+      "position": [
+        -20,
+        0,
+        42
+      ],
+      "rotation": [
+        0,
+        0.18,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "prop-lantern-1",
+      "family": "prop",
+      "prefab": "lantern",
+      "position": [
+        -17,
+        0,
+        23
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "prop-lantern-2",
+      "family": "prop",
+      "prefab": "lantern",
+      "position": [
+        12,
+        0,
+        30
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "prop-lantern-3",
+      "family": "prop",
+      "prefab": "lantern",
+      "position": [
+        31,
+        0,
+        6
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "prop-lantern-4",
+      "family": "prop",
+      "prefab": "lantern",
+      "position": [
+        -27,
+        0,
+        -14
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "prop-cone-1",
+      "family": "prop",
+      "prefab": "cone",
+      "position": [
+        -24,
+        0,
+        13.5
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "prop-cone-2",
+      "family": "prop",
+      "prefab": "cone",
+      "position": [
+        -27.4,
+        0,
+        10.5
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "prop-cone-3",
+      "family": "prop",
+      "prefab": "cone",
+      "position": [
+        -22.2,
+        0,
+        21.2
+      ],
+      "rotation": [
+        0,
+        0.4,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "prop-cone-4",
+      "family": "prop",
+      "prefab": "cone",
+      "position": [
+        -19.8,
+        0,
+        18.2
+      ],
+      "rotation": [
+        0,
+        -0.3,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "prop-cone-5",
+      "family": "prop",
+      "prefab": "cone",
+      "position": [
+        16.3,
+        0,
+        22
+      ],
+      "rotation": [
+        0,
+        0.1,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "prop-sign-1",
+      "family": "prop",
+      "prefab": "arrow_sign",
+      "position": [
+        34,
+        0.2,
+        16
+      ],
+      "rotation": [
+        0,
+        0.2,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "prop-name-sign-1",
+      "family": "prop",
+      "prefab": "name_sign",
+      "position": [
+        -6,
+        0,
+        -16
+      ],
+      "rotation": [
+        0,
+        -0.06,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "prop-bleachers-2",
+      "family": "prop",
+      "prefab": "bleachers",
+      "position": [
+        -6.8,
+        0,
+        28.4
+      ],
+      "rotation": [
+        0,
+        -0.18,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "prop-bench-3",
+      "family": "prop",
+      "prefab": "bench",
+      "position": [
+        4.8,
+        0,
+        23.6
+      ],
+      "rotation": [
+        0,
+        0.08,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "prop-rock-1",
+      "family": "prop",
+      "prefab": "rock",
+      "position": [
+        -46,
+        0.35,
+        -30
+      ],
+      "rotation": [
+        0,
+        0.3,
+        0
+      ],
+      "scale": [
+        1.1,
+        0.9,
+        1.2
+      ]
+    },
+    {
+      "id": "prop-rock-2",
+      "family": "prop",
+      "prefab": "rock",
+      "position": [
+        54,
+        0.3,
+        12
+      ],
+      "rotation": [
+        0,
+        -0.2,
+        0
+      ],
+      "scale": [
+        0.9,
+        1,
+        1
+      ]
+    },
+    {
+      "id": "push-ball-1",
+      "family": "pushable",
+      "prefab": "push_ball",
+      "position": [
+        -52,
+        0.48,
+        -18
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        0.95,
+        0.95,
+        0.95
+      ],
+      "physics": {
+        "shape": "ball",
+        "mass": 1.05,
+        "friction": 1,
+        "restitution": 0.12
+      },
+      "color": "#ed9f87"
+    },
+    {
+      "id": "push-ball-2",
+      "family": "pushable",
+      "prefab": "push_ball",
+      "position": [
+        50,
+        0.52,
+        -44
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        1.04,
+        1.04,
+        1.04
+      ],
+      "physics": {
+        "shape": "ball",
+        "mass": 1.2,
+        "friction": 1,
+        "restitution": 0.12
+      },
+      "color": "#f2d674"
+    },
+    {
+      "id": "push-ball-3",
+      "family": "pushable",
+      "prefab": "push_ball",
+      "position": [
+        34,
+        0.58,
+        42
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        1.16,
+        1.16,
+        1.16
+      ],
+      "physics": {
+        "shape": "ball",
+        "mass": 1.35,
+        "friction": 1,
+        "restitution": 0.12
+      },
+      "color": "#ed9f87"
+    },
+    {
+      "id": "push-ball-4",
+      "family": "pushable",
+      "prefab": "push_ball",
+      "position": [
+        -18,
+        0.45,
+        56
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        0.9,
+        0.9,
+        0.9
+      ],
+      "physics": {
+        "shape": "ball",
+        "mass": 1,
+        "friction": 1,
+        "restitution": 0.1
+      },
+      "color": "#f2d674"
+    },
+    {
+      "id": "push-box-1",
+      "family": "pushable",
+      "prefab": "push_box",
+      "position": [
+        61,
+        0.8,
+        9
+      ],
+      "rotation": [
+        0,
+        0.2,
+        0
+      ],
+      "scale": [
+        1.2,
+        1.6,
+        1.1
+      ],
+      "physics": {
+        "shape": "box",
+        "mass": 1.9,
+        "friction": 1,
+        "restitution": 0.1
+      },
+      "color": "#9c83b5"
+    },
+    {
+      "id": "push-box-2",
+      "family": "pushable",
+      "prefab": "push_box",
+      "position": [
+        -58,
+        0.74,
+        12
+      ],
+      "rotation": [
+        0,
+        -0.4,
+        0
+      ],
+      "scale": [
+        1,
+        1.48,
+        1
+      ],
+      "physics": {
+        "shape": "box",
+        "mass": 1.75,
+        "friction": 1,
+        "restitution": 0.1
+      },
+      "color": "#aa7859"
+    },
+    {
+      "id": "push-box-3",
+      "family": "pushable",
+      "prefab": "push_box",
+      "position": [
+        30,
+        0.7,
+        -60
+      ],
+      "rotation": [
+        0,
+        0.6,
+        0
+      ],
+      "scale": [
+        1.2,
+        1.4,
+        1.2
+      ],
+      "physics": {
+        "shape": "box",
+        "mass": 1.8,
+        "friction": 1,
+        "restitution": 0.08
+      },
+      "color": "#aa7859"
+    },
+    {
+      "id": "push-box-4",
+      "family": "pushable",
+      "prefab": "push_box",
+      "position": [
+        -26,
+        0.7,
+        -52
+      ],
+      "rotation": [
+        0,
+        -0.1,
+        0
+      ],
+      "scale": [
+        1.1,
+        1.4,
+        1.15
+      ],
+      "physics": {
+        "shape": "box",
+        "mass": 1.8,
+        "friction": 1,
+        "restitution": 0.08
+      },
+      "color": "#9c83b5"
+    },
+    {
+      "id": "foliage-tree-1",
+      "family": "foliage",
+      "prefab": "tree_pink",
+      "position": [
+        -30,
+        0,
+        18
+      ],
+      "rotation": [
+        0,
+        0.2,
+        0
+      ],
+      "scale": [
+        1.4,
+        1.4,
+        1.4
+      ]
+    },
+    {
+      "id": "foliage-tree-2",
+      "family": "foliage",
+      "prefab": "tree_pink",
+      "position": [
+        26,
+        0,
+        33
+      ],
+      "rotation": [
+        0,
+        -0.5,
+        0
+      ],
+      "scale": [
+        1.3,
+        1.3,
+        1.3
+      ]
+    },
+    {
+      "id": "foliage-tree-3",
+      "family": "foliage",
+      "prefab": "tree_yellow",
+      "position": [
+        48,
+        0,
+        -12
+      ],
+      "rotation": [
+        0,
+        0.8,
+        0
+      ],
+      "scale": [
+        1.3,
+        1.3,
+        1.3
+      ]
+    },
+    {
+      "id": "foliage-tree-4",
+      "family": "foliage",
+      "prefab": "tree_green",
+      "position": [
+        -48,
+        0,
+        -22
+      ],
+      "rotation": [
+        0,
+        -0.8,
+        0
+      ],
+      "scale": [
+        1.25,
+        1.25,
+        1.25
+      ]
+    },
+    {
+      "id": "foliage-tree-5",
+      "family": "foliage",
+      "prefab": "tree_green",
+      "position": [
+        58,
+        0,
+        44
+      ],
+      "rotation": [
+        0,
+        0.1,
+        0
+      ],
+      "scale": [
+        1.5,
+        1.5,
+        1.5
+      ]
+    },
+    {
+      "id": "foliage-tree-6",
+      "family": "foliage",
+      "prefab": "tree_yellow",
+      "position": [
+        -56,
+        0,
+        40
+      ],
+      "rotation": [
+        0,
+        -0.2,
+        0
+      ],
+      "scale": [
+        1.35,
+        1.35,
+        1.35
+      ]
+    },
+    {
+      "id": "foliage-bush-1",
+      "family": "foliage",
+      "prefab": "bush",
+      "position": [
+        -14,
+        0.5,
+        28
+      ],
+      "rotation": [
+        0,
+        0.3,
+        0
+      ],
+      "scale": [
+        1.2,
+        1,
+        1.1
+      ]
+    },
+    {
+      "id": "foliage-bush-2",
+      "family": "foliage",
+      "prefab": "bush",
+      "position": [
+        8,
+        0.5,
+        36
+      ],
+      "rotation": [
+        0,
+        -0.2,
+        0
+      ],
+      "scale": [
+        1.4,
+        1.1,
+        1.3
+      ]
+    },
+    {
+      "id": "foliage-bush-3",
+      "family": "foliage",
+      "prefab": "bush",
+      "position": [
+        40,
+        0.5,
+        24
+      ],
+      "rotation": [
+        0,
+        0.6,
+        0
+      ],
+      "scale": [
+        1.1,
+        0.95,
+        1.05
+      ]
+    },
+    {
+      "id": "foliage-bush-4",
+      "family": "foliage",
+      "prefab": "bush",
+      "position": [
+        -34,
+        0.5,
+        -10
+      ],
+      "rotation": [
+        0,
+        0.1,
+        0
+      ],
+      "scale": [
+        1.3,
+        1,
+        1.2
+      ]
+    },
+    {
+      "id": "foliage-bush-5",
+      "family": "foliage",
+      "prefab": "bush",
+      "position": [
+        55,
+        0.5,
+        -33
+      ],
+      "rotation": [
+        0,
+        -0.5,
+        0
+      ],
+      "scale": [
+        1.5,
+        1.2,
+        1.45
+      ]
+    },
+    {
+      "id": "foliage-bush-6",
+      "family": "foliage",
+      "prefab": "bush",
+      "position": [
+        -42,
+        0.5,
+        52
+      ],
+      "rotation": [
+        0,
+        0.4,
+        0
+      ],
+      "scale": [
+        1.2,
+        1,
+        1.2
+      ]
+    },
+    {
+      "id": "foliage-grass-1",
+      "family": "foliage",
+      "prefab": "grass_tuft",
+      "position": [
+        -8,
+        0.22,
+        11
+      ],
+      "rotation": [
+        0,
+        0.2,
+        0
+      ],
+      "scale": [
+        1,
+        1.2,
+        1
+      ]
+    },
+    {
+      "id": "foliage-grass-2",
+      "family": "foliage",
+      "prefab": "grass_tuft",
+      "position": [
+        2,
+        0.22,
+        14
+      ],
+      "rotation": [
+        0,
+        -0.2,
+        0
+      ],
+      "scale": [
+        1.1,
+        1.3,
+        1.1
+      ]
+    },
+    {
+      "id": "foliage-grass-3",
+      "family": "foliage",
+      "prefab": "grass_tuft",
+      "position": [
+        12,
+        0.22,
+        18
+      ],
+      "rotation": [
+        0,
+        0.4,
+        0
+      ],
+      "scale": [
+        0.9,
+        1.1,
+        0.9
+      ]
+    },
+    {
+      "id": "foliage-grass-4",
+      "family": "foliage",
+      "prefab": "grass_tuft",
+      "position": [
+        22,
+        0.22,
+        20
+      ],
+      "rotation": [
+        0,
+        -0.4,
+        0
+      ],
+      "scale": [
+        1.2,
+        1.4,
+        1.2
+      ]
+    },
+    {
+      "id": "foliage-grass-5",
+      "family": "foliage",
+      "prefab": "grass_tuft",
+      "position": [
+        -18,
+        0.22,
+        4
+      ],
+      "rotation": [
+        0,
+        0.7,
+        0
+      ],
+      "scale": [
+        1.1,
+        1.2,
+        1.1
+      ]
+    },
+    {
+      "id": "foliage-grass-6",
+      "family": "foliage",
+      "prefab": "grass_tuft",
+      "position": [
+        30,
+        0.22,
+        -4
+      ],
+      "rotation": [
+        0,
+        -0.3,
+        0
+      ],
+      "scale": [
+        1,
+        1.1,
+        1
+      ]
+    },
+    {
+      "id": "foliage-grass-7",
+      "family": "foliage",
+      "prefab": "grass_tuft",
+      "position": [
+        48,
+        0.22,
+        -20
+      ],
+      "rotation": [
+        0,
+        0.2,
+        0
+      ],
+      "scale": [
+        1.15,
+        1.45,
+        1.15
+      ]
+    },
+    {
+      "id": "foliage-grass-8",
+      "family": "foliage",
+      "prefab": "grass_tuft",
+      "position": [
+        -35,
+        0.22,
+        -30
+      ],
+      "rotation": [
+        0,
+        0.3,
+        0
+      ],
+      "scale": [
+        1,
+        1.2,
+        1
+      ]
+    },
+    {
+      "id": "foliage-grass-9",
+      "family": "foliage",
+      "prefab": "grass_tuft",
+      "position": [
+        60,
+        0.22,
+        8
+      ],
+      "rotation": [
+        0,
+        -0.6,
+        0
+      ],
+      "scale": [
+        0.9,
+        1,
+        0.9
+      ]
+    },
+    {
+      "id": "foliage-grass-10",
+      "family": "foliage",
+      "prefab": "grass_tuft",
+      "position": [
+        -60,
+        0.22,
+        16
+      ],
+      "rotation": [
+        0,
+        0.5,
+        0
+      ],
+      "scale": [
+        1.1,
+        1.3,
+        1.1
+      ]
+    },
+    {
+      "id": "foliage-kjkv8l-mlponf5t",
+      "family": "foliage",
+      "prefab": "tree_pink",
+      "position": [
+        -26.162618527359264,
+        0,
+        -19.369625957674607
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        1.3,
+        1.3,
+        1.3
+      ]
+    }
   ]
 }
