@@ -71,6 +71,7 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
 
         const friction = patch.collider.friction ?? 1.3
         const height = 0.16
+        const colliderRotation: [number, number, number] = [0, patch.rotation[2], 0]
 
         if (patch.shape === 'circle') {
           return (
@@ -78,7 +79,7 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
               key={`collider-${patch.id}`}
               args={[patch.size[0], height, patch.size[0]]}
               position={[patch.position[0], patch.position[1] - height, patch.position[2]]}
-              rotation={patch.rotation}
+              rotation={colliderRotation}
               friction={friction}
             />
           )
@@ -89,7 +90,7 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
             key={`collider-${patch.id}`}
             args={[patch.size[0] / 2, height, patch.size[1] / 2]}
             position={[patch.position[0], patch.position[1] - height, patch.position[2]]}
-            rotation={patch.rotation}
+            rotation={colliderRotation}
             friction={friction}
           />
         )
