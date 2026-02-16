@@ -2,7 +2,7 @@ import { OrbitControls, TransformControls } from '@react-three/drei'
 import { useFrame, useThree } from '@react-three/fiber'
 import { Physics } from '@react-three/rapier'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Vector3, type Object3D } from 'three'
+import { MOUSE, Vector3, type Object3D } from 'three'
 import { artDirectionDefaults, type ArtDirectionConfig } from '../game/config/artDirection'
 import { LevelEntities } from '../game/world/LevelEntities'
 import { LevelTerrain } from '../game/world/LevelTerrain'
@@ -107,6 +107,9 @@ export function EditorViewport({
         rotation={[-Math.PI / 2, 0, 0]}
         position={[0, 0.001, 0]}
         onPointerDown={(event) => {
+          if (event.button !== 0) {
+            return
+          }
           event.stopPropagation()
           paintActiveRef.current = true
           const point = event.point.clone()
@@ -129,6 +132,9 @@ export function EditorViewport({
           paintActiveRef.current = false
           lastPaintRef.current = null
         }}
+        onContextMenu={(event) => {
+          event.nativeEvent.preventDefault()
+        }}
       >
         <planeGeometry args={[config.world.size, config.world.size, 1, 1]} />
         <meshBasicMaterial transparent opacity={0} depthWrite={false} />
@@ -144,6 +150,11 @@ export function EditorViewport({
         enableZoom
         minZoom={16}
         maxZoom={72}
+        mouseButtons={{
+          LEFT: MOUSE.ROTATE,
+          MIDDLE: MOUSE.DOLLY,
+          RIGHT: MOUSE.PAN,
+        }}
       />
 
       {selection && selectedObject ? (
