@@ -98,15 +98,23 @@ export function Terrain({ config }: TerrainProps) {
 
         {curbSegments.map((segment) => (
           <group key={`curb-${segment.x}`}>
-            <CuboidCollider args={[3.18 / 2, 0.08, 1.5 / 2]} position={[segment.x, 0.08, -17]} friction={1.5} />
+            <CuboidCollider args={[3.18 / 2, 0.14, 1.5 / 2]} position={[segment.x, 0.14, -17]} friction={1.55} />
+            <CuboidCollider args={[2.72 / 2, 0.06, 0.62 / 2]} position={[segment.x, 0.28, -16.56]} friction={1.55} />
             <mesh
               receiveShadow
               castShadow
-              position={[segment.x, 0.0065, -17]}
-              rotation={[-Math.PI / 2, 0, 0]}
+              position={[segment.x, 0.01, -17]}
             >
-              <planeGeometry args={[3.18, 1.5]} />
+              <boxGeometry args={[3.18, 0.05, 1.5]} />
               <meshStandardMaterial color={segment.color} roughness={0.66} metalness={0.02} />
+            </mesh>
+            <mesh receiveShadow castShadow position={[segment.x, 0.22, -16.56]}>
+              <boxGeometry args={[2.72, 0.04, 0.62]} />
+              <meshStandardMaterial
+                color={segment.color === '#de4d36' ? '#b9382a' : '#e7d8d8'}
+                roughness={0.68}
+                metalness={0.02}
+              />
             </mesh>
           </group>
         ))}

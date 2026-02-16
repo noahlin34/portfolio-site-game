@@ -252,11 +252,12 @@ export function VehiclePhysicsController({ controlsRef, config }: VehiclePhysics
         mass={2.1}
         linearDamping={0.32}
         angularDamping={0.72}
-        friction={1.2}
-        restitution={0.08}
-        enabledRotations={[false, true, false]}
-        canSleep={false}
-      >
+      friction={1.2}
+      restitution={0.08}
+      enabledRotations={[false, true, false]}
+      ccd
+      canSleep={false}
+    >
         <CuboidCollider args={[0.86, 0.38, 1.7]} />
         <VehicleVisual
           chassisRef={chassisRef}
