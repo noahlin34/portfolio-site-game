@@ -27,18 +27,22 @@ const applyMatrices = (instance: InstancedMesh | null, matrices: Matrix4[]) => {
 
 export function Foliage({ config }: FoliageProps) {
   const grassRef = useRef<InstancedMesh>(null)
+  const tallGrassRef = useRef<InstancedMesh>(null)
   const bushRef = useRef<InstancedMesh>(null)
+  const flowerRef = useRef<InstancedMesh>(null)
   const trunkRef = useRef<InstancedMesh>(null)
   const pinkCanopyRef = useRef<InstancedMesh>(null)
   const yellowCanopyRef = useRef<InstancedMesh>(null)
   const greenCanopyRef = useRef<InstancedMesh>(null)
 
-  const { grassMatrices, bushMatrices, trees } = useMemo(() => {
+  const { grassMatrices, tallGrassMatrices, bushMatrices, flowerMatrices, trees } = useMemo(() => {
     const rng = createRng(config.world.seed + 101)
     const half = config.world.size * 0.5
 
     const grassMatricesData: Matrix4[] = []
+    const tallGrassMatricesData: Matrix4[] = []
     const bushMatricesData: Matrix4[] = []
+    const flowerMatricesData: Matrix4[] = []
     const treeData: TreePlacement[] = []
 
     let grassAttempts = 0
@@ -53,6 +57,36 @@ export function Foliage({ config }: FoliageProps) {
 
       const baseScale = randomRange(rng, 0.52, 1.58)
       grassMatricesData.push(composeMatrix(x, 0.14, z, baseScale, randomRange(rng, 0.85, 1.45), baseScale, randomRange(rng, 0, Math.PI * 2)))
+
+      if (rng() > 0.7) {
+        const tallScale = baseScale * randomRange(rng, 0.55, 0.95)
+        tallGrassMatricesData.push(
+          composeMatrix(
+            x + randomRange(rng, -0.45, 0.45),
+            0.2,
+            z + randomRange(rng, -0.45, 0.45),
+            tallScale,
+            randomRange(rng, 1.1, 1.9),
+            tallScale,
+            randomRange(rng, 0, Math.PI * 2),
+          ),
+        )
+      }
+
+      if (rng() > 0.77) {
+        const flowerScale = randomRange(rng, 0.08, 0.16)
+        flowerMatricesData.push(
+          composeMatrix(
+            x + randomRange(rng, -0.5, 0.5),
+            randomRange(rng, 0.24, 0.38),
+            z + randomRange(rng, -0.5, 0.5),
+            flowerScale,
+            flowerScale * randomRange(rng, 0.7, 1.4),
+            flowerScale,
+            randomRange(rng, 0, Math.PI * 2),
+          ),
+        )
+      }
     }
 
     let bushAttempts = 0
@@ -99,7 +133,9 @@ export function Foliage({ config }: FoliageProps) {
 
     return {
       grassMatrices: grassMatricesData,
+      tallGrassMatrices: tallGrassMatricesData,
       bushMatrices: bushMatricesData,
+      flowerMatrices: flowerMatricesData,
       trees: treeData,
     }
   }, [config.density.bushes, config.density.grassTufts, config.density.trees, config.world.seed, config.world.size])
@@ -111,12 +147,23 @@ export function Foliage({ config }: FoliageProps) {
 
   useLayoutEffect(() => {
     applyMatrices(grassRef.current, grassMatrices)
+    applyMatrices(tallGrassRef.current, tallGrassMatrices)
     applyMatrices(bushRef.current, bushMatrices)
+    applyMatrices(flowerRef.current, flowerMatrices)
     applyMatrices(trunkRef.current, trunkMatrices)
     applyMatrices(pinkCanopyRef.current, pinkCanopyMatrices)
     applyMatrices(yellowCanopyRef.current, yellowCanopyMatrices)
     applyMatrices(greenCanopyRef.current, greenCanopyMatrices)
-  }, [grassMatrices, bushMatrices, trunkMatrices, pinkCanopyMatrices, yellowCanopyMatrices, greenCanopyMatrices])
+  }, [
+    grassMatrices,
+    tallGrassMatrices,
+    bushMatrices,
+    flowerMatrices,
+    trunkMatrices,
+    pinkCanopyMatrices,
+    yellowCanopyMatrices,
+    greenCanopyMatrices,
+  ])
 
   return (
     <group>
@@ -125,9 +172,19 @@ export function Foliage({ config }: FoliageProps) {
         <meshStandardMaterial color={config.palette.grassA} roughness={0.96} metalness={0.01} />
       </instancedMesh>
 
+      <instancedMesh ref={tallGrassRef} args={[undefined, undefined, tallGrassMatrices.length]} castShadow receiveShadow>
+        <coneGeometry args={[0.26, 1.7, 5]} />
+        <meshStandardMaterial color="#8f9841" roughness={0.95} metalness={0.01} />
+      </instancedMesh>
+
       <instancedMesh ref={bushRef} args={[undefined, undefined, bushMatrices.length]} castShadow receiveShadow>
         <dodecahedronGeometry args={[0.75, 0]} />
         <meshStandardMaterial color={config.palette.grassB} roughness={0.88} metalness={0.02} />
+      </instancedMesh>
+
+      <instancedMesh ref={flowerRef} args={[undefined, undefined, flowerMatrices.length]}>
+        <octahedronGeometry args={[0.8, 0]} />
+        <meshStandardMaterial color="#fff8e8" emissive="#ffe7bc" emissiveIntensity={0.48} roughness={0.36} metalness={0.03} />
       </instancedMesh>
 
       <instancedMesh ref={trunkRef} args={[undefined, undefined, trunkMatrices.length]} castShadow receiveShadow>

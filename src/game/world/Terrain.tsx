@@ -54,6 +54,16 @@ export function Terrain({ config }: TerrainProps) {
         <meshStandardMaterial map={pathTexture ?? undefined} color={config.palette.path} roughness={0.88} metalness={0.03} />
       </mesh>
 
+      <mesh rotation={[-Math.PI / 2, 0.12, 0]} position={[-45, -0.02, 58]}>
+        <planeGeometry args={[78, 46, 1, 1]} />
+        <meshStandardMaterial color="#62bfd1" roughness={0.28} metalness={0.16} />
+      </mesh>
+
+      <mesh receiveShadow rotation={[-Math.PI / 2, 0.12, 0]} position={[-45, 0.012, 58]}>
+        <planeGeometry args={[82, 50, 1, 1]} />
+        <meshStandardMaterial color="#8ca95e" roughness={0.94} metalness={0.01} transparent opacity={0.88} />
+      </mesh>
+
       {grassIslands.map((island, index) => (
         <mesh
           key={`grass-island-${index}`}

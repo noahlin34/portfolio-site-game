@@ -71,6 +71,21 @@ export function Props({ config }: PropsProps) {
 
   return (
     <group>
+      <group position={[34, 0.2, 16]}>
+        <mesh castShadow position={[0, 0.95, 0]}>
+          <boxGeometry args={[0.2, 1.9, 0.2]} />
+          <meshStandardMaterial color="#6e6988" roughness={0.58} metalness={0.24} />
+        </mesh>
+        <mesh castShadow position={[0, 1.8, 0]}>
+          <coneGeometry args={[0.42, 0.76, 5]} />
+          <meshStandardMaterial color="#e96f45" roughness={0.52} metalness={0.03} />
+        </mesh>
+        <mesh castShadow position={[0.56, 1.4, 0]} rotation={[0, 0, Math.PI * 0.5]}>
+          <coneGeometry args={[0.28, 0.6, 5]} />
+          <meshStandardMaterial color="#58a6d9" roughness={0.52} metalness={0.03} />
+        </mesh>
+      </group>
+
       <group position={[24, 0.2, 13]}>
         <mesh castShadow receiveShadow>
           <boxGeometry args={[4.5, 2.8, 3.8]} />
@@ -106,6 +121,21 @@ export function Props({ config }: PropsProps) {
         <mesh castShadow position={[0, 0.66, -0.26]}>
           <boxGeometry args={[3.1, 0.14, 0.16]} />
           <meshStandardMaterial color="#765134" roughness={0.88} metalness={0.04} />
+        </mesh>
+      </group>
+
+      <group position={[-20, 0, 42]} rotation={[0, 0.18, 0]}>
+        <mesh castShadow position={[0, 0.36, 0]}>
+          <boxGeometry args={[7.2, 0.22, 1.16]} />
+          <meshStandardMaterial color={config.palette.propWood} roughness={0.82} metalness={0.05} />
+        </mesh>
+        <mesh castShadow position={[-3.1, 0.62, 0]}>
+          <boxGeometry args={[0.2, 0.72, 0.2]} />
+          <meshStandardMaterial color={config.palette.propWood} roughness={0.82} metalness={0.05} />
+        </mesh>
+        <mesh castShadow position={[3.1, 0.62, 0]}>
+          <boxGeometry args={[0.2, 0.72, 0.2]} />
+          <meshStandardMaterial color={config.palette.propWood} roughness={0.82} metalness={0.05} />
         </mesh>
       </group>
 
