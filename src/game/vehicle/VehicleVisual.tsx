@@ -113,7 +113,11 @@ export function VehicleVisual({ chassisRef, frontLeftSteerRef, frontRightSteerRe
         </mesh>
         <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
           <cylinderGeometry args={[0.2, 0.2, 0.14, 22]} />
-          <meshStandardMaterial color="#d6dae2" roughness={0.24} metalness={0.9} />
+          <meshStandardMaterial color="#d34f57" roughness={0.28} metalness={0.68} />
+        </mesh>
+        <mesh rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.1, 0.1, 0.15, 14]} />
+          <meshStandardMaterial color="#2a2b34" roughness={0.42} metalness={0.34} />
         </mesh>
       </group>
 
@@ -124,7 +128,11 @@ export function VehicleVisual({ chassisRef, frontLeftSteerRef, frontRightSteerRe
         </mesh>
         <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
           <cylinderGeometry args={[0.2, 0.2, 0.14, 22]} />
-          <meshStandardMaterial color="#d6dae2" roughness={0.24} metalness={0.9} />
+          <meshStandardMaterial color="#d34f57" roughness={0.28} metalness={0.68} />
+        </mesh>
+        <mesh rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.1, 0.1, 0.15, 14]} />
+          <meshStandardMaterial color="#2a2b34" roughness={0.42} metalness={0.34} />
         </mesh>
       </group>
 
@@ -135,7 +143,11 @@ export function VehicleVisual({ chassisRef, frontLeftSteerRef, frontRightSteerRe
         </mesh>
         <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
           <cylinderGeometry args={[0.2, 0.2, 0.14, 22]} />
-          <meshStandardMaterial color="#d6dae2" roughness={0.24} metalness={0.9} />
+          <meshStandardMaterial color="#d34f57" roughness={0.28} metalness={0.68} />
+        </mesh>
+        <mesh rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.1, 0.1, 0.15, 14]} />
+          <meshStandardMaterial color="#2a2b34" roughness={0.42} metalness={0.34} />
         </mesh>
       </group>
 
@@ -146,7 +158,11 @@ export function VehicleVisual({ chassisRef, frontLeftSteerRef, frontRightSteerRe
         </mesh>
         <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
           <cylinderGeometry args={[0.2, 0.2, 0.14, 22]} />
-          <meshStandardMaterial color="#d6dae2" roughness={0.24} metalness={0.9} />
+          <meshStandardMaterial color="#d34f57" roughness={0.28} metalness={0.68} />
+        </mesh>
+        <mesh rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.1, 0.1, 0.15, 14]} />
+          <meshStandardMaterial color="#2a2b34" roughness={0.42} metalness={0.34} />
         </mesh>
       </group>
     </group>
