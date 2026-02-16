@@ -33,14 +33,14 @@ export function EnvironmentScene({ controlsRef, config, level }: EnvironmentScen
 
       <ContactShadows
         position={[0, 0.016, 0]}
-        opacity={0.42}
+        opacity={0.3}
         scale={config.world.size * 0.9}
-        blur={2.8}
+        blur={2.2}
         far={config.world.size * 0.78}
         color="#5a3457"
-        resolution={2048}
-        smooth
-        frames={Infinity}
+        resolution={768}
+        smooth={false}
+        frames={1}
       />
 
       <Effects config={config} />

@@ -30,8 +30,8 @@ export function Environment({ config }: EnvironmentProps) {
         shadow-camera-right={config.lighting.shadowBounds}
         shadow-camera-top={config.lighting.shadowBounds}
         shadow-camera-bottom={-config.lighting.shadowBounds}
-        shadow-normalBias={0.02}
-        shadow-bias={-0.0001}
+        shadow-normalBias={0.03}
+        shadow-bias={-0.00005}
         shadow-radius={3}
       />
       <directionalLight

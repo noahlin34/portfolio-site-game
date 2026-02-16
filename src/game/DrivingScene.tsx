@@ -19,13 +19,14 @@ export function DrivingScene({ controlsRef, level }: SceneProps) {
     <Canvas
       orthographic
       shadows
+      dpr={[1, 1.5]}
       camera={{
         position: config.camera.offset,
         zoom: config.camera.zoom,
         near: 0.1,
         far: 320,
       }}
-      gl={{ antialias: true }}
+      gl={{ antialias: true, powerPreference: 'high-performance' }}
       onCreated={({ gl }) => {
         gl.toneMapping = ACESFilmicToneMapping
         gl.toneMappingExposure = config.post.exposure
@@ -37,7 +38,7 @@ export function DrivingScene({ controlsRef, level }: SceneProps) {
 
       <EffectComposer multisampling={2} enableNormalPass={false}>
         <N8AO
-          quality="high"
+          quality="medium"
           aoRadius={config.post.aoRadius}
           distanceFalloff={config.post.aoDistanceFalloff}
           intensity={config.post.aoIntensity}

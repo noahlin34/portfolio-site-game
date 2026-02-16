@@ -168,7 +168,7 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
         )
       })}
 
-      <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]}>
+      <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.03, 0]}>
         <planeGeometry args={[config.world.size, config.world.size, 1, 1]} />
         <meshStandardMaterial
           map={asphaltTexture ?? undefined}
@@ -199,6 +199,7 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
                 }
                 objectRefs.current[`terrain:${patch.id}`] = node
               }}
+              renderOrder={2}
               receiveShadow
               rotation={patch.rotation}
               position={patch.position}
@@ -233,6 +234,9 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
                   }}
                   transparent
                   depthWrite={false}
+                  polygonOffset
+                  polygonOffsetFactor={-1}
+                  polygonOffsetUnits={-1}
                 />
               ) : (
                 <meshStandardMaterial
@@ -242,6 +246,9 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
                   metalness={materialProps.metalness}
                   emissive={patch.kind === 'water' ? '#1b3964' : '#000000'}
                   emissiveIntensity={patch.kind === 'water' ? 0.22 : 0}
+                  polygonOffset
+                  polygonOffsetFactor={-1}
+                  polygonOffsetUnits={-1}
                 />
               )}
             </mesh>

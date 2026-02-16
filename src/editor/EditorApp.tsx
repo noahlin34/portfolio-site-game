@@ -330,8 +330,9 @@ export function EditorApp({ initialLevel, onSaveLevel, onReloadLevel }: EditorAp
         <Canvas
           orthographic
           shadows
+          dpr={[1, 1.5]}
           camera={{ position: artDirectionDefaults.camera.offset, zoom: 40, near: 0.1, far: 480 }}
-          gl={{ antialias: true }}
+          gl={{ antialias: true, powerPreference: 'high-performance' }}
           onCreated={({ gl }) => {
             gl.toneMapping = ACESFilmicToneMapping
             gl.toneMappingExposure = artDirectionDefaults.post.exposure
@@ -379,7 +380,7 @@ export function EditorApp({ initialLevel, onSaveLevel, onReloadLevel }: EditorAp
           />
           <EffectComposer multisampling={2} enableNormalPass={false}>
             <N8AO
-              quality="high"
+              quality="medium"
               aoRadius={artDirectionDefaults.post.aoRadius}
               distanceFalloff={artDirectionDefaults.post.aoDistanceFalloff}
               intensity={artDirectionDefaults.post.aoIntensity * 0.92}
