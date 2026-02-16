@@ -96,10 +96,11 @@ export function Terrain({ config }: TerrainProps) {
           />
         </mesh>
 
+        <CuboidCollider args={[73.8 / 2, 0.14, 1.5 / 2]} position={[0, 0.14, -17]} friction={1.55} />
+        <CuboidCollider args={[73.8 / 2, 0.06, 0.62 / 2]} position={[0, 0.28, -16.56]} friction={1.55} />
+
         {curbSegments.map((segment) => (
           <group key={`curb-${segment.x}`}>
-            <CuboidCollider args={[3.18 / 2, 0.14, 1.5 / 2]} position={[segment.x, 0.14, -17]} friction={1.55} />
-            <CuboidCollider args={[2.72 / 2, 0.06, 0.62 / 2]} position={[segment.x, 0.28, -16.56]} friction={1.55} />
             <mesh
               receiveShadow
               castShadow
