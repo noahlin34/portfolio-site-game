@@ -47,10 +47,11 @@ export function EditorViewport({
   const objectRefs = useRef<Record<string, Object3D | null>>({})
   const paintActiveRef = useRef(false)
   const lastPaintRef = useRef<Vector3 | null>(null)
+  const panModifierRef = useRef(false)
   const [orbitEnabled, setOrbitEnabled] = useState(true)
   const [selectedObject, setSelectedObject] = useState<Object3D | undefined>(undefined)
   const selectedObjectRef = useRef<Object3D | undefined>(undefined)
-  const { camera } = useThree()
+  const { camera, gl } = useThree()
 
   const selectionKey = selection ? `${selection.type}:${selection.id}` : null
 
@@ -58,6 +59,39 @@ export function EditorViewport({
     camera.position.set(18, 24, 18)
     camera.lookAt(0, 0, 0)
   }, [camera])
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.code === 'Space') {
+        panModifierRef.current = true
+      }
+    }
+    const onKeyUp = (event: KeyboardEvent) => {
+      if (event.code === 'Space') {
+        panModifierRef.current = false
+      }
+    }
+    const onBlur = () => {
+      panModifierRef.current = false
+      paintActiveRef.current = false
+      lastPaintRef.current = null
+    }
+    const onContextMenu = (event: MouseEvent) => {
+      event.preventDefault()
+    }
+
+    window.addEventListener('keydown', onKeyDown)
+    window.addEventListener('keyup', onKeyUp)
+    window.addEventListener('blur', onBlur)
+    gl.domElement.addEventListener('contextmenu', onContextMenu)
+
+    return () => {
+      window.removeEventListener('keydown', onKeyDown)
+      window.removeEventListener('keyup', onKeyUp)
+      window.removeEventListener('blur', onBlur)
+      gl.domElement.removeEventListener('contextmenu', onContextMenu)
+    }
+  }, [gl.domElement])
 
   useFrame(() => {
     const nextObject = selectionKey ? objectRefs.current[selectionKey] ?? undefined : undefined
@@ -107,7 +141,8 @@ export function EditorViewport({
         rotation={[-Math.PI / 2, 0, 0]}
         position={[0, 0.001, 0]}
         onPointerDown={(event) => {
-          if (event.button !== 0) {
+          const shouldPan = panModifierRef.current || event.button === 2 || event.button === 1
+          if (event.button !== 0 || shouldPan) {
             return
           }
           event.stopPropagation()
@@ -151,7 +186,7 @@ export function EditorViewport({
         minZoom={16}
         maxZoom={72}
         mouseButtons={{
-          LEFT: MOUSE.ROTATE,
+          LEFT: MOUSE.PAN,
           MIDDLE: MOUSE.DOLLY,
           RIGHT: MOUSE.PAN,
         }}

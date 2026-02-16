@@ -177,7 +177,7 @@ export function EditorApp({ initialLevel, onSaveLevel, onReloadLevel }: EditorAp
     <main className="editor-shell">
       <aside className="editor-panel left">
         <h2>Level Editor</h2>
-        <p>Paint/place with click-drag on ground.</p>
+        <p>Paint/place with left drag. Pan with right drag or hold space + drag.</p>
         <div className="editor-route-links">
           <a href="/">Play</a>
           <a href="/editor">Editor</a>
