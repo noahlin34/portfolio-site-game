@@ -1,7 +1,8 @@
 import { Suspense, type MutableRefObject, useMemo, useRef } from 'react'
+import { Sky } from '@react-three/drei'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { BallCollider, CuboidCollider, Physics, type RapierRigidBody, RigidBody } from '@react-three/rapier'
-import { Color, PCFSoftShadowMap, Quaternion, ShaderMaterial, Vector3 } from 'three'
+import { ACESFilmicToneMapping, Color, PCFSoftShadowMap, Quaternion, ShaderMaterial, Vector3, type Group } from 'three'
 import type { DriveControlsState } from '../hooks/useDriveControls'
 
 const GROUND_SIZE = 160
@@ -11,6 +12,9 @@ const BRAKE_POWER = 20
 const LATERAL_GRIP = 14
 const TURN_RATE = 3.9
 const TURN_RESPONSE = 18
+const CAMERA_FOCUS_DAMPING = 6
+const CAMERA_POSITION_DAMPING = 9
+const CAMERA_LOOK_Y = 1
 const GROUND_VERTEX_SHADER = `
   uniform float uTime;
   varying vec2 vUv;
@@ -179,13 +183,18 @@ function Obstacles() {
 
 function Car({ controlsRef }: SceneProps) {
   const rigidBodyRef = useRef<RapierRigidBody>(null)
+  const chassisRef = useRef<Group>(null)
   const { camera } = useThree()
 
   const forwardRef = useRef(new Vector3())
   const rightRef = useRef(new Vector3())
   const cameraGoalRef = useRef(new Vector3())
+  const focusTargetRef = useRef(new Vector3())
+  const smoothedFocusRef = useRef(new Vector3())
   const lookAtTargetRef = useRef(new Vector3())
   const quaternionRef = useRef(new Quaternion())
+  const cameraInitializedRef = useRef(false)
+  const isoCameraOffset = useMemo(() => new Vector3(16, 15, 16), [])
 
   useFrame((_, frameDelta) => {
     const delta = Math.min(frameDelta, 0.05)
@@ -269,14 +278,31 @@ function Car({ controlsRef }: SceneProps) {
       )
     }
 
-    const translation = rigidBody.translation()
+    const focusTarget = focusTargetRef.current
+    const smoothedFocus = smoothedFocusRef.current
 
-    cameraGoal.set(translation.x + 16, translation.y + 15, translation.z + 16)
+    if (chassisRef.current) {
+      chassisRef.current.getWorldPosition(focusTarget)
+    } else {
+      const translation = rigidBody.translation()
+      focusTarget.set(translation.x, translation.y, translation.z)
+    }
+    focusTarget.y = CAMERA_LOOK_Y
 
-    const cameraLerp = 1 - Math.exp(-delta * 8)
-    camera.position.lerp(cameraGoal, cameraLerp)
+    if (!cameraInitializedRef.current) {
+      smoothedFocus.copy(focusTarget)
+      camera.position.copy(cameraGoal.copy(smoothedFocus).add(isoCameraOffset))
+      cameraInitializedRef.current = true
+    } else {
+      const focusLerp = 1 - Math.exp(-delta * CAMERA_FOCUS_DAMPING)
+      smoothedFocus.lerp(focusTarget, focusLerp)
 
-    lookAtTarget.set(translation.x, translation.y + 1, translation.z)
+      cameraGoal.copy(smoothedFocus).add(isoCameraOffset)
+      const cameraLerp = 1 - Math.exp(-delta * CAMERA_POSITION_DAMPING)
+      camera.position.lerp(cameraGoal, cameraLerp)
+    }
+
+    lookAtTarget.copy(smoothedFocus)
 
     camera.lookAt(lookAtTarget)
   })
@@ -295,7 +321,7 @@ function Car({ controlsRef }: SceneProps) {
       canSleep={false}
     >
       <CuboidCollider args={[0.86, 0.38, 1.7]} />
-      <group position={[0, 0.55, 0]}>
+      <group ref={chassisRef} position={[0, 0.55, 0]}>
         <mesh castShadow receiveShadow>
           <boxGeometry args={[1.7, 0.5, 3.4]} />
           <meshStandardMaterial color="#b52f33" roughness={0.38} metalness={0.25} />
@@ -335,25 +361,36 @@ function Car({ controlsRef }: SceneProps) {
 function World({ controlsRef }: SceneProps) {
   return (
     <>
-      <color attach="background" args={['#90cff0']} />
-      <fog attach="fog" args={['#90cff0', 45, 145]} />
+      <color attach="background" args={['#b6deff']} />
+      <fog attach="fog" args={['#b6deff', 95, 215]} />
 
-      <hemisphereLight args={['#d5ecff', '#4a5f35', 0.62]} />
-      <ambientLight intensity={0.22} />
+      <Sky
+        distance={450000}
+        sunPosition={[95, 48, -45]}
+        turbidity={4.2}
+        rayleigh={1.45}
+        mieCoefficient={0.007}
+        mieDirectionalG={0.82}
+      />
+
+      <hemisphereLight args={['#d9eeff', '#6f7b57', 0.7]} />
+      <ambientLight intensity={0.14} />
       <directionalLight
         castShadow
-        intensity={1.25}
-        color="#fff7e1"
-        position={[18, 24, 12]}
-        shadow-mapSize={[2048, 2048]}
+        intensity={2.8}
+        color="#fff6dc"
+        position={[95, 48, -45]}
+        shadow-mapSize={[4096, 4096]}
         shadow-camera-near={1}
-        shadow-camera-far={120}
-        shadow-camera-left={-45}
-        shadow-camera-right={45}
-        shadow-camera-top={45}
-        shadow-camera-bottom={-45}
-        shadow-normalBias={0.025}
+        shadow-camera-far={260}
+        shadow-camera-left={-85}
+        shadow-camera-right={85}
+        shadow-camera-top={85}
+        shadow-camera-bottom={-85}
+        shadow-normalBias={0.02}
+        shadow-bias={-0.00008}
       />
+      <directionalLight intensity={0.55} color="#bdd9ff" position={[-70, 30, 80]} />
 
       <Suspense fallback={null}>
         <Physics gravity={[0, -9.81, 0]} colliders={false}>
@@ -374,6 +411,8 @@ export function DrivingScene({ controlsRef }: SceneProps) {
       camera={{ position: [16, 15, 16], zoom: 45, near: 0.1, far: 300 }}
       gl={{ antialias: true }}
       onCreated={({ gl }) => {
+        gl.toneMapping = ACESFilmicToneMapping
+        gl.toneMappingExposure = 1.02
         gl.shadowMap.enabled = true
         gl.shadowMap.type = PCFSoftShadowMap
       }}
