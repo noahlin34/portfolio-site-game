@@ -2,7 +2,7 @@ import { type MutableRefObject, useMemo, useRef } from 'react'
 import { Line } from '@react-three/drei'
 import { useFrame, useThree } from '@react-three/fiber'
 import { CuboidCollider, type RapierRigidBody, RigidBody } from '@react-three/rapier'
-import { Quaternion, Vector3, type Group } from 'three'
+import { Mesh, MeshBasicMaterial, Quaternion, Vector3, type Group } from 'three'
 import type { Line2 } from 'three-stdlib'
 import type { ArtDirectionConfig } from '../config/artDirection'
 import type { DriveControlsState } from '../../hooks/useDriveControls'
@@ -20,6 +20,8 @@ export function VehiclePhysicsController({ controlsRef, config }: VehiclePhysics
   const chassisRef = useRef<Group>(null)
   const frontLeftSteerRef = useRef<Group>(null)
   const frontRightSteerRef = useRef<Group>(null)
+  const carShadowRef = useRef<Mesh>(null)
+  const carShadowMaterialRef = useRef<MeshBasicMaterial>(null)
   const brakeRef = useRef(false)
 
   const { camera } = useThree()
@@ -107,6 +109,23 @@ export function VehiclePhysicsController({ controlsRef, config }: VehiclePhysics
     frontRight.set(frontForward.z, 0, -frontForward.x).normalize()
 
     const translation = rigidBody.translation()
+
+    const carShadow = carShadowRef.current
+    if (carShadow) {
+      const lift = Math.max(0, translation.y - 1)
+      const speedStretch = Math.min(0.42, Math.abs(forwardSpeed) / config.vehicle.maxSpeed * 0.42)
+      const liftStretch = Math.min(0.5, lift * 0.24)
+      const shadowScale = 1 + speedStretch + liftStretch
+      carShadow.position.set(translation.x, 0.032, translation.z)
+      carShadow.scale.set(2.05 * shadowScale, 1.38 * shadowScale, 1)
+    }
+    const carShadowMaterial = carShadowMaterialRef.current
+    if (carShadowMaterial) {
+      const lift = Math.max(0, translation.y - 1)
+      const opacityTarget = Math.max(0.08, 0.34 * (1 - Math.min(0.85, lift * 0.52)))
+      carShadowMaterial.opacity = opacityTarget
+    }
+
     if (translation.y > 0.15 && translation.y < 2.5) {
       lastSafePositionRef.current.set(translation.x, 1, translation.z)
     }
@@ -311,6 +330,17 @@ export function VehiclePhysicsController({ controlsRef, config }: VehiclePhysics
         depthWrite={false}
         visible={false}
       />
+
+      <mesh ref={carShadowRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.032, 0]} renderOrder={1}>
+        <circleGeometry args={[1, 18]} />
+        <meshBasicMaterial
+          ref={carShadowMaterialRef}
+          color="#2a1825"
+          transparent
+          opacity={0.34}
+          depthWrite={false}
+        />
+      </mesh>
     </>
   )
 }

@@ -96,6 +96,14 @@ export function LevelEntities({
               ) : (
                 <CuboidCollider args={[entity.scale[0] / 2, entity.scale[1] / 2, entity.scale[2] / 2]} />
               )}
+              <mesh
+                position={[0, -entity.scale[1] * 0.5 + 0.03, 0]}
+                rotation={[-Math.PI / 2, 0, 0]}
+                renderOrder={1}
+              >
+                <circleGeometry args={[Math.max(entity.scale[0], entity.scale[2]) * 0.56, 12]} />
+                <meshBasicMaterial color="#2b1825" transparent opacity={0.24} depthWrite={false} />
+              </mesh>
               <group scale={entity.scale}>
                 <EntityVisual entity={entity} config={config} />
               </group>

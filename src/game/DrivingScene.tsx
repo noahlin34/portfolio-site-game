@@ -1,7 +1,7 @@
 import type { MutableRefObject } from 'react'
-import { Bloom, BrightnessContrast, EffectComposer, HueSaturation, N8AO, Vignette } from '@react-three/postprocessing'
+import { Bloom, BrightnessContrast, EffectComposer, HueSaturation, Vignette } from '@react-three/postprocessing'
 import { Canvas } from '@react-three/fiber'
-import { ACESFilmicToneMapping, PCFShadowMap } from 'three'
+import { ACESFilmicToneMapping } from 'three'
 import type { DriveControlsState } from '../hooks/useDriveControls'
 import { artDirectionDefaults } from './config/artDirection'
 import type { LevelData } from './level/schema'
@@ -18,8 +18,7 @@ export function DrivingScene({ controlsRef, level }: SceneProps) {
   return (
     <Canvas
       orthographic
-      shadows
-      dpr={[1, 1.5]}
+      dpr={[1, 1.25]}
       camera={{
         position: config.camera.offset,
         zoom: config.camera.zoom,
@@ -30,35 +29,21 @@ export function DrivingScene({ controlsRef, level }: SceneProps) {
       onCreated={({ gl }) => {
         gl.toneMapping = ACESFilmicToneMapping
         gl.toneMappingExposure = config.post.exposure
-        gl.shadowMap.enabled = true
-        gl.shadowMap.type = PCFShadowMap
+        gl.shadowMap.enabled = false
       }}
     >
       <EnvironmentScene controlsRef={controlsRef} config={config} level={level} />
 
-      <EffectComposer multisampling={0} resolutionScale={0.7} enableNormalPass={false}>
-        <N8AO
-          quality="performance"
-          aoRadius={config.post.aoRadius}
-          distanceFalloff={config.post.aoDistanceFalloff}
-          intensity={config.post.aoIntensity * 0.76}
-          aoSamples={Math.min(config.post.aoSamples, 8)}
-          denoiseSamples={config.post.aoDenoiseSamples}
-          denoiseRadius={config.post.aoDenoiseRadius}
-          color={config.post.aoColor}
-          halfRes
-          depthAwareUpsampling
-          screenSpaceRadius
-        />
+      <EffectComposer multisampling={0} resolutionScale={0.8} enableNormalPass={false}>
         <Bloom
-          intensity={config.post.bloomIntensity * 0.66}
+          intensity={config.post.bloomIntensity * 0.72}
           luminanceThreshold={config.post.bloomThreshold}
           luminanceSmoothing={0.35}
           mipmapBlur
           radius={config.post.bloomRadius}
         />
-        <BrightnessContrast brightness={config.post.colorBrightness} contrast={config.post.colorContrast * 0.86} />
-        <HueSaturation hue={0.004} saturation={config.post.colorSaturation * 0.84} />
+        <BrightnessContrast brightness={config.post.colorBrightness * 0.8} contrast={config.post.colorContrast * 0.92} />
+        <HueSaturation hue={0.006} saturation={config.post.colorSaturation * 0.9} />
         <Vignette eskil={false} offset={config.post.vignetteOffset} darkness={config.post.vignetteDarkness * 0.88} />
       </EffectComposer>
     </Canvas>
