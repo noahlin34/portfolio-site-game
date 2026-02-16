@@ -1,7 +1,7 @@
 import { useLayoutEffect, useMemo, useRef } from 'react'
 import { InstancedMesh, Matrix4 } from 'three'
 import type { ArtDirectionConfig } from '../config/artDirection'
-import { createGroundBounceCompiler, createGroundBounceProgramKey } from '../materials/fakeLighting'
+import { createWarmMatcapTexture } from '../materials/stylized'
 import { composeMatrix, createRng, randomRange } from '../utils/random'
 import { isPathArea, isPathEdgeArea, isPlayableArea } from './layout'
 
@@ -232,14 +232,7 @@ export function Foliage({ config }: FoliageProps) {
   const yellowCanopyUpperMatrices = useMemo(() => trees.filter((tree) => tree.color === 'yellow').map((tree) => tree.canopyUpper), [trees])
   const greenCanopyUpperMatrices = useMemo(() => trees.filter((tree) => tree.color === 'green').map((tree) => tree.canopyUpper), [trees])
   const treeShadowMatrices = useMemo(() => trees.map((tree) => tree.contactShadow), [trees])
-  const foliageGroundBounce = useMemo(
-    () => createGroundBounceCompiler({ color: [1, 0.51, 0.26], intensity: 0.24, maxHeight: 4.2 }),
-    [],
-  )
-  const foliageGroundBounceKey = useMemo(
-    () => createGroundBounceProgramKey({ color: [1, 0.51, 0.26], intensity: 0.24, maxHeight: 4.2 }),
-    [],
-  )
+  const foliageMatcap = useMemo(() => createWarmMatcapTexture(), [])
 
   useLayoutEffect(() => {
     applyMatrices(grassRef.current, grassMatrices)
@@ -285,130 +278,99 @@ export function Foliage({ config }: FoliageProps) {
 
       <instancedMesh ref={grassRef} args={[undefined, undefined, grassMatrices.length]}>
         <coneGeometry args={[0.38, 1.35, 6]} />
-        <meshLambertMaterial
+        <meshMatcapMaterial
+          matcap={foliageMatcap ?? undefined}
           color={config.palette.grassA}
-          emissive={config.palette.grassA}
-          emissiveIntensity={0.02}
           flatShading
-          onBeforeCompile={foliageGroundBounce}
-          customProgramCacheKey={() => foliageGroundBounceKey}
         />
       </instancedMesh>
 
       <instancedMesh ref={tallGrassRef} args={[undefined, undefined, tallGrassMatrices.length]}>
         <coneGeometry args={[0.2, 1.92, 5]} />
-        <meshLambertMaterial
+        <meshMatcapMaterial
+          matcap={foliageMatcap ?? undefined}
           color="#8f9841"
-          emissive="#8f9841"
-          emissiveIntensity={0.02}
           flatShading
-          onBeforeCompile={foliageGroundBounce}
-          customProgramCacheKey={() => foliageGroundBounceKey}
         />
       </instancedMesh>
 
       <instancedMesh ref={bushRef} args={[undefined, undefined, bushMatrices.length]}>
         <dodecahedronGeometry args={[0.75, 0]} />
-        <meshLambertMaterial
+        <meshMatcapMaterial
+          matcap={foliageMatcap ?? undefined}
           color={config.palette.grassB}
-          emissive={config.palette.grassB}
-          emissiveIntensity={0.03}
           flatShading
-          onBeforeCompile={foliageGroundBounce}
-          customProgramCacheKey={() => foliageGroundBounceKey}
         />
       </instancedMesh>
 
       <instancedMesh ref={flowerRef} args={[undefined, undefined, flowerMatrices.length]}>
         <octahedronGeometry args={[0.8, 0]} />
-        <meshLambertMaterial
+        <meshMatcapMaterial
+          matcap={foliageMatcap ?? undefined}
           color="#fff8e8"
-          emissive="#ffe7bc"
-          emissiveIntensity={0.42}
-          onBeforeCompile={foliageGroundBounce}
-          customProgramCacheKey={() => foliageGroundBounceKey}
         />
       </instancedMesh>
 
       <instancedMesh ref={trunkRef} args={[undefined, undefined, trunkMatrices.length]}>
         <cylinderGeometry args={[0.22, 0.34, 1.2, 6]} />
-        <meshLambertMaterial
+        <meshMatcapMaterial
+          matcap={foliageMatcap ?? undefined}
           color={config.palette.trunk}
           flatShading
-          onBeforeCompile={foliageGroundBounce}
-          customProgramCacheKey={() => foliageGroundBounceKey}
         />
       </instancedMesh>
 
       <instancedMesh ref={pinkCanopyLowerRef} args={[undefined, undefined, pinkCanopyLowerMatrices.length]}>
         <icosahedronGeometry args={[0.86, 0]} />
-        <meshLambertMaterial
+        <meshMatcapMaterial
+          matcap={foliageMatcap ?? undefined}
           color={config.palette.foliagePink}
-          emissive={config.palette.foliagePink}
-          emissiveIntensity={0.04}
           flatShading
-          onBeforeCompile={foliageGroundBounce}
-          customProgramCacheKey={() => foliageGroundBounceKey}
         />
       </instancedMesh>
 
       <instancedMesh ref={yellowCanopyLowerRef} args={[undefined, undefined, yellowCanopyLowerMatrices.length]}>
         <icosahedronGeometry args={[0.86, 0]} />
-        <meshLambertMaterial
+        <meshMatcapMaterial
+          matcap={foliageMatcap ?? undefined}
           color={config.palette.foliageYellow}
-          emissive={config.palette.foliageYellow}
-          emissiveIntensity={0.04}
           flatShading
-          onBeforeCompile={foliageGroundBounce}
-          customProgramCacheKey={() => foliageGroundBounceKey}
         />
       </instancedMesh>
 
       <instancedMesh ref={greenCanopyLowerRef} args={[undefined, undefined, greenCanopyLowerMatrices.length]}>
         <icosahedronGeometry args={[0.86, 0]} />
-        <meshLambertMaterial
+        <meshMatcapMaterial
+          matcap={foliageMatcap ?? undefined}
           color={config.palette.foliageGreen}
-          emissive={config.palette.foliageGreen}
-          emissiveIntensity={0.04}
           flatShading
-          onBeforeCompile={foliageGroundBounce}
-          customProgramCacheKey={() => foliageGroundBounceKey}
         />
       </instancedMesh>
 
       <instancedMesh ref={pinkCanopyUpperRef} args={[undefined, undefined, pinkCanopyUpperMatrices.length]}>
         <dodecahedronGeometry args={[0.72, 0]} />
-        <meshLambertMaterial
+        <meshMatcapMaterial
+          matcap={foliageMatcap ?? undefined}
           color={config.palette.foliagePink}
-          emissive={config.palette.foliagePink}
-          emissiveIntensity={0.03}
           flatShading
-          onBeforeCompile={foliageGroundBounce}
-          customProgramCacheKey={() => foliageGroundBounceKey}
         />
       </instancedMesh>
 
       <instancedMesh ref={yellowCanopyUpperRef} args={[undefined, undefined, yellowCanopyUpperMatrices.length]}>
         <dodecahedronGeometry args={[0.72, 0]} />
-        <meshLambertMaterial
+        <meshMatcapMaterial
+          matcap={foliageMatcap ?? undefined}
           color={config.palette.foliageYellow}
-          emissive={config.palette.foliageYellow}
-          emissiveIntensity={0.03}
           flatShading
-          onBeforeCompile={foliageGroundBounce}
-          customProgramCacheKey={() => foliageGroundBounceKey}
         />
       </instancedMesh>
 
       <instancedMesh ref={greenCanopyUpperRef} args={[undefined, undefined, greenCanopyUpperMatrices.length]}>
         <dodecahedronGeometry args={[0.72, 0]} />
-        <meshLambertMaterial
+        <meshMatcapMaterial
+          matcap={foliageMatcap ?? undefined}
           color={config.palette.foliageGreen}
-          emissive={config.palette.foliageGreen}
-          emissiveIntensity={0.03}
           flatShading
-          onBeforeCompile={foliageGroundBounce}
-          customProgramCacheKey={() => foliageGroundBounceKey}
         />
       </instancedMesh>
     </group>

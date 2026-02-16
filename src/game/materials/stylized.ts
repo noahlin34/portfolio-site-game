@@ -22,6 +22,14 @@ interface GroundGradientTextureOptions {
   bottomRight?: string
 }
 
+interface MatcapTextureOptions {
+  size?: number
+  base?: string
+  mid?: string
+  shadow?: string
+  highlight?: string
+}
+
 export const createPathTileTexture = ({ seed, size = 512, repeat = 18 }: PathTileTextureOptions) => {
   const canvas = document.createElement('canvas')
   canvas.width = size
@@ -149,6 +157,46 @@ export const createGroundGradientTexture = ({
   texture.colorSpace = SRGBColorSpace
   texture.magFilter = LinearFilter
   texture.minFilter = LinearFilter
+  texture.needsUpdate = true
+  return texture
+}
+
+export const createWarmMatcapTexture = ({
+  size = 256,
+  base = '#cf7b57',
+  mid = '#f3b185',
+  shadow = '#603545',
+  highlight = '#fff1d4',
+}: MatcapTextureOptions = {}) => {
+  const canvas = document.createElement('canvas')
+  canvas.width = size
+  canvas.height = size
+  const context = canvas.getContext('2d')
+  if (!context) {
+    return null
+  }
+
+  context.fillStyle = base
+  context.fillRect(0, 0, size, size)
+
+  const shadowGradient = context.createRadialGradient(size * 0.42, size * 0.58, size * 0.12, size * 0.5, size * 0.5, size * 0.6)
+  shadowGradient.addColorStop(0, mid)
+  shadowGradient.addColorStop(0.45, base)
+  shadowGradient.addColorStop(1, shadow)
+  context.fillStyle = shadowGradient
+  context.fillRect(0, 0, size, size)
+
+  const highlightGradient = context.createRadialGradient(size * 0.36, size * 0.28, size * 0.02, size * 0.34, size * 0.24, size * 0.24)
+  highlightGradient.addColorStop(0, 'rgba(255,255,255,0.85)')
+  highlightGradient.addColorStop(0.4, highlight)
+  highlightGradient.addColorStop(1, 'rgba(255,255,255,0)')
+  context.fillStyle = highlightGradient
+  context.fillRect(0, 0, size, size)
+
+  const texture = new CanvasTexture(canvas)
+  texture.colorSpace = SRGBColorSpace
+  texture.minFilter = LinearFilter
+  texture.magFilter = LinearFilter
   texture.needsUpdate = true
   return texture
 }
