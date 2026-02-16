@@ -1,4 +1,4 @@
-import { CanvasTexture, RepeatWrapping, SRGBColorSpace } from 'three'
+import { CanvasTexture, LinearFilter, RepeatWrapping, SRGBColorSpace } from 'three'
 import { createRng } from '../utils/random'
 
 interface PathTileTextureOptions {
@@ -11,6 +11,15 @@ interface WaterTextureOptions {
   seed: number
   size?: number
   repeat?: number
+}
+
+interface GroundGradientTextureOptions {
+  repeatX?: number
+  repeatY?: number
+  topLeft?: string
+  topRight?: string
+  bottomLeft?: string
+  bottomRight?: string
 }
 
 export const createPathTileTexture = ({ seed, size = 512, repeat = 18 }: PathTileTextureOptions) => {
@@ -100,6 +109,46 @@ export const createWaterTexture = ({ seed, size = 384, repeat = 11 }: WaterTextu
   texture.wrapT = RepeatWrapping
   texture.repeat.set(repeat, repeat)
   texture.colorSpace = SRGBColorSpace
+  texture.needsUpdate = true
+  return texture
+}
+
+export const createGroundGradientTexture = ({
+  repeatX = 1,
+  repeatY = 1,
+  topLeft = '#f2bc84',
+  topRight = '#df9f67',
+  bottomLeft = '#bf824d',
+  bottomRight = '#a66d3f',
+}: GroundGradientTextureOptions = {}) => {
+  const canvas = document.createElement('canvas')
+  canvas.width = 2
+  canvas.height = 2
+  const context = canvas.getContext('2d')
+
+  if (!context) {
+    return null
+  }
+
+  context.fillStyle = topLeft
+  context.fillRect(0, 0, 1, 1)
+
+  context.fillStyle = topRight
+  context.fillRect(1, 0, 1, 1)
+
+  context.fillStyle = bottomLeft
+  context.fillRect(0, 1, 1, 1)
+
+  context.fillStyle = bottomRight
+  context.fillRect(1, 1, 1, 1)
+
+  const texture = new CanvasTexture(canvas)
+  texture.wrapS = RepeatWrapping
+  texture.wrapT = RepeatWrapping
+  texture.repeat.set(repeatX, repeatY)
+  texture.colorSpace = SRGBColorSpace
+  texture.magFilter = LinearFilter
+  texture.minFilter = LinearFilter
   texture.needsUpdate = true
   return texture
 }

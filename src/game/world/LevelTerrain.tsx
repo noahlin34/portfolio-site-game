@@ -5,7 +5,8 @@ import { useFrame } from '@react-three/fiber'
 import { Euler, Matrix4, Quaternion, Vector3, type InstancedMesh, type Object3D } from 'three'
 import type { ArtDirectionConfig } from '../config/artDirection'
 import { createAsphaltTexture } from '../materials/asphalt'
-import { createPathTileTexture, createWaterTexture } from '../materials/stylized'
+import { createGroundBounceCompiler, createGroundBounceProgramKey } from '../materials/fakeLighting'
+import { createGroundGradientTexture, createPathTileTexture, createWaterTexture } from '../materials/stylized'
 import type { LevelData, TerrainPatch } from '../level/schema'
 
 interface LevelTerrainProps {
@@ -22,27 +23,19 @@ const getPatchMaterialProps = (patch: TerrainPatch, config: ArtDirectionConfig) 
     case 'path':
       return {
         color: patch.materialVariant === 'alt' ? '#e7b177' : config.palette.path,
-        roughness: 0.9,
-        metalness: 0.03,
       }
     case 'track':
       return {
         color: patch.materialVariant === 'alt' ? '#423751' : '#352f49',
-        roughness: 0.94,
-        metalness: 0.02,
       }
     case 'water':
       return {
         color: patch.materialVariant === 'alt' ? '#2f7293' : '#234e77',
-        roughness: 0.28,
-        metalness: 0.12,
       }
     case 'grass':
     default:
       return {
         color: patch.materialVariant === 'alt' ? '#9cae53' : '#8ea147',
-        roughness: 0.99,
-        metalness: 0.01,
       }
   }
 }
@@ -88,9 +81,15 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
   const waterCircleAltRef = useRef<InstancedMesh>(null)
   const waterAccentOuterRef = useRef<InstancedMesh>(null)
   const waterAccentInnerRef = useRef<InstancedMesh>(null)
-  const asphaltTexture = useMemo(
-    () => createAsphaltTexture({ seed: config.world.seed + 11, repeat: 46 }),
-    [config.world.seed],
+  const groundGradientTexture = useMemo(
+    () =>
+      createGroundGradientTexture({
+        topLeft: '#f3bb7f',
+        topRight: '#dd9f66',
+        bottomLeft: '#bc824d',
+        bottomRight: '#9d673e',
+      }),
+    [],
   )
   const trackTexture = useMemo(
     () => createAsphaltTexture({ seed: config.world.seed + 31, repeat: 24 }),
@@ -131,6 +130,14 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
   const waterAccentPatches = useMemo(
     () => waterPatches.filter((patch) => patch.shape === 'circle' && patch.size[0] >= 4),
     [waterPatches],
+  )
+  const terrainGroundBounce = useMemo(
+    () => createGroundBounceCompiler({ color: [1, 0.5, 0.24], intensity: 0.2, maxHeight: 3.4 }),
+    [],
+  )
+  const terrainGroundBounceKey = useMemo(
+    () => createGroundBounceProgramKey({ color: [1, 0.5, 0.24], intensity: 0.2, maxHeight: 3.4 }),
+    [],
   )
 
   useLayoutEffect(() => {
@@ -223,28 +230,23 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
         )
       })}
 
-      <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.03, 0]}>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.03, 0]}>
         <planeGeometry args={[config.world.size, config.world.size, 1, 1]} />
-        <meshStandardMaterial
-          map={asphaltTexture ?? undefined}
-          color={config.palette.baseGround}
-          roughness={0.96}
-          metalness={0.02}
-        />
+        <meshBasicMaterial map={groundGradientTexture ?? undefined} color={config.palette.baseGround} />
       </mesh>
 
       {!selectable ? (
         <>
           {waterPlaneDefaultPatches.length > 0 ? (
-            <instancedMesh ref={waterPlaneDefaultRef} args={[undefined, undefined, waterPlaneDefaultPatches.length]} renderOrder={2} receiveShadow>
+            <instancedMesh ref={waterPlaneDefaultRef} args={[undefined, undefined, waterPlaneDefaultPatches.length]} renderOrder={2}>
               <planeGeometry args={[1, 1, 1, 1]} />
-              <meshStandardMaterial
+              <meshLambertMaterial
                 map={waterTexture ?? undefined}
                 color="#234e77"
-                roughness={0.4}
-                metalness={0.08}
                 emissive="#163558"
                 emissiveIntensity={0.18}
+                onBeforeCompile={terrainGroundBounce}
+                customProgramCacheKey={() => terrainGroundBounceKey}
                 polygonOffset
                 polygonOffsetFactor={-1}
                 polygonOffsetUnits={-1}
@@ -253,15 +255,15 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
           ) : null}
 
           {waterPlaneAltPatches.length > 0 ? (
-            <instancedMesh ref={waterPlaneAltRef} args={[undefined, undefined, waterPlaneAltPatches.length]} renderOrder={2} receiveShadow>
+            <instancedMesh ref={waterPlaneAltRef} args={[undefined, undefined, waterPlaneAltPatches.length]} renderOrder={2}>
               <planeGeometry args={[1, 1, 1, 1]} />
-              <meshStandardMaterial
+              <meshLambertMaterial
                 map={waterTexture ?? undefined}
                 color="#2f7293"
-                roughness={0.4}
-                metalness={0.08}
                 emissive="#163558"
                 emissiveIntensity={0.18}
+                onBeforeCompile={terrainGroundBounce}
+                customProgramCacheKey={() => terrainGroundBounceKey}
                 polygonOffset
                 polygonOffsetFactor={-1}
                 polygonOffsetUnits={-1}
@@ -270,15 +272,15 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
           ) : null}
 
           {waterCircleDefaultPatches.length > 0 ? (
-            <instancedMesh ref={waterCircleDefaultRef} args={[undefined, undefined, waterCircleDefaultPatches.length]} renderOrder={2} receiveShadow>
+            <instancedMesh ref={waterCircleDefaultRef} args={[undefined, undefined, waterCircleDefaultPatches.length]} renderOrder={2}>
               <circleGeometry args={[1, 30]} />
-              <meshStandardMaterial
+              <meshLambertMaterial
                 map={waterTexture ?? undefined}
                 color="#234e77"
-                roughness={0.4}
-                metalness={0.08}
                 emissive="#163558"
                 emissiveIntensity={0.18}
+                onBeforeCompile={terrainGroundBounce}
+                customProgramCacheKey={() => terrainGroundBounceKey}
                 polygonOffset
                 polygonOffsetFactor={-1}
                 polygonOffsetUnits={-1}
@@ -287,15 +289,15 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
           ) : null}
 
           {waterCircleAltPatches.length > 0 ? (
-            <instancedMesh ref={waterCircleAltRef} args={[undefined, undefined, waterCircleAltPatches.length]} renderOrder={2} receiveShadow>
+            <instancedMesh ref={waterCircleAltRef} args={[undefined, undefined, waterCircleAltPatches.length]} renderOrder={2}>
               <circleGeometry args={[1, 30]} />
-              <meshStandardMaterial
+              <meshLambertMaterial
                 map={waterTexture ?? undefined}
                 color="#2f7293"
-                roughness={0.4}
-                metalness={0.08}
                 emissive="#163558"
                 emissiveIntensity={0.18}
+                onBeforeCompile={terrainGroundBounce}
+                customProgramCacheKey={() => terrainGroundBounceKey}
                 polygonOffset
                 polygonOffsetFactor={-1}
                 polygonOffsetUnits={-1}
@@ -342,7 +344,6 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
                 objectRefs.current[`terrain:${patch.id}`] = node
               }}
               renderOrder={2}
-              receiveShadow
               rotation={patch.rotation}
               position={patch.position}
               scale={[1, 1, 1]}
@@ -359,13 +360,13 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
               ) : (
                 <planeGeometry args={[patch.size[0], patch.size[1], 1, 1]} />
               )}
-              <meshStandardMaterial
+              <meshLambertMaterial
                 map={map ?? undefined}
                 color={selectedPatchId === patch.id ? '#f6d39c' : materialProps.color}
-                roughness={patch.kind === 'water' ? 0.4 : materialProps.roughness}
-                metalness={patch.kind === 'water' ? 0.08 : materialProps.metalness}
                 emissive={patch.kind === 'water' ? '#163558' : '#000000'}
                 emissiveIntensity={patch.kind === 'water' ? 0.18 : 0}
+                onBeforeCompile={terrainGroundBounce}
+                customProgramCacheKey={() => terrainGroundBounceKey}
                 polygonOffset
                 polygonOffsetFactor={-1}
                 polygonOffsetUnits={-1}
@@ -399,13 +400,21 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
                   const color = index % 2 === 0 ? '#de4d36' : '#f6e5e3'
                   return (
                     <group key={`curb-segment-${patch.id}-${index}`}>
-                      <mesh castShadow receiveShadow position={[x, 0.012, -sideZ]}>
+                      <mesh position={[x, 0.012, -sideZ]}>
                         <boxGeometry args={[segmentWidth * 0.94, 0.024, 1.4]} />
-                        <meshStandardMaterial color={color} roughness={0.66} metalness={0.02} />
+                        <meshLambertMaterial
+                          color={color}
+                          onBeforeCompile={terrainGroundBounce}
+                          customProgramCacheKey={() => terrainGroundBounceKey}
+                        />
                       </mesh>
-                      <mesh castShadow receiveShadow position={[x, 0.012, sideZ]}>
+                      <mesh position={[x, 0.012, sideZ]}>
                         <boxGeometry args={[segmentWidth * 0.94, 0.024, 1.4]} />
-                        <meshStandardMaterial color={color} roughness={0.66} metalness={0.02} />
+                        <meshLambertMaterial
+                          color={color}
+                          onBeforeCompile={terrainGroundBounce}
+                          customProgramCacheKey={() => terrainGroundBounceKey}
+                        />
                       </mesh>
                     </group>
                   )
@@ -415,11 +424,19 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
                   <group key={`chevron-${patch.id}-${index}`} position={[x, 0.013, 3.8 - index * 1.1]}>
                     <mesh rotation={[0, Math.PI * 0.25, 0]}>
                       <boxGeometry args={[1.85, 0.018, 0.3]} />
-                      <meshStandardMaterial color="#f4ebf4" roughness={0.44} metalness={0.02} />
+                      <meshLambertMaterial
+                        color="#f4ebf4"
+                        onBeforeCompile={terrainGroundBounce}
+                        customProgramCacheKey={() => terrainGroundBounceKey}
+                      />
                     </mesh>
                     <mesh position={[0, 0, -1.24]} rotation={[0, -Math.PI * 0.25, 0]}>
                       <boxGeometry args={[1.85, 0.018, 0.3]} />
-                      <meshStandardMaterial color="#f4ebf4" roughness={0.44} metalness={0.02} />
+                      <meshLambertMaterial
+                        color="#f4ebf4"
+                        onBeforeCompile={terrainGroundBounce}
+                        customProgramCacheKey={() => terrainGroundBounceKey}
+                      />
                     </mesh>
                   </group>
                 ))}
