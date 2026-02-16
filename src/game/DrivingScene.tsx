@@ -4,13 +4,15 @@ import { Canvas } from '@react-three/fiber'
 import { ACESFilmicToneMapping, PCFSoftShadowMap } from 'three'
 import type { DriveControlsState } from '../hooks/useDriveControls'
 import { artDirectionDefaults } from './config/artDirection'
+import type { LevelData } from './level/schema'
 import { EnvironmentScene } from './world/EnvironmentScene'
 
 interface SceneProps {
   controlsRef: MutableRefObject<DriveControlsState>
+  level: LevelData
 }
 
-export function DrivingScene({ controlsRef }: SceneProps) {
+export function DrivingScene({ controlsRef, level }: SceneProps) {
   const config = artDirectionDefaults
 
   return (
@@ -31,7 +33,7 @@ export function DrivingScene({ controlsRef }: SceneProps) {
         gl.shadowMap.type = PCFSoftShadowMap
       }}
     >
-      <EnvironmentScene controlsRef={controlsRef} config={config} />
+      <EnvironmentScene controlsRef={controlsRef} config={config} level={level} />
 
       <EffectComposer multisampling={2} enableNormalPass={false}>
         <Bloom

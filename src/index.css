@@ -46,7 +46,7 @@ canvas {
   border-radius: 0.6rem;
   background: rgb(7 20 23 / 62%);
   backdrop-filter: blur(6px);
-  pointer-events: none;
+  pointer-events: auto;
 }
 
 .hud h1 {
@@ -62,10 +62,188 @@ canvas {
   color: rgb(237 248 247 / 84%);
 }
 
+.hud .hud-meta {
+  margin-top: 0.55rem;
+  font-size: 0.78rem;
+  color: rgb(238 246 245 / 70%);
+}
+
+.hud-links {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.65rem;
+}
+
+.hud-links a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.8rem;
+  border: 1px solid rgb(255 255 255 / 22%);
+  border-radius: 999px;
+  padding: 0.22rem 0.6rem;
+  background: rgb(255 255 255 / 8%);
+}
+
+.loading-shell {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  font-size: 1.1rem;
+  background: #1f1f1f;
+}
+
+.editor-shell {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 300px 1fr 300px;
+  background: #1f1f1f;
+}
+
+.editor-panel {
+  background: #1d1f28;
+  color: #eceff8;
+  padding: 0.9rem;
+  overflow: auto;
+  border-right: 1px solid rgb(255 255 255 / 8%);
+}
+
+.editor-panel.right {
+  border-right: 0;
+  border-left: 1px solid rgb(255 255 255 / 8%);
+}
+
+.editor-panel h2,
+.editor-panel h3 {
+  margin: 0 0 0.55rem;
+  font-size: 1rem;
+}
+
+.editor-panel p {
+  margin: 0.3rem 0 0.55rem;
+  font-size: 0.86rem;
+  color: rgb(236 239 248 / 80%);
+}
+
+.editor-panel section {
+  margin-top: 0.9rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid rgb(255 255 255 / 10%);
+}
+
+.editor-panel label {
+  display: grid;
+  gap: 0.25rem;
+  margin-bottom: 0.55rem;
+  font-size: 0.79rem;
+  color: rgb(238 243 255 / 86%);
+}
+
+.editor-panel input,
+.editor-panel select,
+.editor-panel button {
+  font: inherit;
+}
+
+.editor-panel input[type='number'],
+.editor-panel select {
+  width: 100%;
+  border: 1px solid rgb(255 255 255 / 18%);
+  border-radius: 0.35rem;
+  background: rgb(0 0 0 / 25%);
+  color: #fff;
+  padding: 0.36rem 0.44rem;
+}
+
+.mode-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.55rem;
+}
+
+.mode-row button,
+.editor-route-links a,
+.file-import {
+  border: 1px solid rgb(255 255 255 / 20%);
+  border-radius: 0.35rem;
+  background: rgb(255 255 255 / 8%);
+  color: #fff;
+  padding: 0.33rem 0.55rem;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 0.78rem;
+}
+
+.mode-row button.active {
+  background: #f39f58;
+  color: #1b1c25;
+  border-color: #f3b06d;
+}
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.file-import {
+  position: relative;
+  overflow: hidden;
+}
+
+.file-import input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.status-line {
+  margin: 0.2rem 0;
+  font-size: 0.76rem;
+  color: rgb(235 244 255 / 76%);
+}
+
+.editor-route-links {
+  display: flex;
+  gap: 0.45rem;
+  margin-top: 0.45rem;
+}
+
+.editor-canvas-wrap {
+  position: relative;
+  min-width: 0;
+}
+
 @media (max-width: 600px) {
   .hud {
     top: 0.75rem;
     left: 0.75rem;
     padding: 0.6rem 0.75rem;
+  }
+}
+
+@media (max-width: 1200px) {
+  .editor-shell {
+    grid-template-columns: 260px 1fr 260px;
+  }
+}
+
+@media (max-width: 900px) {
+  .editor-shell {
+    grid-template-columns: 1fr;
+    grid-template-rows: 240px 1fr 240px;
+  }
+
+  .editor-panel {
+    border-right: 0;
+    border-bottom: 1px solid rgb(255 255 255 / 8%);
+  }
+
+  .editor-panel.right {
+    border-left: 0;
+    border-top: 1px solid rgb(255 255 255 / 8%);
   }
 }

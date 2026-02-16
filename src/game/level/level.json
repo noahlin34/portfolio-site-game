@@ -1,0 +1,149 @@
+{
+  "version": 1,
+  "meta": {
+    "name": "Stylized Test Grounds",
+    "updatedAt": "2026-02-16T12:00:00.000Z"
+  },
+  "terrainPatches": [
+    {
+      "id": "path-main",
+      "kind": "path",
+      "shape": "plane",
+      "position": [0, 0.006, 0],
+      "rotation": [-1.5707963267948966, 0, 0.14],
+      "size": [144, 14.2],
+      "collider": { "enabled": true, "friction": 1.35 },
+      "materialVariant": "default"
+    },
+    {
+      "id": "path-cross",
+      "kind": "path",
+      "shape": "plane",
+      "position": [12, 0.0062, -7],
+      "rotation": [-1.5707963267948966, 0, -0.78],
+      "size": [102, 10.8],
+      "collider": { "enabled": true, "friction": 1.35 },
+      "materialVariant": "alt"
+    },
+    {
+      "id": "path-plaza",
+      "kind": "path",
+      "shape": "circle",
+      "position": [-2, 0.0064, 1.5],
+      "rotation": [-1.5707963267948966, 0, 0],
+      "size": [8.6, 8.6],
+      "collider": { "enabled": true, "friction": 1.35 },
+      "materialVariant": "default"
+    },
+    {
+      "id": "track-main",
+      "kind": "track",
+      "shape": "plane",
+      "position": [13.5, 0.0076, 6],
+      "rotation": [-1.5707963267948966, 0, -0.21],
+      "size": [82, 33],
+      "collider": { "enabled": true, "friction": 1.38 },
+      "materialVariant": "default"
+    },
+    {
+      "id": "water-cove",
+      "kind": "water",
+      "shape": "plane",
+      "position": [-45, -0.02, 58],
+      "rotation": [-1.5707963267948966, 0, 0.12],
+      "size": [78, 46],
+      "collider": { "enabled": false },
+      "materialVariant": "default"
+    },
+    {
+      "id": "grass-1",
+      "kind": "grass",
+      "shape": "plane",
+      "position": [-38, 0.01, 26],
+      "rotation": [-1.5707963267948966, 0, 0.22],
+      "size": [35, 26],
+      "collider": { "enabled": false },
+      "materialVariant": "default"
+    },
+    {
+      "id": "grass-2",
+      "kind": "grass",
+      "shape": "plane",
+      "position": [36, 0.01, -28],
+      "rotation": [-1.5707963267948966, 0, -0.28],
+      "size": [40, 28],
+      "collider": { "enabled": false },
+      "materialVariant": "alt"
+    },
+    {
+      "id": "grass-3",
+      "kind": "grass",
+      "shape": "plane",
+      "position": [-44, 0.01, -36],
+      "rotation": [-1.5707963267948966, 0, -0.45],
+      "size": [31, 24],
+      "collider": { "enabled": false },
+      "materialVariant": "default"
+    },
+    {
+      "id": "grass-4",
+      "kind": "grass",
+      "shape": "plane",
+      "position": [52, 0.01, 38],
+      "rotation": [-1.5707963267948966, 0, 0.35],
+      "size": [28, 24],
+      "collider": { "enabled": false },
+      "materialVariant": "alt"
+    }
+  ],
+  "entities": [
+    { "id": "prop-house-1", "family": "prop", "prefab": "house", "position": [24, 0.2, 13], "rotation": [0, 0.24, 0], "scale": [1, 1, 1] },
+    { "id": "prop-bleachers-1", "family": "prop", "prefab": "bleachers", "position": [-11.5, 0, 23], "rotation": [0, -0.18, 0], "scale": [1, 1, 1] },
+    { "id": "prop-board-1", "family": "prop", "prefab": "scoreboard", "position": [24.8, 0, 24.2], "rotation": [0, -0.2, 0], "scale": [1, 1, 1] },
+    { "id": "prop-bench-1", "family": "prop", "prefab": "bench", "position": [-8, 0, 20], "rotation": [0, 0, 0], "scale": [1, 1, 1] },
+    { "id": "prop-bench-2", "family": "prop", "prefab": "bench_long", "position": [-20, 0, 42], "rotation": [0, 0.18, 0], "scale": [1, 1, 1] },
+    { "id": "prop-lantern-1", "family": "prop", "prefab": "lantern", "position": [-17, 0, 23], "rotation": [0, 0, 0], "scale": [1, 1, 1] },
+    { "id": "prop-lantern-2", "family": "prop", "prefab": "lantern", "position": [12, 0, 30], "rotation": [0, 0, 0], "scale": [1, 1, 1] },
+    { "id": "prop-lantern-3", "family": "prop", "prefab": "lantern", "position": [31, 0, 6], "rotation": [0, 0, 0], "scale": [1, 1, 1] },
+    { "id": "prop-lantern-4", "family": "prop", "prefab": "lantern", "position": [-27, 0, -14], "rotation": [0, 0, 0], "scale": [1, 1, 1] },
+    { "id": "prop-cone-1", "family": "prop", "prefab": "cone", "position": [-24, 0, 13.5], "rotation": [0, 0, 0], "scale": [1, 1, 1] },
+    { "id": "prop-cone-2", "family": "prop", "prefab": "cone", "position": [-27.4, 0, 10.5], "rotation": [0, 0, 0], "scale": [1, 1, 1] },
+    { "id": "prop-sign-1", "family": "prop", "prefab": "arrow_sign", "position": [34, 0.2, 16], "rotation": [0, 0.2, 0], "scale": [1, 1, 1] },
+    { "id": "prop-rock-1", "family": "prop", "prefab": "rock", "position": [-46, 0.35, -30], "rotation": [0, 0.3, 0], "scale": [1.1, 0.9, 1.2] },
+    { "id": "prop-rock-2", "family": "prop", "prefab": "rock", "position": [54, 0.3, 12], "rotation": [0, -0.2, 0], "scale": [0.9, 1, 1] },
+
+    { "id": "push-ball-1", "family": "pushable", "prefab": "push_ball", "position": [-52, 0.48, -18], "rotation": [0, 0, 0], "scale": [0.95, 0.95, 0.95], "physics": { "shape": "ball", "mass": 1.05, "friction": 1, "restitution": 0.12 }, "color": "#ed9f87" },
+    { "id": "push-ball-2", "family": "pushable", "prefab": "push_ball", "position": [50, 0.52, -44], "rotation": [0, 0, 0], "scale": [1.04, 1.04, 1.04], "physics": { "shape": "ball", "mass": 1.2, "friction": 1, "restitution": 0.12 }, "color": "#f2d674" },
+    { "id": "push-ball-3", "family": "pushable", "prefab": "push_ball", "position": [34, 0.58, 42], "rotation": [0, 0, 0], "scale": [1.16, 1.16, 1.16], "physics": { "shape": "ball", "mass": 1.35, "friction": 1, "restitution": 0.12 }, "color": "#ed9f87" },
+    { "id": "push-ball-4", "family": "pushable", "prefab": "push_ball", "position": [-18, 0.45, 56], "rotation": [0, 0, 0], "scale": [0.9, 0.9, 0.9], "physics": { "shape": "ball", "mass": 1.0, "friction": 1, "restitution": 0.1 }, "color": "#f2d674" },
+    { "id": "push-box-1", "family": "pushable", "prefab": "push_box", "position": [61, 0.8, 9], "rotation": [0, 0.2, 0], "scale": [1.2, 1.6, 1.1], "physics": { "shape": "box", "mass": 1.9, "friction": 1, "restitution": 0.1 }, "color": "#9c83b5" },
+    { "id": "push-box-2", "family": "pushable", "prefab": "push_box", "position": [-58, 0.74, 12], "rotation": [0, -0.4, 0], "scale": [1, 1.48, 1], "physics": { "shape": "box", "mass": 1.75, "friction": 1, "restitution": 0.1 }, "color": "#aa7859" },
+    { "id": "push-box-3", "family": "pushable", "prefab": "push_box", "position": [30, 0.7, -60], "rotation": [0, 0.6, 0], "scale": [1.2, 1.4, 1.2], "physics": { "shape": "box", "mass": 1.8, "friction": 1, "restitution": 0.08 }, "color": "#aa7859" },
+    { "id": "push-box-4", "family": "pushable", "prefab": "push_box", "position": [-26, 0.7, -52], "rotation": [0, -0.1, 0], "scale": [1.1, 1.4, 1.15], "physics": { "shape": "box", "mass": 1.8, "friction": 1, "restitution": 0.08 }, "color": "#9c83b5" },
+
+    { "id": "foliage-tree-1", "family": "foliage", "prefab": "tree_pink", "position": [-30, 0, 18], "rotation": [0, 0.2, 0], "scale": [1.4, 1.4, 1.4] },
+    { "id": "foliage-tree-2", "family": "foliage", "prefab": "tree_pink", "position": [26, 0, 33], "rotation": [0, -0.5, 0], "scale": [1.3, 1.3, 1.3] },
+    { "id": "foliage-tree-3", "family": "foliage", "prefab": "tree_yellow", "position": [48, 0, -12], "rotation": [0, 0.8, 0], "scale": [1.3, 1.3, 1.3] },
+    { "id": "foliage-tree-4", "family": "foliage", "prefab": "tree_green", "position": [-48, 0, -22], "rotation": [0, -0.8, 0], "scale": [1.25, 1.25, 1.25] },
+    { "id": "foliage-tree-5", "family": "foliage", "prefab": "tree_green", "position": [58, 0, 44], "rotation": [0, 0.1, 0], "scale": [1.5, 1.5, 1.5] },
+    { "id": "foliage-tree-6", "family": "foliage", "prefab": "tree_yellow", "position": [-56, 0, 40], "rotation": [0, -0.2, 0], "scale": [1.35, 1.35, 1.35] },
+
+    { "id": "foliage-bush-1", "family": "foliage", "prefab": "bush", "position": [-14, 0.5, 28], "rotation": [0, 0.3, 0], "scale": [1.2, 1, 1.1] },
+    { "id": "foliage-bush-2", "family": "foliage", "prefab": "bush", "position": [8, 0.5, 36], "rotation": [0, -0.2, 0], "scale": [1.4, 1.1, 1.3] },
+    { "id": "foliage-bush-3", "family": "foliage", "prefab": "bush", "position": [40, 0.5, 24], "rotation": [0, 0.6, 0], "scale": [1.1, 0.95, 1.05] },
+    { "id": "foliage-bush-4", "family": "foliage", "prefab": "bush", "position": [-34, 0.5, -10], "rotation": [0, 0.1, 0], "scale": [1.3, 1, 1.2] },
+    { "id": "foliage-bush-5", "family": "foliage", "prefab": "bush", "position": [55, 0.5, -33], "rotation": [0, -0.5, 0], "scale": [1.5, 1.2, 1.45] },
+    { "id": "foliage-bush-6", "family": "foliage", "prefab": "bush", "position": [-42, 0.5, 52], "rotation": [0, 0.4, 0], "scale": [1.2, 1, 1.2] },
+
+    { "id": "foliage-grass-1", "family": "foliage", "prefab": "grass_tuft", "position": [-8, 0.22, 11], "rotation": [0, 0.2, 0], "scale": [1, 1.2, 1] },
+    { "id": "foliage-grass-2", "family": "foliage", "prefab": "grass_tuft", "position": [2, 0.22, 14], "rotation": [0, -0.2, 0], "scale": [1.1, 1.3, 1.1] },
+    { "id": "foliage-grass-3", "family": "foliage", "prefab": "grass_tuft", "position": [12, 0.22, 18], "rotation": [0, 0.4, 0], "scale": [0.9, 1.1, 0.9] },
+    { "id": "foliage-grass-4", "family": "foliage", "prefab": "grass_tuft", "position": [22, 0.22, 20], "rotation": [0, -0.4, 0], "scale": [1.2, 1.4, 1.2] },
+    { "id": "foliage-grass-5", "family": "foliage", "prefab": "grass_tuft", "position": [-18, 0.22, 4], "rotation": [0, 0.7, 0], "scale": [1.1, 1.2, 1.1] },
+    { "id": "foliage-grass-6", "family": "foliage", "prefab": "grass_tuft", "position": [30, 0.22, -4], "rotation": [0, -0.3, 0], "scale": [1, 1.1, 1] },
+    { "id": "foliage-grass-7", "family": "foliage", "prefab": "grass_tuft", "position": [48, 0.22, -20], "rotation": [0, 0.2, 0], "scale": [1.15, 1.45, 1.15] },
+    { "id": "foliage-grass-8", "family": "foliage", "prefab": "grass_tuft", "position": [-35, 0.22, -30], "rotation": [0, 0.3, 0], "scale": [1, 1.2, 1] },
+    { "id": "foliage-grass-9", "family": "foliage", "prefab": "grass_tuft", "position": [60, 0.22, 8], "rotation": [0, -0.6, 0], "scale": [0.9, 1, 0.9] },
+    { "id": "foliage-grass-10", "family": "foliage", "prefab": "grass_tuft", "position": [-60, 0.22, 16], "rotation": [0, 0.5, 0], "scale": [1.1, 1.3, 1.1] }
+  ]
+}
