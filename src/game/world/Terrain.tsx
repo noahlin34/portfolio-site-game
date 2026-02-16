@@ -58,7 +58,7 @@ export function Terrain({ config }: TerrainProps) {
 
   return (
     <RigidBody type="fixed" colliders={false}>
-      <CuboidCollider args={[config.world.size / 2, 0.16, config.world.size / 2]} position={[0, -0.16, 0]} friction={1.3} />
+      <CuboidCollider args={[config.world.size / 2, 3, config.world.size / 2]} position={[0, -3, 0]} friction={1.3} />
 
       <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[config.world.size, config.world.size, 1, 1]} />
@@ -86,6 +86,8 @@ export function Terrain({ config }: TerrainProps) {
       </mesh>
 
       <group position={[13.5, 0, 6]} rotation={[0, -0.21, 0]}>
+        <CuboidCollider args={[82 / 2, 0.26, 33 / 2]} position={[0, -0.26, 0]} friction={1.35} />
+
         <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.0035, 0]}>
           <planeGeometry args={[82, 33, 1, 1]} />
           <meshStandardMaterial
@@ -96,21 +98,18 @@ export function Terrain({ config }: TerrainProps) {
           />
         </mesh>
 
-        <CuboidCollider args={[73.8 / 2, 0.14, 1.5 / 2]} position={[0, 0.14, -17]} friction={1.55} />
-        <CuboidCollider args={[73.8 / 2, 0.06, 0.62 / 2]} position={[0, 0.28, -16.56]} friction={1.55} />
-
         {curbSegments.map((segment) => (
           <group key={`curb-${segment.x}`}>
             <mesh
               receiveShadow
               castShadow
-              position={[segment.x, 0.01, -17]}
+              position={[segment.x, 0.012, -17]}
             >
-              <boxGeometry args={[3.18, 0.05, 1.5]} />
+              <boxGeometry args={[3.18, 0.024, 1.5]} />
               <meshStandardMaterial color={segment.color} roughness={0.66} metalness={0.02} />
             </mesh>
-            <mesh receiveShadow castShadow position={[segment.x, 0.22, -16.56]}>
-              <boxGeometry args={[2.72, 0.04, 0.62]} />
+            <mesh receiveShadow castShadow position={[segment.x, 0.028, -16.56]}>
+              <boxGeometry args={[2.72, 0.02, 0.62]} />
               <meshStandardMaterial
                 color={segment.color === '#de4d36' ? '#b9382a' : '#e7d8d8'}
                 roughness={0.68}
