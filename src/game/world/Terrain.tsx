@@ -29,7 +29,7 @@ const chevrons = [
 
 function TrackChevron({ x, z }: { x: number; z: number }) {
   return (
-    <group position={[x, 0.058, z]}>
+    <group position={[x, 0.01, z]}>
       <mesh rotation={[0, Math.PI * 0.25, 0]}>
         <boxGeometry args={[1.85, 0.02, 0.3]} />
         <meshStandardMaterial color="#f4ebf4" roughness={0.44} metalness={0.02} />
@@ -58,7 +58,7 @@ export function Terrain({ config }: TerrainProps) {
 
   return (
     <RigidBody type="fixed" colliders={false}>
-      <CuboidCollider args={[config.world.size / 2, 0.35, config.world.size / 2]} friction={1.3} />
+      <CuboidCollider args={[config.world.size / 2, 0.16, config.world.size / 2]} position={[0, -0.16, 0]} friction={1.3} />
 
       <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[config.world.size, config.world.size, 1, 1]} />
@@ -70,23 +70,23 @@ export function Terrain({ config }: TerrainProps) {
         />
       </mesh>
 
-      <mesh receiveShadow rotation={[-Math.PI / 2, 0.14, 0]} position={[0, 0.02, 0]}>
+      <mesh receiveShadow rotation={[-Math.PI / 2, 0.14, 0]} position={[0, 0.002, 0]}>
         <planeGeometry args={[144, 14.2, 1, 1]} />
         <meshStandardMaterial map={pathTexture ?? undefined} color={config.palette.path} roughness={0.88} metalness={0.03} />
       </mesh>
 
-      <mesh receiveShadow rotation={[-Math.PI / 2, -0.78, 0]} position={[12, 0.021, -7]}>
+      <mesh receiveShadow rotation={[-Math.PI / 2, -0.78, 0]} position={[12, 0.0021, -7]}>
         <planeGeometry args={[102, 10.8, 1, 1]} />
         <meshStandardMaterial map={pathTexture ?? undefined} color={config.palette.path} roughness={0.88} metalness={0.03} />
       </mesh>
 
-      <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[-2, 0.024, 1.5]}>
+      <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[-2, 0.0024, 1.5]}>
         <circleGeometry args={[8.6, 28]} />
         <meshStandardMaterial map={pathTexture ?? undefined} color={config.palette.path} roughness={0.88} metalness={0.03} />
       </mesh>
 
       <group position={[13.5, 0, 6]} rotation={[0, -0.21, 0]}>
-        <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.04, 0]}>
+        <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.0035, 0]}>
           <planeGeometry args={[82, 33, 1, 1]} />
           <meshStandardMaterial
             map={trackTexture ?? undefined}
@@ -97,16 +97,18 @@ export function Terrain({ config }: TerrainProps) {
         </mesh>
 
         {curbSegments.map((segment) => (
-          <mesh
-            key={`curb-${segment.x}`}
-            receiveShadow
-            castShadow
-            position={[segment.x, 0.048, -17]}
-            rotation={[-Math.PI / 2, 0, 0]}
-          >
-            <planeGeometry args={[3.18, 1.5]} />
-            <meshStandardMaterial color={segment.color} roughness={0.66} metalness={0.02} />
-          </mesh>
+          <group key={`curb-${segment.x}`}>
+            <CuboidCollider args={[3.18 / 2, 0.08, 1.5 / 2]} position={[segment.x, 0.08, -17]} friction={1.5} />
+            <mesh
+              receiveShadow
+              castShadow
+              position={[segment.x, 0.0065, -17]}
+              rotation={[-Math.PI / 2, 0, 0]}
+            >
+              <planeGeometry args={[3.18, 1.5]} />
+              <meshStandardMaterial color={segment.color} roughness={0.66} metalness={0.02} />
+            </mesh>
+          </group>
         ))}
 
         {chevrons.map((chevron) => (
@@ -119,7 +121,7 @@ export function Terrain({ config }: TerrainProps) {
         <meshStandardMaterial color="#62bfd1" roughness={0.28} metalness={0.16} />
       </mesh>
 
-      <mesh receiveShadow rotation={[-Math.PI / 2, 0.12, 0]} position={[-45, 0.012, 58]}>
+      <mesh receiveShadow rotation={[-Math.PI / 2, 0.12, 0]} position={[-45, 0.0012, 58]}>
         <planeGeometry args={[82, 50, 1, 1]} />
         <meshStandardMaterial color="#8ca95e" roughness={0.94} metalness={0.01} transparent opacity={0.88} />
       </mesh>
