@@ -108,6 +108,8 @@ const getPatchMaterialProps = (patch: TerrainPatch, config: ArtDirectionConfig) 
 
 export function LevelTerrain({ config, level, selectable, selectedPatchId, onSelectPatch, objectRefs }: LevelTerrainProps) {
   const waterMaterialRefs = useRef<Record<string, ShaderMaterial | null>>({})
+  const patchGroupRefs = useRef<Record<string, Object3D | null>>({})
+  const trackCurbRefs = useRef<Record<string, Object3D | null>>({})
   const asphaltTexture = useMemo(
     () => createAsphaltTexture({ seed: config.world.seed + 11, repeat: 46 }),
     [config.world.seed],
@@ -121,7 +123,7 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
     [config.world.seed],
   )
 
-  useFrame(({ clock }) => {
+  useFrame(({ clock, camera }) => {
     const time = clock.elapsedTime
     Object.values(waterMaterialRefs.current).forEach((material) => {
       if (!material) {
@@ -129,6 +131,39 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
       }
       const uniforms = material.uniforms as unknown as WaterUniforms
       uniforms.uTime.value = time
+    })
+
+    if (selectable) {
+      return
+    }
+
+    const cullRadius = config.world.size * 0.74
+
+    level.terrainPatches.forEach((patch) => {
+      const group = patchGroupRefs.current[patch.id]
+      if (!group) {
+        return
+      }
+      const extent = patch.shape === 'circle' ? patch.size[0] : Math.max(patch.size[0], patch.size[1]) * 0.5
+      const dx = patch.position[0] - camera.position.x
+      const dz = patch.position[2] - camera.position.z
+      const threshold = cullRadius + extent
+      group.visible = dx * dx + dz * dz < threshold * threshold
+    })
+
+    level.terrainPatches.forEach((patch) => {
+      if (patch.kind !== 'track' || patch.shape !== 'plane') {
+        return
+      }
+      const curbs = trackCurbRefs.current[patch.id]
+      if (!curbs) {
+        return
+      }
+      const extent = Math.max(patch.size[0], patch.size[1]) * 0.6
+      const dx = patch.position[0] - camera.position.x
+      const dz = patch.position[2] - camera.position.z
+      const threshold = cullRadius + extent
+      curbs.visible = dx * dx + dz * dz < threshold * threshold
     })
   })
 
@@ -192,7 +227,12 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
               : undefined
 
         return (
-          <group key={patch.id}>
+          <group
+            key={patch.id}
+            ref={(node) => {
+              patchGroupRefs.current[patch.id] = node
+            }}
+          >
             <mesh
               ref={(node) => {
                 if (!objectRefs) {
@@ -323,6 +363,9 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
             return (
               <group
                 key={`track-curbs-${patch.id}`}
+                ref={(node) => {
+                  trackCurbRefs.current[patch.id] = node
+                }}
                 position={[patch.position[0], 0, patch.position[2]]}
                 rotation={[0, patch.rotation[2], 0]}
               >

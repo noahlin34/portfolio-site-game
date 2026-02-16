@@ -1,5 +1,6 @@
 import { BallCollider, CuboidCollider, RigidBody } from '@react-three/rapier'
-import type { MutableRefObject } from 'react'
+import { useFrame } from '@react-three/fiber'
+import { useRef, type MutableRefObject } from 'react'
 import { type Object3D } from 'three'
 import type { ArtDirectionConfig } from '../config/artDirection'
 import { EntityVisual } from '../level/prefabs'
@@ -33,6 +34,32 @@ export function LevelEntities({
   onSelectEntity,
   objectRefs,
 }: LevelEntitiesProps) {
+  const staticEntityRefs = useRef<Record<string, Object3D | null>>({})
+
+  useFrame(({ camera }) => {
+    if (selectable) {
+      return
+    }
+
+    const cullRadius = config.world.size * 0.7
+    const cullRadiusSq = cullRadius * cullRadius
+
+    level.entities.forEach((entity) => {
+      if (entity.family === 'pushable') {
+        return
+      }
+
+      const object = staticEntityRefs.current[entity.id]
+      if (!object) {
+        return
+      }
+
+      const dx = entity.position[0] - camera.position.x
+      const dz = entity.position[2] - camera.position.z
+      object.visible = dx * dx + dz * dz < cullRadiusSq
+    })
+  })
+
   return (
     <>
       {level.entities.map((entity) => {
@@ -81,6 +108,7 @@ export function LevelEntities({
           <group
             key={entity.id}
             ref={(node) => {
+              staticEntityRefs.current[entity.id] = node
               if (!objectRefs) {
                 return
               }

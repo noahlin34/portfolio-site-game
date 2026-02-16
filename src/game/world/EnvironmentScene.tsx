@@ -4,6 +4,7 @@ import type { DriveControlsState } from '../../hooks/useDriveControls'
 import type { ArtDirectionConfig } from '../config/artDirection'
 import type { LevelData } from '../level/schema'
 import { VehiclePhysicsController } from '../vehicle/VehiclePhysicsController'
+import { Effects } from './Effects'
 import { Environment } from './Environment'
 import { Foliage } from './Foliage'
 import { LevelEntities } from './LevelEntities'
@@ -28,6 +29,8 @@ export function EnvironmentScene({ controlsRef, config, level }: EnvironmentScen
           <VehiclePhysicsController controlsRef={controlsRef} config={config} />
         </Physics>
       </Suspense>
+
+      <Effects config={config} />
     </>
   )
 }
