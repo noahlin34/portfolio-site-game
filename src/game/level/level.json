@@ -1,7 +1,7 @@
 {
   "version": 1,
   "meta": {
-    "name": "Stylized Test Grounds",
+    "name": "Bruno-Style Test Grounds",
     "updatedAt": "2026-02-16T12:00:00.000Z"
   },
   "terrainPatches": [
@@ -52,6 +52,26 @@
       "position": [-45, -0.02, 58],
       "rotation": [-1.5707963267948966, 0, 0.12],
       "size": [78, 46],
+      "collider": { "enabled": false },
+      "materialVariant": "default"
+    },
+    {
+      "id": "water-lagoon-1",
+      "kind": "water",
+      "shape": "circle",
+      "position": [-20, -0.015, 24],
+      "rotation": [-1.5707963267948966, 0, 0],
+      "size": [10, 10],
+      "collider": { "enabled": false },
+      "materialVariant": "alt"
+    },
+    {
+      "id": "water-lagoon-2",
+      "kind": "water",
+      "shape": "circle",
+      "position": [-14, -0.015, 18],
+      "rotation": [-1.5707963267948966, 0, 0],
+      "size": [7.5, 7.5],
       "collider": { "enabled": false },
       "materialVariant": "default"
     },
@@ -109,6 +129,7 @@
     { "id": "prop-cone-1", "family": "prop", "prefab": "cone", "position": [-24, 0, 13.5], "rotation": [0, 0, 0], "scale": [1, 1, 1] },
     { "id": "prop-cone-2", "family": "prop", "prefab": "cone", "position": [-27.4, 0, 10.5], "rotation": [0, 0, 0], "scale": [1, 1, 1] },
     { "id": "prop-sign-1", "family": "prop", "prefab": "arrow_sign", "position": [34, 0.2, 16], "rotation": [0, 0.2, 0], "scale": [1, 1, 1] },
+    { "id": "prop-name-sign-1", "family": "prop", "prefab": "name_sign", "position": [-6, 0, -16], "rotation": [0, -0.06, 0], "scale": [1, 1, 1] },
     { "id": "prop-rock-1", "family": "prop", "prefab": "rock", "position": [-46, 0.35, -30], "rotation": [0, 0.3, 0], "scale": [1.1, 0.9, 1.2] },
     { "id": "prop-rock-2", "family": "prop", "prefab": "rock", "position": [54, 0.3, 12], "rotation": [0, -0.2, 0], "scale": [0.9, 1, 1] },
 

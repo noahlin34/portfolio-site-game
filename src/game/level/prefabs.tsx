@@ -1,3 +1,4 @@
+import { Text } from '@react-three/drei'
 import type { ArtDirectionConfig } from '../config/artDirection'
 import type { LevelEntity } from './schema'
 
@@ -152,6 +153,28 @@ export function EntityVisual({ entity, config }: EntityVisualProps) {
           <mesh castShadow position={[0.56, 1.4, 0]} rotation={[0, 0, Math.PI * 0.5]}>
             <coneGeometry args={[0.28, 0.6, 5]} />
             <meshStandardMaterial color="#58a6d9" roughness={0.52} metalness={0.03} />
+          </mesh>
+        </group>
+      )
+    case 'name_sign':
+      return (
+        <group>
+          <Text
+            position={[0, 0.92, 0]}
+            rotation={[-Math.PI * 0.02, 0.06, 0]}
+            fontSize={2.2}
+            letterSpacing={0.02}
+            color="#ead6f8"
+            anchorX="center"
+            anchorY="middle"
+            outlineColor="#cfb2e8"
+            outlineWidth={0.045}
+          >
+            BRUNO SIMON
+          </Text>
+          <mesh position={[0, 0.06, 0]}>
+            <boxGeometry args={[22, 0.08, 1.18]} />
+            <meshStandardMaterial color="#dcb4ed" roughness={0.54} metalness={0.03} transparent opacity={0.22} />
           </mesh>
         </group>
       )

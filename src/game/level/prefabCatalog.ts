@@ -31,6 +31,7 @@ export const entityPrefabs: EntityPrefabDefinition[] = [
   { id: 'cone', family: 'prop', label: 'Cone', defaultScale: [1, 1, 1] },
   { id: 'arrow_sign', family: 'prop', label: 'Arrow Sign', defaultScale: [1, 1, 1] },
   { id: 'rock', family: 'prop', label: 'Rock', defaultScale: [1, 1, 1] },
+  { id: 'name_sign', family: 'prop', label: 'Name Sign', defaultScale: [1, 1, 1] },
 
   {
     id: 'push_box',
