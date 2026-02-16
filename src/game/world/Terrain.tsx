@@ -73,7 +73,7 @@ export function Terrain({ config }: TerrainProps) {
         />
       </mesh>
 
-      <mesh receiveShadow rotation={[-Math.PI / 2, 0.14, 0]} position={[0, 0.006, 0]}>
+      <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0.14]} position={[0, 0.006, 0]}>
         <planeGeometry args={[144, 14.2, 1, 1]} />
         <meshStandardMaterial
           map={pathTexture ?? undefined}
@@ -83,7 +83,7 @@ export function Terrain({ config }: TerrainProps) {
         />
       </mesh>
 
-      <mesh receiveShadow rotation={[-Math.PI / 2, -0.78, 0]} position={[12, 0.0062, -7]}>
+      <mesh receiveShadow rotation={[-Math.PI / 2, 0, -0.78]} position={[12, 0.0062, -7]}>
         <planeGeometry args={[102, 10.8, 1, 1]} />
         <meshStandardMaterial
           map={pathTexture ?? undefined}
@@ -142,7 +142,7 @@ export function Terrain({ config }: TerrainProps) {
         ))}
       </group>
 
-      <mesh rotation={[-Math.PI / 2, 0.12, 0]} position={[-45, -0.02, 58]}>
+      <mesh rotation={[-Math.PI / 2, 0, 0.12]} position={[-45, -0.02, 58]}>
         <planeGeometry args={[78, 46, 1, 1]} />
         <meshStandardMaterial color="#62bfd1" roughness={0.28} metalness={0.16} />
       </mesh>
@@ -151,7 +151,7 @@ export function Terrain({ config }: TerrainProps) {
         <mesh
           key={`grass-island-${index}`}
           receiveShadow
-          rotation={[-Math.PI / 2, island.rotation, 0]}
+          rotation={[-Math.PI / 2, 0, island.rotation]}
           position={island.position as [number, number, number]}
         >
           <planeGeometry args={[island.size[0], island.size[1], 1, 1]} />
