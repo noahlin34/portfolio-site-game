@@ -1,4 +1,5 @@
 import { useLayoutEffect, useMemo, useRef } from 'react'
+import { Text } from '@react-three/drei'
 import { InstancedMesh, Matrix4 } from 'three'
 import type { ArtDirectionConfig } from '../config/artDirection'
 import { composeMatrix, createRng, randomRange } from '../utils/random'
@@ -31,6 +32,57 @@ function Lantern({ position }: { position: [number, number, number] }) {
       <mesh position={[0, 1.95, 0]}>
         <boxGeometry args={[0.3, 0.42, 0.3]} />
         <meshStandardMaterial color="#ffd89a" emissive="#ffc772" emissiveIntensity={0.85} roughness={0.2} />
+      </mesh>
+    </group>
+  )
+}
+
+function Cone({ position }: { position: [number, number, number] }) {
+  return (
+    <group position={position}>
+      <mesh castShadow position={[0, 0.18, 0]}>
+        <coneGeometry args={[0.34, 0.46, 6]} />
+        <meshStandardMaterial color="#df6b3a" roughness={0.56} metalness={0.04} />
+      </mesh>
+      <mesh position={[0, 0.13, 0]}>
+        <cylinderGeometry args={[0.22, 0.26, 0.07, 14]} />
+        <meshStandardMaterial color="#f6f1f1" roughness={0.35} metalness={0.06} />
+      </mesh>
+      <mesh receiveShadow position={[0, 0.02, 0]}>
+        <cylinderGeometry args={[0.44, 0.5, 0.04, 14]} />
+        <meshStandardMaterial color="#6f4c35" roughness={0.82} metalness={0.02} />
+      </mesh>
+    </group>
+  )
+}
+
+function Bleachers({ position, rotation }: { position: [number, number, number]; rotation: [number, number, number] }) {
+  return (
+    <group position={position} rotation={rotation}>
+      <mesh castShadow position={[0, 1.02, 0]}>
+        <boxGeometry args={[10, 0.24, 0.62]} />
+        <meshStandardMaterial color="#c48758" roughness={0.78} metalness={0.06} />
+      </mesh>
+      <mesh castShadow position={[0, 0.68, 0.5]}>
+        <boxGeometry args={[10, 0.24, 0.62]} />
+        <meshStandardMaterial color="#c48758" roughness={0.78} metalness={0.06} />
+      </mesh>
+      <mesh castShadow position={[0, 0.34, 1.0]}>
+        <boxGeometry args={[10, 0.24, 0.62]} />
+        <meshStandardMaterial color="#c48758" roughness={0.78} metalness={0.06} />
+      </mesh>
+
+      <mesh castShadow position={[-4.7, 0.52, 0.54]} rotation={[0, 0, -0.24]}>
+        <boxGeometry args={[0.12, 1.52, 1.6]} />
+        <meshStandardMaterial color="#71728a" roughness={0.42} metalness={0.34} />
+      </mesh>
+      <mesh castShadow position={[4.7, 0.52, 0.54]} rotation={[0, 0, 0.24]}>
+        <boxGeometry args={[0.12, 1.52, 1.6]} />
+        <meshStandardMaterial color="#71728a" roughness={0.42} metalness={0.34} />
+      </mesh>
+      <mesh castShadow position={[0, 1.24, -0.26]}>
+        <boxGeometry args={[10.2, 0.18, 0.16]} />
+        <meshStandardMaterial color="#6d657f" roughness={0.42} metalness={0.34} />
       </mesh>
     </group>
   )
@@ -105,6 +157,53 @@ export function Props({ config }: PropsProps) {
         </mesh>
       </group>
 
+      <Bleachers position={[-11.5, 0, 23]} rotation={[0, -0.18, 0]} />
+
+      <group position={[24.8, 0, 24.2]} rotation={[0, -0.2, 0]}>
+        <mesh castShadow position={[0, 1.5, 0]}>
+          <boxGeometry args={[4.8, 3.1, 0.24]} />
+          <meshStandardMaterial color="#3b3d4f" roughness={0.42} metalness={0.38} />
+        </mesh>
+        <mesh castShadow position={[-2.3, 1.1, 0]}>
+          <boxGeometry args={[0.28, 3.9, 0.28]} />
+          <meshStandardMaterial color="#6f7184" roughness={0.44} metalness={0.34} />
+        </mesh>
+        <mesh castShadow position={[2.3, 1.1, 0]}>
+          <boxGeometry args={[0.28, 3.9, 0.28]} />
+          <meshStandardMaterial color="#6f7184" roughness={0.44} metalness={0.34} />
+        </mesh>
+
+        <Text position={[0, 2.55, 0.18]} fontSize={0.46} color="#ffffff" anchorX="center" anchorY="middle">
+          RESET
+        </Text>
+        <Text position={[0, 1.84, 0.18]} fontSize={0.26} color="#f5f2fd" anchorX="center" anchorY="middle">
+          in 2h 20m
+        </Text>
+      </group>
+
+      <group position={[20.4, 0.12, 22.4]} rotation={[0, 0.18, 0]}>
+        <mesh castShadow>
+          <sphereGeometry args={[0.68, 18, 18]} />
+          <meshStandardMaterial color="#e74c3e" roughness={0.46} metalness={0.08} />
+        </mesh>
+        <mesh position={[0, 0.04, 0.64]}>
+          <cylinderGeometry args={[0.42, 0.42, 0.14, 20]} />
+          <meshStandardMaterial color="#f6edf2" roughness={0.18} metalness={0.06} />
+        </mesh>
+        <mesh position={[0, 0.07, 0.74]} rotation={[0, 0, -Math.PI * 0.24]}>
+          <boxGeometry args={[0.06, 0.24, 0.08]} />
+          <meshStandardMaterial color="#413847" roughness={0.35} metalness={0.25} />
+        </mesh>
+        <mesh position={[0.34, 0.56, 0.22]} castShadow>
+          <sphereGeometry args={[0.18, 12, 12]} />
+          <meshStandardMaterial color="#d84337" roughness={0.46} metalness={0.08} />
+        </mesh>
+        <mesh position={[-0.34, 0.56, 0.22]} castShadow>
+          <sphereGeometry args={[0.18, 12, 12]} />
+          <meshStandardMaterial color="#d84337" roughness={0.46} metalness={0.08} />
+        </mesh>
+      </group>
+
       <group position={[-8, 0, 20]}>
         <mesh castShadow position={[0, 0.34, 0]}>
           <boxGeometry args={[3, 0.18, 0.78]} />
@@ -143,6 +242,9 @@ export function Props({ config }: PropsProps) {
       <Lantern position={[12, 0, 30]} />
       <Lantern position={[31, 0, 6]} />
       <Lantern position={[-27, 0, -14]} />
+
+      <Cone position={[-24, 0, 13.5]} />
+      <Cone position={[-27.4, 0, 10.5]} />
 
       <mesh position={[-6, 0.5, -16]} castShadow>
         <boxGeometry args={[2.6, 0.8, 0.3]} />
