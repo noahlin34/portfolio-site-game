@@ -1,7 +1,9 @@
-import { useMemo } from 'react'
+import { useMemo, useRef } from 'react'
 import { CuboidCollider, RigidBody } from '@react-three/rapier'
 import type { MutableRefObject } from 'react'
-import type { Object3D } from 'three'
+import { useFrame } from '@react-three/fiber'
+import { Color } from 'three'
+import type { Object3D, ShaderMaterial } from 'three'
 import type { ArtDirectionConfig } from '../config/artDirection'
 import { createAsphaltTexture } from '../materials/asphalt'
 import { createPathTileTexture } from '../materials/stylized'
@@ -14,6 +16,64 @@ interface LevelTerrainProps {
   selectedPatchId?: string | null
   onSelectPatch?: (patchId: string) => void
   objectRefs?: MutableRefObject<Record<string, Object3D | null>>
+}
+
+const waterVertexShader = `
+uniform float uTime;
+varying vec2 vUv;
+varying float vWave;
+
+void main() {
+  vUv = uv;
+  vec3 pos = position;
+  float waveA = sin((uv.x * 14.0 + uTime * 0.35)) * 0.018;
+  float waveB = cos((uv.y * 16.0 - uTime * 0.28)) * 0.014;
+  float waveC = sin(((uv.x + uv.y) * 21.0 + uTime * 0.22)) * 0.01;
+  vWave = waveA + waveB + waveC;
+  pos.z += vWave;
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+}
+`
+
+const waterFragmentShader = `
+uniform float uTime;
+uniform vec3 uDeepColor;
+uniform vec3 uShallowColor;
+uniform vec3 uFoamColor;
+uniform vec3 uGlowColor;
+uniform vec3 uSpecColor;
+varying vec2 vUv;
+varying float vWave;
+
+float edgeStrength(vec2 uv) {
+  float edge = min(min(uv.x, 1.0 - uv.x), min(uv.y, 1.0 - uv.y));
+  return 1.0 - smoothstep(0.02, 0.14, edge);
+}
+
+void main() {
+  float radial = length(vUv - vec2(0.5)) * 1.72;
+  float depth = smoothstep(0.14, 0.97, radial + vWave * 0.85);
+  vec3 base = mix(uShallowColor, uDeepColor, depth);
+
+  float rippleA = sin((vUv.x * 46.0 + vUv.y * 37.0) + uTime * 1.24) * 0.5 + 0.5;
+  float rippleB = sin((vUv.x * 29.0 - vUv.y * 34.0) - uTime * 1.12) * 0.5 + 0.5;
+  float streak = smoothstep(0.72, 0.99, rippleA) * (1.0 - depth) * 0.22;
+  float caustic = smoothstep(0.74, 0.98, rippleB) * (1.0 - depth) * 0.18;
+  float foam = edgeStrength(vUv) * (0.72 + sin((vUv.x - vUv.y) * 26.0 + uTime * 1.85) * 0.28);
+  float spec = smoothstep(0.78, 1.0, sin(vUv.x * 58.0 - vUv.y * 55.0 + uTime * 1.6) * 0.5 + 0.5) * (1.0 - depth) * 0.18;
+
+  vec3 color = base + uGlowColor * (streak + caustic) + uFoamColor * foam * 0.55 + uSpecColor * spec;
+  gl_FragColor = vec4(color, 0.97);
+}
+`
+
+interface WaterUniforms {
+  uTime: { value: number }
+  uDeepColor: { value: Color }
+  uShallowColor: { value: Color }
+  uFoamColor: { value: Color }
+  uGlowColor: { value: Color }
+  uSpecColor: { value: Color }
 }
 
 const getPatchMaterialProps = (patch: TerrainPatch, config: ArtDirectionConfig) => {
@@ -47,6 +107,7 @@ const getPatchMaterialProps = (patch: TerrainPatch, config: ArtDirectionConfig) 
 }
 
 export function LevelTerrain({ config, level, selectable, selectedPatchId, onSelectPatch, objectRefs }: LevelTerrainProps) {
+  const waterMaterialRefs = useRef<Record<string, ShaderMaterial | null>>({})
   const asphaltTexture = useMemo(
     () => createAsphaltTexture({ seed: config.world.seed + 11, repeat: 46 }),
     [config.world.seed],
@@ -59,6 +120,17 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
     () => createPathTileTexture({ seed: config.world.seed + 21, repeat: 20 }),
     [config.world.seed],
   )
+
+  useFrame(({ clock }) => {
+    const time = clock.elapsedTime
+    Object.values(waterMaterialRefs.current).forEach((material) => {
+      if (!material) {
+        return
+      }
+      const uniforms = material.uniforms as unknown as WaterUniforms
+      uniforms.uTime.value = time
+    })
+  })
 
   return (
     <RigidBody type="fixed" colliders={false}>
@@ -108,8 +180,11 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
 
       {level.terrainPatches.map((patch) => {
         const materialProps = getPatchMaterialProps(patch, config)
+        const useWaterShader = !selectable && patch.kind === 'water'
         const map =
-          patch.kind === 'path'
+          useWaterShader
+            ? undefined
+            : patch.kind === 'path'
             ? pathTexture
             : patch.kind === 'track'
               ? trackTexture
@@ -141,14 +216,34 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
               ) : (
                 <planeGeometry args={[patch.size[0], patch.size[1], 1, 1]} />
               )}
-              <meshStandardMaterial
-                map={map ?? undefined}
-                color={selectedPatchId === patch.id ? '#f6d39c' : materialProps.color}
-                roughness={materialProps.roughness}
-                metalness={materialProps.metalness}
-                emissive={patch.kind === 'water' ? '#1b3964' : '#000000'}
-                emissiveIntensity={patch.kind === 'water' ? 0.22 : 0}
-              />
+              {useWaterShader ? (
+                <shaderMaterial
+                  ref={(node) => {
+                    waterMaterialRefs.current[patch.id] = (node as ShaderMaterial | null) ?? null
+                  }}
+                  vertexShader={waterVertexShader}
+                  fragmentShader={waterFragmentShader}
+                  uniforms={{
+                    uTime: { value: 0 },
+                    uDeepColor: { value: new Color('#21416f') },
+                    uShallowColor: { value: new Color(patch.materialVariant === 'alt' ? '#2f8aa5' : '#2d7291') },
+                    uFoamColor: { value: new Color('#fff9e9') },
+                    uGlowColor: { value: new Color('#99ead4') },
+                    uSpecColor: { value: new Color('#f4f1e9') },
+                  }}
+                  transparent
+                  depthWrite={false}
+                />
+              ) : (
+                <meshStandardMaterial
+                  map={map ?? undefined}
+                  color={selectedPatchId === patch.id ? '#f6d39c' : materialProps.color}
+                  roughness={materialProps.roughness}
+                  metalness={materialProps.metalness}
+                  emissive={patch.kind === 'water' ? '#1b3964' : '#000000'}
+                  emissiveIntensity={patch.kind === 'water' ? 0.22 : 0}
+                />
+              )}
             </mesh>
 
             {!selectable && patch.kind === 'water' ? (
