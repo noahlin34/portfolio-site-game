@@ -1,4 +1,5 @@
-import { type MutableRefObject, useMemo, useRef } from 'react'
+import { type MutableRefObject, useMemo, useRef, useState } from 'react'
+import { Line } from '@react-three/drei'
 import { useFrame, useThree } from '@react-three/fiber'
 import { CuboidCollider, type RapierRigidBody, RigidBody } from '@react-three/rapier'
 import { Quaternion, Vector3, type Group } from 'three'
@@ -35,6 +36,8 @@ export function VehiclePhysicsController({ controlsRef, config }: VehiclePhysics
   const quaternionRef = useRef(new Quaternion())
   const steeringAngleRef = useRef(0)
   const cameraInitializedRef = useRef(false)
+  const trailTimerRef = useRef(0)
+  const [trailPoints, setTrailPoints] = useState<[number, number, number][]>([])
   const cameraOffset = useMemo(
     () => new Vector3(config.camera.offset[0], config.camera.offset[1], config.camera.offset[2]),
     [config.camera.offset],
@@ -226,28 +229,53 @@ export function VehiclePhysicsController({ controlsRef, config }: VehiclePhysics
 
     lookAtTarget.copy(smoothedFocus)
     camera.lookAt(lookAtTarget)
+
+    trailTimerRef.current += delta
+    if (trailTimerRef.current >= 0.08) {
+      trailTimerRef.current = 0
+      setTrailPoints((previous) => {
+        const next = [...previous, [translation.x, 0.08, translation.z] as [number, number, number]]
+        if (next.length > 72) {
+          next.shift()
+        }
+        return next
+      })
+    }
   })
 
   return (
-    <RigidBody
-      ref={rigidBodyRef}
-      colliders={false}
-      position={[0, 1, 0]}
-      mass={2.1}
-      linearDamping={0.32}
-      angularDamping={0.72}
-      friction={1.2}
-      restitution={0.08}
-      enabledRotations={[false, true, false]}
-      canSleep={false}
-    >
-      <CuboidCollider args={[0.86, 0.38, 1.7]} />
-      <VehicleVisual
-        chassisRef={chassisRef}
-        frontLeftSteerRef={frontLeftSteerRef}
-        frontRightSteerRef={frontRightSteerRef}
-        brakingRef={brakeRef}
-      />
-    </RigidBody>
+    <>
+      <RigidBody
+        ref={rigidBodyRef}
+        colliders={false}
+        position={[0, 1, 0]}
+        mass={2.1}
+        linearDamping={0.32}
+        angularDamping={0.72}
+        friction={1.2}
+        restitution={0.08}
+        enabledRotations={[false, true, false]}
+        canSleep={false}
+      >
+        <CuboidCollider args={[0.86, 0.38, 1.7]} />
+        <VehicleVisual
+          chassisRef={chassisRef}
+          frontLeftSteerRef={frontLeftSteerRef}
+          frontRightSteerRef={frontRightSteerRef}
+          brakingRef={brakeRef}
+        />
+      </RigidBody>
+
+      {trailPoints.length > 1 ? (
+        <Line
+          points={trailPoints}
+          color="#fff8ee"
+          lineWidth={1.8}
+          transparent
+          opacity={0.92}
+          depthWrite={false}
+        />
+      ) : null}
+    </>
   )
 }
