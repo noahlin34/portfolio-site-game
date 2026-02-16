@@ -2,11 +2,10 @@ import { useMemo, useRef } from 'react'
 import { CuboidCollider, RigidBody } from '@react-three/rapier'
 import type { MutableRefObject } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { Color } from 'three'
-import type { Object3D, ShaderMaterial } from 'three'
+import type { Object3D } from 'three'
 import type { ArtDirectionConfig } from '../config/artDirection'
 import { createAsphaltTexture } from '../materials/asphalt'
-import { createPathTileTexture } from '../materials/stylized'
+import { createPathTileTexture, createWaterTexture } from '../materials/stylized'
 import type { LevelData, TerrainPatch } from '../level/schema'
 
 interface LevelTerrainProps {
@@ -16,64 +15,6 @@ interface LevelTerrainProps {
   selectedPatchId?: string | null
   onSelectPatch?: (patchId: string) => void
   objectRefs?: MutableRefObject<Record<string, Object3D | null>>
-}
-
-const waterVertexShader = `
-uniform float uTime;
-varying vec2 vUv;
-varying float vWave;
-
-void main() {
-  vUv = uv;
-  vec3 pos = position;
-  float waveA = sin((uv.x * 14.0 + uTime * 0.35)) * 0.018;
-  float waveB = cos((uv.y * 16.0 - uTime * 0.28)) * 0.014;
-  float waveC = sin(((uv.x + uv.y) * 21.0 + uTime * 0.22)) * 0.01;
-  vWave = waveA + waveB + waveC;
-  pos.z += vWave;
-  gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
-}
-`
-
-const waterFragmentShader = `
-uniform float uTime;
-uniform vec3 uDeepColor;
-uniform vec3 uShallowColor;
-uniform vec3 uFoamColor;
-uniform vec3 uGlowColor;
-uniform vec3 uSpecColor;
-varying vec2 vUv;
-varying float vWave;
-
-float edgeStrength(vec2 uv) {
-  float edge = min(min(uv.x, 1.0 - uv.x), min(uv.y, 1.0 - uv.y));
-  return 1.0 - smoothstep(0.02, 0.14, edge);
-}
-
-void main() {
-  float radial = length(vUv - vec2(0.5)) * 1.72;
-  float depth = smoothstep(0.14, 0.97, radial + vWave * 0.85);
-  vec3 base = mix(uShallowColor, uDeepColor, depth);
-
-  float rippleA = sin((vUv.x * 46.0 + vUv.y * 37.0) + uTime * 1.24) * 0.5 + 0.5;
-  float rippleB = sin((vUv.x * 29.0 - vUv.y * 34.0) - uTime * 1.12) * 0.5 + 0.5;
-  float streak = smoothstep(0.72, 0.99, rippleA) * (1.0 - depth) * 0.22;
-  float caustic = smoothstep(0.74, 0.98, rippleB) * (1.0 - depth) * 0.18;
-  float foam = edgeStrength(vUv) * (0.72 + sin((vUv.x - vUv.y) * 26.0 + uTime * 1.85) * 0.28);
-  float spec = smoothstep(0.78, 1.0, sin(vUv.x * 58.0 - vUv.y * 55.0 + uTime * 1.6) * 0.5 + 0.5) * (1.0 - depth) * 0.18;
-
-  vec3 color = base + uGlowColor * (streak + caustic) + uFoamColor * foam * 0.55 + uSpecColor * spec;
-  gl_FragColor = vec4(color, 0.97);
-}
-`
-
-interface WaterUniforms {
-  uTime: { value: number }
-  uDeepColor: { value: Color }
-  uShallowColor: { value: Color }
-  uFoamColor: { value: Color }
-  uGlowColor: { value: Color }
-  uSpecColor: { value: Color }
 }
 
 const getPatchMaterialProps = (patch: TerrainPatch, config: ArtDirectionConfig) => {
@@ -107,7 +48,6 @@ const getPatchMaterialProps = (patch: TerrainPatch, config: ArtDirectionConfig) 
 }
 
 export function LevelTerrain({ config, level, selectable, selectedPatchId, onSelectPatch, objectRefs }: LevelTerrainProps) {
-  const waterMaterialRefs = useRef<Record<string, ShaderMaterial | null>>({})
   const patchGroupRefs = useRef<Record<string, Object3D | null>>({})
   const trackCurbRefs = useRef<Record<string, Object3D | null>>({})
   const asphaltTexture = useMemo(
@@ -122,17 +62,12 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
     () => createPathTileTexture({ seed: config.world.seed + 21, repeat: 20 }),
     [config.world.seed],
   )
+  const waterTexture = useMemo(
+    () => createWaterTexture({ seed: config.world.seed + 17, repeat: 12 }),
+    [config.world.seed],
+  )
 
-  useFrame(({ clock, camera }) => {
-    const time = clock.elapsedTime
-    Object.values(waterMaterialRefs.current).forEach((material) => {
-      if (!material) {
-        return
-      }
-      const uniforms = material.uniforms as unknown as WaterUniforms
-      uniforms.uTime.value = time
-    })
-
+  useFrame(({ camera }) => {
     if (selectable) {
       return
     }
@@ -215,16 +150,15 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
 
       {level.terrainPatches.map((patch) => {
         const materialProps = getPatchMaterialProps(patch, config)
-        const useWaterShader =
-          !selectable && patch.kind === 'water' && patch.shape === 'circle' && patch.size[0] <= 40
         const map =
-          useWaterShader
-            ? undefined
-            : patch.kind === 'path'
+          patch.kind === 'path'
             ? pathTexture
             : patch.kind === 'track'
               ? trackTexture
+              : patch.kind === 'water'
+                ? waterTexture
               : undefined
+        const showWaterAccent = !selectable && patch.kind === 'water' && patch.shape === 'circle' && patch.size[0] >= 4
 
         return (
           <group
@@ -258,92 +192,32 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
               ) : (
                 <planeGeometry args={[patch.size[0], patch.size[1], 1, 1]} />
               )}
-              {useWaterShader ? (
-                <shaderMaterial
-                  ref={(node) => {
-                    waterMaterialRefs.current[patch.id] = (node as ShaderMaterial | null) ?? null
-                  }}
-                  vertexShader={waterVertexShader}
-                  fragmentShader={waterFragmentShader}
-                  uniforms={{
-                    uTime: { value: 0 },
-                    uDeepColor: { value: new Color('#21416f') },
-                    uShallowColor: { value: new Color(patch.materialVariant === 'alt' ? '#2f8aa5' : '#2d7291') },
-                    uFoamColor: { value: new Color('#fff9e9') },
-                    uGlowColor: { value: new Color('#99ead4') },
-                    uSpecColor: { value: new Color('#f4f1e9') },
-                  }}
-                  transparent
-                  depthWrite={false}
-                  polygonOffset
-                  polygonOffsetFactor={-1}
-                  polygonOffsetUnits={-1}
-                />
-              ) : (
-                <meshStandardMaterial
-                  map={map ?? undefined}
-                  color={selectedPatchId === patch.id ? '#f6d39c' : materialProps.color}
-                  roughness={materialProps.roughness}
-                  metalness={materialProps.metalness}
-                  emissive={patch.kind === 'water' ? '#1b3964' : '#000000'}
-                  emissiveIntensity={patch.kind === 'water' ? 0.22 : 0}
-                  polygonOffset
-                  polygonOffsetFactor={-1}
-                  polygonOffsetUnits={-1}
-                />
-              )}
+              <meshStandardMaterial
+                map={map ?? undefined}
+                color={selectedPatchId === patch.id ? '#f6d39c' : materialProps.color}
+                roughness={patch.kind === 'water' ? 0.4 : materialProps.roughness}
+                metalness={patch.kind === 'water' ? 0.08 : materialProps.metalness}
+                emissive={patch.kind === 'water' ? '#163558' : '#000000'}
+                emissiveIntensity={patch.kind === 'water' ? 0.18 : 0}
+                polygonOffset
+                polygonOffsetFactor={-1}
+                polygonOffsetUnits={-1}
+              />
             </mesh>
 
-            {!selectable && patch.kind === 'water' ? (
+            {showWaterAccent ? (
               <>
-                {patch.shape === 'circle' ? (
-                  <mesh
-                    rotation={patch.rotation}
-                    position={[patch.position[0], patch.position[1] + 0.0018, patch.position[2]]}
-                    scale={[0.7, 0.7, 0.7]}
-                  >
-                    <circleGeometry args={[patch.size[0], 54]} />
-                    <meshBasicMaterial color="#1d325d" transparent opacity={0.34} depthWrite={false} />
-                  </mesh>
-                ) : null}
                 <mesh
                   rotation={patch.rotation}
-                  position={[patch.position[0], patch.position[1] + 0.004, patch.position[2]]}
-                  scale={[1.03, 1.03, 1.03]}
+                  position={[patch.position[0], patch.position[1] + 0.0038, patch.position[2]]}
                 >
-                  {patch.shape === 'circle' ? (
-                    <ringGeometry args={[patch.size[0] * 0.88, patch.size[0] * 1.04, 64]} />
-                  ) : (
-                    <planeGeometry args={[patch.size[0], patch.size[1], 1, 1]} />
-                  )}
-                  <meshBasicMaterial color="#71d8cf" transparent opacity={0.3} depthWrite={false} />
+                  <ringGeometry args={[patch.size[0] * 0.94, patch.size[0] * 1.02, 56]} />
+                  <meshBasicMaterial color="#dff7ff" transparent opacity={0.26} depthWrite={false} />
                 </mesh>
-                {patch.shape === 'circle' ? (
-                  <mesh
-                    rotation={patch.rotation}
-                    position={[patch.position[0], patch.position[1] + 0.0062, patch.position[2]]}
-                  >
-                    <ringGeometry args={[patch.size[0] * 0.965, patch.size[0] * 1.015, 64]} />
-                    <meshBasicMaterial color="#fff7df" transparent opacity={0.3} depthWrite={false} />
-                  </mesh>
-                ) : null}
-
-                {patch.shape === 'circle' ? (
-                  <group rotation={patch.rotation} position={[patch.position[0], patch.position[1] + 0.0085, patch.position[2]]}>
-                    <mesh rotation={[0, 0, -0.35]}>
-                      <ringGeometry args={[patch.size[0] * 0.985, patch.size[0] * 1.004, 36, 1, 0.1, Math.PI * 0.58]} />
-                      <meshBasicMaterial color="#fff8e8" transparent opacity={0.42} depthWrite={false} />
-                    </mesh>
-                    <mesh rotation={[0, 0, 1.2]}>
-                      <ringGeometry args={[patch.size[0] * 0.982, patch.size[0] * 1.0, 36, 1, 0.2, Math.PI * 0.34]} />
-                      <meshBasicMaterial color="#fff8e8" transparent opacity={0.35} depthWrite={false} />
-                    </mesh>
-                    <mesh rotation={[0, 0, -2.1]}>
-                      <ringGeometry args={[patch.size[0] * 0.98, patch.size[0] * 1.002, 36, 1, 0.1, Math.PI * 0.42]} />
-                      <meshBasicMaterial color="#fef6de" transparent opacity={0.3} depthWrite={false} />
-                    </mesh>
-                  </group>
-                ) : null}
+                <mesh rotation={patch.rotation} position={[patch.position[0], patch.position[1] + 0.0056, patch.position[2]]}>
+                  <ringGeometry args={[patch.size[0] * 0.985, patch.size[0] * 1.005, 30, 1, 0.18, Math.PI * 0.58]} />
+                  <meshBasicMaterial color="#fff8e8" transparent opacity={0.32} depthWrite={false} />
+                </mesh>
               </>
             ) : null}
           </group>
