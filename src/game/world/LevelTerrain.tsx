@@ -75,6 +75,7 @@ const applyPatchMatrices = (
 export function LevelTerrain({ config, level, selectable, selectedPatchId, onSelectPatch, objectRefs }: LevelTerrainProps) {
   const patchGroupRefs = useRef<Record<string, Object3D | null>>({})
   const trackCurbRefs = useRef<Record<string, Object3D | null>>({})
+  const cullTimerRef = useRef(0)
   const waterPlaneDefaultRef = useRef<InstancedMesh>(null)
   const waterPlaneAltRef = useRef<InstancedMesh>(null)
   const waterCircleDefaultRef = useRef<InstancedMesh>(null)
@@ -131,6 +132,10 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
     () => waterPatches.filter((patch) => patch.shape === 'circle' && patch.size[0] >= 4),
     [waterPatches],
   )
+  const trackPlanePatches = useMemo(
+    () => level.terrainPatches.filter((patch) => patch.kind === 'track' && patch.shape === 'plane'),
+    [level.terrainPatches],
+  )
   const terrainGroundBounce = useMemo(
     () => createGroundBounceCompiler({ color: [1, 0.5, 0.24], intensity: 0.2, maxHeight: 3.4 }),
     [],
@@ -159,10 +164,15 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
     waterAccentPatches,
   ])
 
-  useFrame(({ camera }) => {
+  useFrame(({ camera }, delta) => {
     if (selectable) {
       return
     }
+    cullTimerRef.current += delta
+    if (cullTimerRef.current < 1 / 12) {
+      return
+    }
+    cullTimerRef.current = 0
 
     const cullRadius = config.world.size * 0.74
 
@@ -178,10 +188,7 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
       group.visible = dx * dx + dz * dz < threshold * threshold
     })
 
-    level.terrainPatches.forEach((patch) => {
-      if (patch.kind !== 'track' || patch.shape !== 'plane') {
-        return
-      }
+    trackPlanePatches.forEach((patch) => {
       const curbs = trackCurbRefs.current[patch.id]
       if (!curbs) {
         return
@@ -273,7 +280,7 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
 
           {waterCircleDefaultPatches.length > 0 ? (
             <instancedMesh ref={waterCircleDefaultRef} args={[undefined, undefined, waterCircleDefaultPatches.length]} renderOrder={2}>
-              <circleGeometry args={[1, 30]} />
+              <circleGeometry args={[1, 18]} />
               <meshLambertMaterial
                 map={waterTexture ?? undefined}
                 color="#234e77"
@@ -290,7 +297,7 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
 
           {waterCircleAltPatches.length > 0 ? (
             <instancedMesh ref={waterCircleAltRef} args={[undefined, undefined, waterCircleAltPatches.length]} renderOrder={2}>
-              <circleGeometry args={[1, 30]} />
+              <circleGeometry args={[1, 18]} />
               <meshLambertMaterial
                 map={waterTexture ?? undefined}
                 color="#2f7293"
@@ -308,11 +315,11 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
           {waterAccentPatches.length > 0 ? (
             <>
               <instancedMesh ref={waterAccentOuterRef} args={[undefined, undefined, waterAccentPatches.length]}>
-                <ringGeometry args={[0.94, 1.02, 56]} />
+                <ringGeometry args={[0.94, 1.02, 28]} />
                 <meshBasicMaterial color="#dff7ff" transparent opacity={0.26} depthWrite={false} />
               </instancedMesh>
               <instancedMesh ref={waterAccentInnerRef} args={[undefined, undefined, waterAccentPatches.length]}>
-                <ringGeometry args={[0.985, 1.005, 30, 1, 0.18, Math.PI * 0.58]} />
+                <ringGeometry args={[0.985, 1.005, 18, 1, 0.18, Math.PI * 0.58]} />
                 <meshBasicMaterial color="#fff8e8" transparent opacity={0.32} depthWrite={false} />
               </instancedMesh>
             </>
@@ -356,7 +363,7 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
               }}
             >
               {patch.shape === 'circle' ? (
-                <circleGeometry args={[patch.size[0], 30]} />
+                <circleGeometry args={[patch.size[0], 20]} />
               ) : (
                 <planeGeometry args={[patch.size[0], patch.size[1], 1, 1]} />
               )}

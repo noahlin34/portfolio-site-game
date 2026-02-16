@@ -273,6 +273,12 @@ export function VehiclePhysicsController({ controlsRef, config }: VehiclePhysics
     if (trailTimerRef.current >= 0.08) {
       trailTimerRef.current = 0
       const points = trailPointsRef.current
+      const lastPoint = points.length > 0 ? points[points.length - 1] : null
+      const hasMovedEnough = !lastPoint || Math.hypot(lastPoint[0] - translation.x, lastPoint[2] - translation.z) > 0.3
+      if (!hasMovedEnough) {
+        return
+      }
+
       points.push([translation.x, 0.08, translation.z])
       if (points.length > 72) {
         points.shift()

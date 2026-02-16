@@ -35,11 +35,17 @@ export function LevelEntities({
   objectRefs,
 }: LevelEntitiesProps) {
   const staticEntityRefs = useRef<Record<string, Object3D | null>>({})
+  const cullTimerRef = useRef(0)
 
-  useFrame(({ camera }) => {
+  useFrame(({ camera }, delta) => {
     if (selectable) {
       return
     }
+    cullTimerRef.current += delta
+    if (cullTimerRef.current < 1 / 12) {
+      return
+    }
+    cullTimerRef.current = 0
 
     const cullRadius = config.world.size * 0.7
     const cullRadiusSq = cullRadius * cullRadius
