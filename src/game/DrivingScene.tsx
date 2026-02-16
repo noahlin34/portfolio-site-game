@@ -1,7 +1,16 @@
 import { Suspense, type MutableRefObject, useMemo, useRef } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { BallCollider, CuboidCollider, Physics, type RapierRigidBody, RigidBody } from '@react-three/rapier'
-import { ACESFilmicToneMapping, Color, PCFSoftShadowMap, Quaternion, Vector3, type Group } from 'three'
+import {
+  ACESFilmicToneMapping,
+  CanvasTexture,
+  PCFSoftShadowMap,
+  Quaternion,
+  RepeatWrapping,
+  SRGBColorSpace,
+  Vector3,
+  type Group,
+} from 'three'
 import type { DriveControlsState } from '../hooks/useDriveControls'
 
 const GROUND_SIZE = 160
@@ -22,71 +31,6 @@ const CAMERA_FOCUS_DAMPING = 6
 const CAMERA_POSITION_DAMPING = 9
 const CAMERA_LOOK_Y = 1
 const UP_AXIS = new Vector3(0, 1, 0)
-const GROUND_VERTEX_SHADER = `
-  varying vec2 vUv;
-
-  void main() {
-    vUv = uv * 130.0;
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-  }
-`
-const GROUND_FRAGMENT_SHADER = `
-  uniform vec3 uBaseColor;
-  uniform vec3 uStoneColor;
-  uniform vec3 uOilColor;
-  varying vec2 vUv;
-
-  float hash(vec2 p) {
-    p = fract(p * vec2(123.34, 456.21));
-    p += dot(p, p + 45.32);
-    return fract(p.x * p.y);
-  }
-
-  float noise(vec2 p) {
-    vec2 i = floor(p);
-    vec2 f = fract(p);
-    vec2 u = f * f * (3.0 - 2.0 * f);
-
-    float a = hash(i);
-    float b = hash(i + vec2(1.0, 0.0));
-    float c = hash(i + vec2(0.0, 1.0));
-    float d = hash(i + vec2(1.0, 1.0));
-
-    return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
-  }
-
-  float fbm(vec2 p) {
-    float value = 0.0;
-    float amplitude = 0.5;
-    for (int i = 0; i < 5; i++) {
-      value += noise(p) * amplitude;
-      p *= 2.02;
-      amplitude *= 0.5;
-    }
-    return value;
-  }
-
-  void main() {
-    float macro = fbm(vUv * 0.045);
-    float mid = fbm(vUv * 0.16 + 12.0);
-    float grain = noise(vUv * 1.9);
-
-    float aggregateA = smoothstep(0.58, 0.93, hash(floor(vUv * 1.25)));
-    float aggregateB = smoothstep(0.72, 0.97, hash(floor(vUv * 2.45) + 18.3));
-    float aggregate = clamp(aggregateA * 0.45 + aggregateB * 0.4, 0.0, 1.0);
-
-    float tarPatch = smoothstep(0.62, 0.93, fbm(vUv * 0.09 + 42.0)) * 0.32;
-    float seam = smoothstep(0.47, 0.53, fract((vUv.y + sin(vUv.x * 0.035) * 1.1) * 0.085)) * 0.08;
-
-    vec3 color = mix(uBaseColor, uStoneColor, aggregate);
-    color *= 0.78 + macro * 0.28 + mid * 0.1;
-    color = mix(color, uOilColor, tarPatch);
-    color += (grain - 0.5) * 0.06;
-    color *= 1.0 - seam;
-
-    gl_FragColor = vec4(color, 1.0);
-  }
-`
 
 interface SceneProps {
   controlsRef: MutableRefObject<DriveControlsState>
@@ -107,18 +51,66 @@ const pseudoRandom = (seed: number) => {
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value))
 
+const createAsphaltTexture = () => {
+  const size = 512
+  const canvas = document.createElement('canvas')
+  canvas.width = size
+  canvas.height = size
+  const context = canvas.getContext('2d')
+
+  if (!context) {
+    return null
+  }
+
+  context.fillStyle = '#34373d'
+  context.fillRect(0, 0, size, size)
+
+  const imageData = context.getImageData(0, 0, size, size)
+  const data = imageData.data
+
+  for (let index = 0; index < data.length; index += 4) {
+    const grain = (Math.random() * 2 - 1) * 26
+    const speckle = Math.random() > 0.91 ? 20 + Math.random() * 28 : 0
+    const oil = Math.random() > 0.975 ? -(18 + Math.random() * 20) : 0
+    const shade = 54 + grain + speckle + oil
+    const value = Math.max(18, Math.min(135, Math.round(shade)))
+
+    data[index] = value
+    data[index + 1] = value + (Math.random() > 0.5 ? 1 : 0)
+    data[index + 2] = value + (Math.random() > 0.65 ? 2 : 0)
+    data[index + 3] = 255
+  }
+
+  context.putImageData(imageData, 0, 0)
+
+  for (let line = 0; line < 8; line += 1) {
+    const y = Math.floor(Math.random() * size)
+    context.strokeStyle = 'rgba(18, 20, 24, 0.18)'
+    context.lineWidth = 1 + Math.random() * 1.2
+    context.beginPath()
+    context.moveTo(0, y + Math.sin(line * 1.9) * 4)
+    context.quadraticCurveTo(size * 0.5, y + Math.random() * 18 - 9, size, y + Math.sin(line * 2.3) * 4)
+    context.stroke()
+  }
+
+  const texture = new CanvasTexture(canvas)
+  texture.wrapS = RepeatWrapping
+  texture.wrapT = RepeatWrapping
+  texture.repeat.set(48, 48)
+  texture.colorSpace = SRGBColorSpace
+  texture.needsUpdate = true
+  return texture
+}
+
 function GroundMaterial() {
-  const uniforms = useMemo(() => ({
-    uBaseColor: { value: new Color('#2f3136') },
-    uStoneColor: { value: new Color('#44474d') },
-    uOilColor: { value: new Color('#202327') },
-  }), [])
+  const texture = useMemo(() => createAsphaltTexture(), [])
 
   return (
-    <shaderMaterial
-      uniforms={uniforms}
-      vertexShader={GROUND_VERTEX_SHADER}
-      fragmentShader={GROUND_FRAGMENT_SHADER}
+    <meshStandardMaterial
+      map={texture ?? undefined}
+      color="#383c42"
+      roughness={0.93}
+      metalness={0.04}
     />
   )
 }
