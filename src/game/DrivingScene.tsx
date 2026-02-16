@@ -14,10 +14,10 @@ const REAR_LATERAL_GRIP = 16
 const MAX_DRIVE_IMPULSE = 2.4
 const HALF_WHEEL_BASE = 1.08
 const FRONT_TRACK_WIDTH = 1.72
-const MAX_STEER_ANGLE = Math.PI / 5.2
+const MAX_STEER_ANGLE = Math.PI / 4.2
 const STEER_IN_RATE = 10
 const STEER_OUT_RATE = 14
-const STEER_YAW_RESPONSE = 10
+const STEER_YAW_RESPONSE = 13
 const CAMERA_FOCUS_DAMPING = 6
 const CAMERA_POSITION_DAMPING = 9
 const CAMERA_LOOK_Y = 1
@@ -278,7 +278,7 @@ function Car({ controlsRef }: SceneProps) {
     const steerInput = Number(controls.left) - Number(controls.right)
 
     const speedRatio = Math.min(1, Math.abs(forwardSpeed) / MAX_SPEED)
-    const steerLimit = MAX_STEER_ANGLE * (1 - speedRatio * 0.45)
+    const steerLimit = MAX_STEER_ANGLE * (1 - speedRatio * 0.3)
     const targetSteering = steerInput * steerLimit
     const steerDamping = Math.abs(steerInput) > 0.001 ? STEER_IN_RATE : STEER_OUT_RATE
     const steerLerp = 1 - Math.exp(-delta * steerDamping)
