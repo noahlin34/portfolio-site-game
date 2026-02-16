@@ -51,6 +51,10 @@ export interface ArtDirectionConfig {
     aoSamples: number
     aoDenoiseSamples: number
     aoDenoiseRadius: number
+    aoColor: string
+    colorSaturation: number
+    colorContrast: number
+    colorBrightness: number
     bloomIntensity: number
     bloomThreshold: number
     bloomRadius: number
@@ -109,35 +113,39 @@ export const artDirectionDefaults: ArtDirectionConfig = {
     propStone: '#978fab',
   },
   lighting: {
-    fogNear: 50,
-    fogFar: 176,
-    ambientColor: '#ffd8b6',
-    ambientIntensity: 0.24,
-    hemisphereSky: '#ffd9b8',
-    hemisphereGround: '#6e4567',
-    hemisphereIntensity: 1.15,
-    sunColor: '#ffbf7e',
-    sunIntensity: 2.86,
-    sunPosition: [52, 19, -34],
-    fillColor: '#955de5',
-    fillIntensity: 0.72,
-    fillPosition: [-78, 20, 90],
+    fogNear: 46,
+    fogFar: 188,
+    ambientColor: '#ffd8b2',
+    ambientIntensity: 0.17,
+    hemisphereSky: '#ffdcb9',
+    hemisphereGround: '#643c58',
+    hemisphereIntensity: 1.18,
+    sunColor: '#ffd2a4',
+    sunIntensity: 3.26,
+    sunPosition: [58, 16, -41],
+    fillColor: '#b56de9',
+    fillIntensity: 0.44,
+    fillPosition: [-92, 28, 84],
     shadowMapSize: 4096,
-    shadowBounds: 92,
+    shadowBounds: 110,
   },
   post: {
-    exposure: 1.08,
-    aoIntensity: 2.3,
-    aoRadius: 2.05,
+    exposure: 1.05,
+    aoIntensity: 2.45,
+    aoRadius: 2.35,
     aoDistanceFalloff: 1.7,
-    aoSamples: 16,
+    aoSamples: 24,
     aoDenoiseSamples: 6,
-    aoDenoiseRadius: 8,
-    bloomIntensity: 1.02,
-    bloomThreshold: 0.66,
-    bloomRadius: 0.9,
-    vignetteOffset: 0.22,
-    vignetteDarkness: 0.4,
+    aoDenoiseRadius: 10,
+    aoColor: '#5f3d63',
+    colorSaturation: 0.1,
+    colorContrast: 0.08,
+    colorBrightness: -0.02,
+    bloomIntensity: 0.88,
+    bloomThreshold: 0.71,
+    bloomRadius: 0.82,
+    vignetteOffset: 0.23,
+    vignetteDarkness: 0.38,
   },
   density: {
     grassTufts: 720,

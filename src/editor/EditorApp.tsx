@@ -1,5 +1,5 @@
 import { Canvas } from '@react-three/fiber'
-import { Bloom, EffectComposer, N8AO, Vignette } from '@react-three/postprocessing'
+import { Bloom, BrightnessContrast, EffectComposer, HueSaturation, N8AO, Vignette } from '@react-three/postprocessing'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { ACESFilmicToneMapping, PCFSoftShadowMap } from 'three'
 import { artDirectionDefaults } from '../game/config/artDirection'
@@ -379,13 +379,14 @@ export function EditorApp({ initialLevel, onSaveLevel, onReloadLevel }: EditorAp
           />
           <EffectComposer multisampling={2} enableNormalPass={false}>
             <N8AO
-              quality="medium"
+              quality="high"
               aoRadius={artDirectionDefaults.post.aoRadius}
               distanceFalloff={artDirectionDefaults.post.aoDistanceFalloff}
-              intensity={artDirectionDefaults.post.aoIntensity}
+              intensity={artDirectionDefaults.post.aoIntensity * 0.92}
               aoSamples={artDirectionDefaults.post.aoSamples}
               denoiseSamples={artDirectionDefaults.post.aoDenoiseSamples}
               denoiseRadius={artDirectionDefaults.post.aoDenoiseRadius}
+              color={artDirectionDefaults.post.aoColor}
               screenSpaceRadius
             />
             <Bloom
@@ -395,6 +396,11 @@ export function EditorApp({ initialLevel, onSaveLevel, onReloadLevel }: EditorAp
               mipmapBlur
               radius={artDirectionDefaults.post.bloomRadius}
             />
+            <BrightnessContrast
+              brightness={artDirectionDefaults.post.colorBrightness}
+              contrast={artDirectionDefaults.post.colorContrast * 0.92}
+            />
+            <HueSaturation hue={0.004} saturation={artDirectionDefaults.post.colorSaturation * 0.92} />
             <Vignette
               eskil={false}
               offset={artDirectionDefaults.post.vignetteOffset}

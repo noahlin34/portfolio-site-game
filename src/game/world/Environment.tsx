@@ -30,14 +30,16 @@ export function Environment({ config }: EnvironmentProps) {
         shadow-camera-right={config.lighting.shadowBounds}
         shadow-camera-top={config.lighting.shadowBounds}
         shadow-camera-bottom={-config.lighting.shadowBounds}
-        shadow-normalBias={0.018}
-        shadow-bias={-0.00008}
+        shadow-normalBias={0.02}
+        shadow-bias={-0.0001}
+        shadow-radius={3}
       />
       <directionalLight
         intensity={config.lighting.fillIntensity}
         color={config.lighting.fillColor}
         position={config.lighting.fillPosition}
       />
+      <directionalLight intensity={0.18} color="#ffc5d5" position={[-32, 16, -70]} />
     </>
   )
 }

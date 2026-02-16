@@ -1,5 +1,5 @@
 import type { MutableRefObject } from 'react'
-import { Bloom, EffectComposer, N8AO, Vignette } from '@react-three/postprocessing'
+import { Bloom, BrightnessContrast, EffectComposer, HueSaturation, N8AO, Vignette } from '@react-three/postprocessing'
 import { Canvas } from '@react-three/fiber'
 import { ACESFilmicToneMapping, PCFSoftShadowMap } from 'three'
 import type { DriveControlsState } from '../hooks/useDriveControls'
@@ -37,13 +37,14 @@ export function DrivingScene({ controlsRef, level }: SceneProps) {
 
       <EffectComposer multisampling={2} enableNormalPass={false}>
         <N8AO
-          quality="medium"
+          quality="high"
           aoRadius={config.post.aoRadius}
           distanceFalloff={config.post.aoDistanceFalloff}
           intensity={config.post.aoIntensity}
           aoSamples={config.post.aoSamples}
           denoiseSamples={config.post.aoDenoiseSamples}
           denoiseRadius={config.post.aoDenoiseRadius}
+          color={config.post.aoColor}
           screenSpaceRadius
         />
         <Bloom
@@ -53,6 +54,8 @@ export function DrivingScene({ controlsRef, level }: SceneProps) {
           mipmapBlur
           radius={config.post.bloomRadius}
         />
+        <BrightnessContrast brightness={config.post.colorBrightness} contrast={config.post.colorContrast} />
+        <HueSaturation hue={0.004} saturation={config.post.colorSaturation} />
         <Vignette eskil={false} offset={config.post.vignetteOffset} darkness={config.post.vignetteDarkness} />
       </EffectComposer>
     </Canvas>
