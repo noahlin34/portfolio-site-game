@@ -12,19 +12,19 @@ function TreeVisual({ canopyColor, config }: { canopyColor: string; config: ArtD
     <group>
       <mesh castShadow receiveShadow position={[0, 1.05, 0]}>
         <cylinderGeometry args={[0.18, 0.34, 2.1, 6]} />
-        <meshStandardMaterial color={config.palette.trunk} roughness={0.9} metalness={0.02} />
+        <meshStandardMaterial color={config.palette.trunk} roughness={0.9} metalness={0.02} flatShading />
       </mesh>
       <mesh castShadow receiveShadow position={[0, 2.55, 0]}>
         <icosahedronGeometry args={[0.98, 0]} />
-        <meshStandardMaterial color={canopyColor} roughness={0.8} metalness={0.02} emissive={canopyColor} emissiveIntensity={0.04} />
+        <meshStandardMaterial color={canopyColor} roughness={0.8} metalness={0.02} emissive={canopyColor} emissiveIntensity={0.04} flatShading />
       </mesh>
       <mesh castShadow receiveShadow position={[0.25, 3.2, -0.12]} rotation={[0, 0.4, 0]}>
         <dodecahedronGeometry args={[0.72, 0]} />
-        <meshStandardMaterial color={canopyColor} roughness={0.8} metalness={0.02} emissive={canopyColor} emissiveIntensity={0.03} />
+        <meshStandardMaterial color={canopyColor} roughness={0.8} metalness={0.02} emissive={canopyColor} emissiveIntensity={0.03} flatShading />
       </mesh>
       <mesh castShadow receiveShadow position={[-0.28, 3.08, 0.16]} rotation={[0, -0.26, 0]}>
         <dodecahedronGeometry args={[0.52, 0]} />
-        <meshStandardMaterial color={canopyColor} roughness={0.8} metalness={0.02} emissive={canopyColor} emissiveIntensity={0.03} />
+        <meshStandardMaterial color={canopyColor} roughness={0.8} metalness={0.02} emissive={canopyColor} emissiveIntensity={0.03} flatShading />
       </mesh>
     </group>
   )
@@ -246,14 +246,14 @@ export function EntityVisual({ entity, config }: EntityVisualProps) {
       return (
         <mesh castShadow receiveShadow position={[0, 0.75, 0]}>
           <dodecahedronGeometry args={[0.75, 0]} />
-          <meshStandardMaterial color={config.palette.grassB} roughness={0.84} metalness={0.03} emissive={config.palette.grassB} emissiveIntensity={0.04} />
+          <meshStandardMaterial color={config.palette.grassB} roughness={0.84} metalness={0.03} emissive={config.palette.grassB} emissiveIntensity={0.04} flatShading />
         </mesh>
       )
     case 'grass_tuft':
       return (
         <mesh castShadow receiveShadow position={[0, 0.6, 0]}>
           <coneGeometry args={[0.38, 1.35, 6]} />
-          <meshStandardMaterial color={config.palette.grassA} roughness={0.95} metalness={0.01} emissive={config.palette.grassA} emissiveIntensity={0.02} />
+          <meshStandardMaterial color={config.palette.grassA} roughness={0.95} metalness={0.01} emissive={config.palette.grassA} emissiveIntensity={0.02} flatShading />
         </mesh>
       )
     default:

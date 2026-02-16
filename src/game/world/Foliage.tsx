@@ -254,17 +254,17 @@ export function Foliage({ config }: FoliageProps) {
     <group>
       <instancedMesh ref={grassRef} args={[undefined, undefined, grassMatrices.length]} castShadow receiveShadow>
         <coneGeometry args={[0.38, 1.35, 6]} />
-        <meshStandardMaterial color={config.palette.grassA} roughness={0.95} metalness={0.01} emissive={config.palette.grassA} emissiveIntensity={0.02} />
+        <meshStandardMaterial color={config.palette.grassA} roughness={0.95} metalness={0.01} emissive={config.palette.grassA} emissiveIntensity={0.02} flatShading />
       </instancedMesh>
 
       <instancedMesh ref={tallGrassRef} args={[undefined, undefined, tallGrassMatrices.length]} castShadow receiveShadow>
         <coneGeometry args={[0.2, 1.92, 5]} />
-        <meshStandardMaterial color="#8f9841" roughness={0.94} metalness={0.01} emissive="#8f9841" emissiveIntensity={0.02} />
+        <meshStandardMaterial color="#8f9841" roughness={0.94} metalness={0.01} emissive="#8f9841" emissiveIntensity={0.02} flatShading />
       </instancedMesh>
 
       <instancedMesh ref={bushRef} args={[undefined, undefined, bushMatrices.length]} castShadow receiveShadow>
         <dodecahedronGeometry args={[0.75, 0]} />
-        <meshStandardMaterial color={config.palette.grassB} roughness={0.84} metalness={0.03} emissive={config.palette.grassB} emissiveIntensity={0.03} />
+        <meshStandardMaterial color={config.palette.grassB} roughness={0.84} metalness={0.03} emissive={config.palette.grassB} emissiveIntensity={0.03} flatShading />
       </instancedMesh>
 
       <instancedMesh ref={flowerRef} args={[undefined, undefined, flowerMatrices.length]}>
@@ -274,37 +274,37 @@ export function Foliage({ config }: FoliageProps) {
 
       <instancedMesh ref={trunkRef} args={[undefined, undefined, trunkMatrices.length]} castShadow receiveShadow>
         <cylinderGeometry args={[0.22, 0.34, 1.2, 6]} />
-        <meshStandardMaterial color={config.palette.trunk} roughness={0.9} metalness={0.02} />
+        <meshStandardMaterial color={config.palette.trunk} roughness={0.9} metalness={0.02} flatShading />
       </instancedMesh>
 
       <instancedMesh ref={pinkCanopyLowerRef} args={[undefined, undefined, pinkCanopyLowerMatrices.length]} castShadow receiveShadow>
         <icosahedronGeometry args={[0.86, 0]} />
-        <meshStandardMaterial color={config.palette.foliagePink} roughness={0.8} metalness={0.02} emissive={config.palette.foliagePink} emissiveIntensity={0.04} />
+        <meshStandardMaterial color={config.palette.foliagePink} roughness={0.8} metalness={0.02} emissive={config.palette.foliagePink} emissiveIntensity={0.04} flatShading />
       </instancedMesh>
 
       <instancedMesh ref={yellowCanopyLowerRef} args={[undefined, undefined, yellowCanopyLowerMatrices.length]} castShadow receiveShadow>
         <icosahedronGeometry args={[0.86, 0]} />
-        <meshStandardMaterial color={config.palette.foliageYellow} roughness={0.8} metalness={0.02} emissive={config.palette.foliageYellow} emissiveIntensity={0.04} />
+        <meshStandardMaterial color={config.palette.foliageYellow} roughness={0.8} metalness={0.02} emissive={config.palette.foliageYellow} emissiveIntensity={0.04} flatShading />
       </instancedMesh>
 
       <instancedMesh ref={greenCanopyLowerRef} args={[undefined, undefined, greenCanopyLowerMatrices.length]} castShadow receiveShadow>
         <icosahedronGeometry args={[0.86, 0]} />
-        <meshStandardMaterial color={config.palette.foliageGreen} roughness={0.8} metalness={0.02} emissive={config.palette.foliageGreen} emissiveIntensity={0.04} />
+        <meshStandardMaterial color={config.palette.foliageGreen} roughness={0.8} metalness={0.02} emissive={config.palette.foliageGreen} emissiveIntensity={0.04} flatShading />
       </instancedMesh>
 
       <instancedMesh ref={pinkCanopyUpperRef} args={[undefined, undefined, pinkCanopyUpperMatrices.length]} castShadow receiveShadow>
         <dodecahedronGeometry args={[0.72, 0]} />
-        <meshStandardMaterial color={config.palette.foliagePink} roughness={0.78} metalness={0.02} emissive={config.palette.foliagePink} emissiveIntensity={0.03} />
+        <meshStandardMaterial color={config.palette.foliagePink} roughness={0.78} metalness={0.02} emissive={config.palette.foliagePink} emissiveIntensity={0.03} flatShading />
       </instancedMesh>
 
       <instancedMesh ref={yellowCanopyUpperRef} args={[undefined, undefined, yellowCanopyUpperMatrices.length]} castShadow receiveShadow>
         <dodecahedronGeometry args={[0.72, 0]} />
-        <meshStandardMaterial color={config.palette.foliageYellow} roughness={0.78} metalness={0.02} emissive={config.palette.foliageYellow} emissiveIntensity={0.03} />
+        <meshStandardMaterial color={config.palette.foliageYellow} roughness={0.78} metalness={0.02} emissive={config.palette.foliageYellow} emissiveIntensity={0.03} flatShading />
       </instancedMesh>
 
       <instancedMesh ref={greenCanopyUpperRef} args={[undefined, undefined, greenCanopyUpperMatrices.length]} castShadow receiveShadow>
         <dodecahedronGeometry args={[0.72, 0]} />
-        <meshStandardMaterial color={config.palette.foliageGreen} roughness={0.78} metalness={0.02} emissive={config.palette.foliageGreen} emissiveIntensity={0.03} />
+        <meshStandardMaterial color={config.palette.foliageGreen} roughness={0.78} metalness={0.02} emissive={config.palette.foliageGreen} emissiveIntensity={0.03} flatShading />
       </instancedMesh>
     </group>
   )
