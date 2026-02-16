@@ -9,8 +9,8 @@ function App() {
       <DrivingScene controlsRef={controlsRef} />
 
       <section className="hud">
-        <h1>R3F Driving Sandbox</h1>
-        <p>W / A / S / D or arrow keys to drive. Hold space to brake.</p>
+        <h1>Stylized Isometric Driving</h1>
+        <p>W / A / S / D or arrows to drive, hold space to brake.</p>
       </section>
     </main>
   )
