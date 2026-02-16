@@ -10,7 +10,8 @@ interface FoliageProps {
 
 interface TreePlacement {
   trunk: Matrix4
-  canopy: Matrix4
+  canopyLower: Matrix4
+  canopyUpper: Matrix4
   color: 'pink' | 'yellow' | 'green'
 }
 
@@ -31,9 +32,12 @@ export function Foliage({ config }: FoliageProps) {
   const bushRef = useRef<InstancedMesh>(null)
   const flowerRef = useRef<InstancedMesh>(null)
   const trunkRef = useRef<InstancedMesh>(null)
-  const pinkCanopyRef = useRef<InstancedMesh>(null)
-  const yellowCanopyRef = useRef<InstancedMesh>(null)
-  const greenCanopyRef = useRef<InstancedMesh>(null)
+  const pinkCanopyLowerRef = useRef<InstancedMesh>(null)
+  const yellowCanopyLowerRef = useRef<InstancedMesh>(null)
+  const greenCanopyLowerRef = useRef<InstancedMesh>(null)
+  const pinkCanopyUpperRef = useRef<InstancedMesh>(null)
+  const yellowCanopyUpperRef = useRef<InstancedMesh>(null)
+  const greenCanopyUpperRef = useRef<InstancedMesh>(null)
 
   const { grassMatrices, tallGrassMatrices, bushMatrices, flowerMatrices, trees } = useMemo(() => {
     const rng = createRng(config.world.seed + 101)
@@ -181,7 +185,24 @@ export function Foliage({ config }: FoliageProps) {
 
       treeData.push({
         trunk: composeMatrix(x, trunkHeight * 0.55, z, 0.42, trunkHeight, 0.42, randomRange(rng, 0, Math.PI * 2)),
-        canopy: composeMatrix(x, trunkHeight + canopyScale * 0.42, z, canopyScale, canopyScale, canopyScale, randomRange(rng, 0, Math.PI * 2)),
+        canopyLower: composeMatrix(
+          x + randomRange(rng, -0.14, 0.14),
+          trunkHeight + canopyScale * 0.34,
+          z + randomRange(rng, -0.14, 0.14),
+          canopyScale,
+          canopyScale * randomRange(rng, 0.9, 1.06),
+          canopyScale,
+          randomRange(rng, 0, Math.PI * 2),
+        ),
+        canopyUpper: composeMatrix(
+          x + randomRange(rng, -0.26, 0.26),
+          trunkHeight + canopyScale * 0.84,
+          z + randomRange(rng, -0.26, 0.26),
+          canopyScale * randomRange(rng, 0.52, 0.7),
+          canopyScale * randomRange(rng, 0.58, 0.78),
+          canopyScale * randomRange(rng, 0.52, 0.7),
+          randomRange(rng, 0, Math.PI * 2),
+        ),
         color,
       })
     }
@@ -196,9 +217,12 @@ export function Foliage({ config }: FoliageProps) {
   }, [config.density.bushes, config.density.grassTufts, config.density.trees, config.world.seed, config.world.size])
 
   const trunkMatrices = useMemo(() => trees.map((tree) => tree.trunk), [trees])
-  const pinkCanopyMatrices = useMemo(() => trees.filter((tree) => tree.color === 'pink').map((tree) => tree.canopy), [trees])
-  const yellowCanopyMatrices = useMemo(() => trees.filter((tree) => tree.color === 'yellow').map((tree) => tree.canopy), [trees])
-  const greenCanopyMatrices = useMemo(() => trees.filter((tree) => tree.color === 'green').map((tree) => tree.canopy), [trees])
+  const pinkCanopyLowerMatrices = useMemo(() => trees.filter((tree) => tree.color === 'pink').map((tree) => tree.canopyLower), [trees])
+  const yellowCanopyLowerMatrices = useMemo(() => trees.filter((tree) => tree.color === 'yellow').map((tree) => tree.canopyLower), [trees])
+  const greenCanopyLowerMatrices = useMemo(() => trees.filter((tree) => tree.color === 'green').map((tree) => tree.canopyLower), [trees])
+  const pinkCanopyUpperMatrices = useMemo(() => trees.filter((tree) => tree.color === 'pink').map((tree) => tree.canopyUpper), [trees])
+  const yellowCanopyUpperMatrices = useMemo(() => trees.filter((tree) => tree.color === 'yellow').map((tree) => tree.canopyUpper), [trees])
+  const greenCanopyUpperMatrices = useMemo(() => trees.filter((tree) => tree.color === 'green').map((tree) => tree.canopyUpper), [trees])
 
   useLayoutEffect(() => {
     applyMatrices(grassRef.current, grassMatrices)
@@ -206,35 +230,41 @@ export function Foliage({ config }: FoliageProps) {
     applyMatrices(bushRef.current, bushMatrices)
     applyMatrices(flowerRef.current, flowerMatrices)
     applyMatrices(trunkRef.current, trunkMatrices)
-    applyMatrices(pinkCanopyRef.current, pinkCanopyMatrices)
-    applyMatrices(yellowCanopyRef.current, yellowCanopyMatrices)
-    applyMatrices(greenCanopyRef.current, greenCanopyMatrices)
+    applyMatrices(pinkCanopyLowerRef.current, pinkCanopyLowerMatrices)
+    applyMatrices(yellowCanopyLowerRef.current, yellowCanopyLowerMatrices)
+    applyMatrices(greenCanopyLowerRef.current, greenCanopyLowerMatrices)
+    applyMatrices(pinkCanopyUpperRef.current, pinkCanopyUpperMatrices)
+    applyMatrices(yellowCanopyUpperRef.current, yellowCanopyUpperMatrices)
+    applyMatrices(greenCanopyUpperRef.current, greenCanopyUpperMatrices)
   }, [
     grassMatrices,
     tallGrassMatrices,
     bushMatrices,
     flowerMatrices,
     trunkMatrices,
-    pinkCanopyMatrices,
-    yellowCanopyMatrices,
-    greenCanopyMatrices,
+    pinkCanopyLowerMatrices,
+    yellowCanopyLowerMatrices,
+    greenCanopyLowerMatrices,
+    pinkCanopyUpperMatrices,
+    yellowCanopyUpperMatrices,
+    greenCanopyUpperMatrices,
   ])
 
   return (
     <group>
       <instancedMesh ref={grassRef} args={[undefined, undefined, grassMatrices.length]} castShadow receiveShadow>
-        <coneGeometry args={[0.42, 1.2, 5]} />
-        <meshStandardMaterial color={config.palette.grassA} roughness={0.96} metalness={0.01} />
+        <coneGeometry args={[0.38, 1.35, 6]} />
+        <meshStandardMaterial color={config.palette.grassA} roughness={0.95} metalness={0.01} emissive={config.palette.grassA} emissiveIntensity={0.02} />
       </instancedMesh>
 
       <instancedMesh ref={tallGrassRef} args={[undefined, undefined, tallGrassMatrices.length]} castShadow receiveShadow>
-        <coneGeometry args={[0.26, 1.7, 5]} />
-        <meshStandardMaterial color="#8f9841" roughness={0.95} metalness={0.01} />
+        <coneGeometry args={[0.2, 1.92, 5]} />
+        <meshStandardMaterial color="#8f9841" roughness={0.94} metalness={0.01} emissive="#8f9841" emissiveIntensity={0.02} />
       </instancedMesh>
 
       <instancedMesh ref={bushRef} args={[undefined, undefined, bushMatrices.length]} castShadow receiveShadow>
         <dodecahedronGeometry args={[0.75, 0]} />
-        <meshStandardMaterial color={config.palette.grassB} roughness={0.88} metalness={0.02} />
+        <meshStandardMaterial color={config.palette.grassB} roughness={0.84} metalness={0.03} emissive={config.palette.grassB} emissiveIntensity={0.03} />
       </instancedMesh>
 
       <instancedMesh ref={flowerRef} args={[undefined, undefined, flowerMatrices.length]}>
@@ -247,19 +277,34 @@ export function Foliage({ config }: FoliageProps) {
         <meshStandardMaterial color={config.palette.trunk} roughness={0.9} metalness={0.02} />
       </instancedMesh>
 
-      <instancedMesh ref={pinkCanopyRef} args={[undefined, undefined, pinkCanopyMatrices.length]} castShadow receiveShadow>
+      <instancedMesh ref={pinkCanopyLowerRef} args={[undefined, undefined, pinkCanopyLowerMatrices.length]} castShadow receiveShadow>
         <icosahedronGeometry args={[0.86, 0]} />
-        <meshStandardMaterial color={config.palette.foliagePink} roughness={0.82} metalness={0.02} />
+        <meshStandardMaterial color={config.palette.foliagePink} roughness={0.8} metalness={0.02} emissive={config.palette.foliagePink} emissiveIntensity={0.04} />
       </instancedMesh>
 
-      <instancedMesh ref={yellowCanopyRef} args={[undefined, undefined, yellowCanopyMatrices.length]} castShadow receiveShadow>
+      <instancedMesh ref={yellowCanopyLowerRef} args={[undefined, undefined, yellowCanopyLowerMatrices.length]} castShadow receiveShadow>
         <icosahedronGeometry args={[0.86, 0]} />
-        <meshStandardMaterial color={config.palette.foliageYellow} roughness={0.82} metalness={0.02} />
+        <meshStandardMaterial color={config.palette.foliageYellow} roughness={0.8} metalness={0.02} emissive={config.palette.foliageYellow} emissiveIntensity={0.04} />
       </instancedMesh>
 
-      <instancedMesh ref={greenCanopyRef} args={[undefined, undefined, greenCanopyMatrices.length]} castShadow receiveShadow>
+      <instancedMesh ref={greenCanopyLowerRef} args={[undefined, undefined, greenCanopyLowerMatrices.length]} castShadow receiveShadow>
         <icosahedronGeometry args={[0.86, 0]} />
-        <meshStandardMaterial color={config.palette.foliageGreen} roughness={0.82} metalness={0.02} />
+        <meshStandardMaterial color={config.palette.foliageGreen} roughness={0.8} metalness={0.02} emissive={config.palette.foliageGreen} emissiveIntensity={0.04} />
+      </instancedMesh>
+
+      <instancedMesh ref={pinkCanopyUpperRef} args={[undefined, undefined, pinkCanopyUpperMatrices.length]} castShadow receiveShadow>
+        <dodecahedronGeometry args={[0.72, 0]} />
+        <meshStandardMaterial color={config.palette.foliagePink} roughness={0.78} metalness={0.02} emissive={config.palette.foliagePink} emissiveIntensity={0.03} />
+      </instancedMesh>
+
+      <instancedMesh ref={yellowCanopyUpperRef} args={[undefined, undefined, yellowCanopyUpperMatrices.length]} castShadow receiveShadow>
+        <dodecahedronGeometry args={[0.72, 0]} />
+        <meshStandardMaterial color={config.palette.foliageYellow} roughness={0.78} metalness={0.02} emissive={config.palette.foliageYellow} emissiveIntensity={0.03} />
+      </instancedMesh>
+
+      <instancedMesh ref={greenCanopyUpperRef} args={[undefined, undefined, greenCanopyUpperMatrices.length]} castShadow receiveShadow>
+        <dodecahedronGeometry args={[0.72, 0]} />
+        <meshStandardMaterial color={config.palette.foliageGreen} roughness={0.78} metalness={0.02} emissive={config.palette.foliageGreen} emissiveIntensity={0.03} />
       </instancedMesh>
     </group>
   )
