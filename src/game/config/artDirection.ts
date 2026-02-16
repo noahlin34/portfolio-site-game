@@ -127,7 +127,7 @@ export const artDirectionDefaults: ArtDirectionConfig = {
     fillIntensity: 0.44,
     fillPosition: [-92, 28, 84],
     shadowMapSize: 2048,
-    shadowBounds: 86,
+    shadowBounds: 62,
   },
   post: {
     exposure: 1.05,

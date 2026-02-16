@@ -90,7 +90,6 @@ export function LevelEntities({
               friction={physics.friction}
               restitution={physics.restitution}
               mass={physics.mass}
-              ccd
             >
               {physics.shape === 'ball' ? (
                 <BallCollider args={[Math.max(entity.scale[0], entity.scale[1], entity.scale[2]) * 0.5]} />

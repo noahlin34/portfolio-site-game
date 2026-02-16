@@ -22,7 +22,7 @@ export function EnvironmentScene({ controlsRef, config, level }: EnvironmentScen
       <Environment config={config} />
 
       <Suspense fallback={null}>
-        <Physics gravity={[0, -9.81, 0]} colliders={false}>
+        <Physics gravity={[0, -9.81, 0]} colliders={false} timeStep="vary">
           <LevelTerrain config={config} level={level} />
           <Foliage config={config} />
           <LevelEntities config={config} level={level} simulatePhysics />

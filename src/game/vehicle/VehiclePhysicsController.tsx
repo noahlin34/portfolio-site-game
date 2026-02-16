@@ -42,6 +42,14 @@ export function VehiclePhysicsController({ controlsRef, config }: VehiclePhysics
   const trailPointsRef = useRef<[number, number, number][]>([])
   const trailLineRef = useRef<Line2>(null)
   const trailFlatRef = useRef<Float32Array>(new Float32Array(72 * 3))
+  const resetTranslationRef = useRef({ x: 0, y: 0, z: 0 })
+  const zeroVelocityRef = useRef({ x: 0, y: 0, z: 0 })
+  const driveImpulseRef = useRef({ x: 0, y: 0, z: 0 })
+  const rollingImpulseRef = useRef({ x: 0, y: 0, z: 0 })
+  const frontGripImpulseRef = useRef({ x: 0, y: 0, z: 0 })
+  const rearGripImpulseRef = useRef({ x: 0, y: 0, z: 0 })
+  const angularVelocityRef = useRef({ x: 0, y: 0, z: 0 })
+  const limitedVelocityRef = useRef({ x: 0, y: 0, z: 0 })
   const cameraOffset = useMemo(
     () => new Vector3(config.camera.offset[0], config.camera.offset[1], config.camera.offset[2]),
     [config.camera.offset],
@@ -104,9 +112,13 @@ export function VehiclePhysicsController({ controlsRef, config }: VehiclePhysics
     }
     if (translation.y < -1.2) {
       const safePosition = lastSafePositionRef.current
-      rigidBody.setTranslation({ x: safePosition.x, y: safePosition.y, z: safePosition.z }, true)
-      rigidBody.setLinvel({ x: 0, y: 0, z: 0 }, true)
-      rigidBody.setAngvel({ x: 0, y: 0, z: 0 }, true)
+      const resetTranslation = resetTranslationRef.current
+      resetTranslation.x = safePosition.x
+      resetTranslation.y = safePosition.y
+      resetTranslation.z = safePosition.z
+      rigidBody.setTranslation(resetTranslation, true)
+      rigidBody.setLinvel(zeroVelocityRef.current, true)
+      rigidBody.setAngvel(zeroVelocityRef.current, true)
       steeringAngleRef.current = 0
       if (frontLeftSteerRef.current) {
         frontLeftSteerRef.current.rotation.y = 0
@@ -135,71 +147,58 @@ export function VehiclePhysicsController({ controlsRef, config }: VehiclePhysics
       Math.max(-config.vehicle.maxDriveImpulse, speedDelta * accelerationStrength * delta),
     )
 
-    rigidBody.applyImpulseAtPoint(
-      {
-        x: frontForward.x * driveImpulse,
-        y: 0,
-        z: frontForward.z * driveImpulse,
-      },
-      frontPoint,
-      true,
-    )
+    const driveImpulseVector = driveImpulseRef.current
+    driveImpulseVector.x = frontForward.x * driveImpulse
+    driveImpulseVector.y = 0
+    driveImpulseVector.z = frontForward.z * driveImpulse
+    rigidBody.applyImpulseAtPoint(driveImpulseVector, frontPoint, true)
 
     const rollingImpulse = -forwardSpeed * config.vehicle.rollingResistance * delta
-    rigidBody.applyImpulseAtPoint(
-      {
-        x: forward.x * rollingImpulse,
-        y: 0,
-        z: forward.z * rollingImpulse,
-      },
-      rearPoint,
-      true,
-    )
+    const rollingImpulseVector = rollingImpulseRef.current
+    rollingImpulseVector.x = forward.x * rollingImpulse
+    rollingImpulseVector.y = 0
+    rollingImpulseVector.z = forward.z * rollingImpulse
+    rigidBody.applyImpulseAtPoint(rollingImpulseVector, rearPoint, true)
 
     const frontVelocity = rigidBody.velocityAtPoint(frontPoint)
     const rearVelocity = rigidBody.velocityAtPoint(rearPoint)
     const frontLateralSpeed = frontVelocity.x * frontRight.x + frontVelocity.z * frontRight.z
     const rearLateralSpeed = rearVelocity.x * right.x + rearVelocity.z * right.z
 
-    rigidBody.applyImpulseAtPoint(
-      {
-        x: frontRight.x * (-frontLateralSpeed * config.vehicle.frontLateralGrip * delta),
-        y: 0,
-        z: frontRight.z * (-frontLateralSpeed * config.vehicle.frontLateralGrip * delta),
-      },
-      frontPoint,
-      true,
-    )
+    const frontGripImpulse = -frontLateralSpeed * config.vehicle.frontLateralGrip * delta
+    const frontGripVector = frontGripImpulseRef.current
+    frontGripVector.x = frontRight.x * frontGripImpulse
+    frontGripVector.y = 0
+    frontGripVector.z = frontRight.z * frontGripImpulse
+    rigidBody.applyImpulseAtPoint(frontGripVector, frontPoint, true)
 
-    rigidBody.applyImpulseAtPoint(
-      {
-        x: right.x * (-rearLateralSpeed * config.vehicle.rearLateralGrip * delta),
-        y: 0,
-        z: right.z * (-rearLateralSpeed * config.vehicle.rearLateralGrip * delta),
-      },
-      rearPoint,
-      true,
-    )
+    const rearGripImpulse = -rearLateralSpeed * config.vehicle.rearLateralGrip * delta
+    const rearGripVector = rearGripImpulseRef.current
+    rearGripVector.x = right.x * rearGripImpulse
+    rearGripVector.y = 0
+    rearGripVector.z = right.z * rearGripImpulse
+    rigidBody.applyImpulseAtPoint(rearGripVector, rearPoint, true)
 
     const wheelBase = config.vehicle.halfWheelBase * 2
     const targetYawRate = (forwardSpeed / wheelBase) * Math.tan(steeringAngle)
     const angvel = rigidBody.angvel()
     const yawLerp = 1 - Math.exp(-delta * config.vehicle.steerYawResponse)
-    rigidBody.setAngvel({ x: 0, y: angvel.y + (targetYawRate - angvel.y) * yawLerp, z: 0 }, true)
+    const angularVelocity = angularVelocityRef.current
+    angularVelocity.x = 0
+    angularVelocity.y = angvel.y + (targetYawRate - angvel.y) * yawLerp
+    angularVelocity.z = 0
+    rigidBody.setAngvel(angularVelocity, true)
 
     const limitedVelocity = rigidBody.linvel()
     const horizontalSpeed = Math.hypot(limitedVelocity.x, limitedVelocity.z)
 
     if (horizontalSpeed > config.vehicle.maxSpeed) {
       const scale = config.vehicle.maxSpeed / horizontalSpeed
-      rigidBody.setLinvel(
-        {
-          x: limitedVelocity.x * scale,
-          y: limitedVelocity.y,
-          z: limitedVelocity.z * scale,
-        },
-        true,
-      )
+      const limitedVelocityOut = limitedVelocityRef.current
+      limitedVelocityOut.x = limitedVelocity.x * scale
+      limitedVelocityOut.y = limitedVelocity.y
+      limitedVelocityOut.z = limitedVelocity.z * scale
+      rigidBody.setLinvel(limitedVelocityOut, true)
     }
 
     const steerAbs = Math.abs(steeringAngle)
@@ -270,7 +269,6 @@ export function VehiclePhysicsController({ controlsRef, config }: VehiclePhysics
           cursor += 3
         }
         trailLineRef.current.geometry.setPositions(flat.subarray(0, points.length * 3))
-        trailLineRef.current.computeLineDistances()
         trailLineRef.current.visible = true
       }
     }

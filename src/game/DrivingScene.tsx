@@ -38,7 +38,7 @@ export function DrivingScene({ controlsRef, level }: SceneProps) {
 
       <EffectComposer multisampling={0} resolutionScale={0.7} enableNormalPass={false}>
         <N8AO
-          quality="low"
+          quality="performance"
           aoRadius={config.post.aoRadius}
           distanceFalloff={config.post.aoDistanceFalloff}
           intensity={config.post.aoIntensity * 0.76}
@@ -46,6 +46,8 @@ export function DrivingScene({ controlsRef, level }: SceneProps) {
           denoiseSamples={config.post.aoDenoiseSamples}
           denoiseRadius={config.post.aoDenoiseRadius}
           color={config.post.aoColor}
+          halfRes
+          depthAwareUpsampling
           screenSpaceRadius
         />
         <Bloom
