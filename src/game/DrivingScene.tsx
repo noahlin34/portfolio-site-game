@@ -1,5 +1,4 @@
 import { Suspense, type MutableRefObject, useMemo, useRef } from 'react'
-import { Sky } from '@react-three/drei'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { BallCollider, CuboidCollider, Physics, type RapierRigidBody, RigidBody } from '@react-three/rapier'
 import { ACESFilmicToneMapping, Color, PCFSoftShadowMap, Quaternion, ShaderMaterial, Vector3, type Group } from 'three'
@@ -18,6 +17,7 @@ const FRONT_TRACK_WIDTH = 1.72
 const MAX_STEER_ANGLE = Math.PI / 5.2
 const STEER_IN_RATE = 10
 const STEER_OUT_RATE = 14
+const STEER_YAW_RESPONSE = 10
 const CAMERA_FOCUS_DAMPING = 6
 const CAMERA_POSITION_DAMPING = 9
 const CAMERA_LOOK_Y = 1
@@ -280,9 +280,9 @@ function Car({ controlsRef }: SceneProps) {
     const driveImpulse = clamp(speedDelta * accelerationStrength * delta, -MAX_DRIVE_IMPULSE, MAX_DRIVE_IMPULSE)
     rigidBody.applyImpulseAtPoint(
       {
-        x: forward.x * driveImpulse,
+        x: frontForward.x * driveImpulse,
         y: 0,
-        z: forward.z * driveImpulse,
+        z: frontForward.z * driveImpulse,
       },
       frontPoint,
       true,
@@ -325,6 +325,12 @@ function Car({ controlsRef }: SceneProps) {
       rearPoint,
       true,
     )
+
+    const wheelBase = HALF_WHEEL_BASE * 2
+    const targetYawRate = (forwardSpeed / wheelBase) * Math.tan(steeringAngle)
+    const angvel = rigidBody.angvel()
+    const yawLerp = 1 - Math.exp(-delta * STEER_YAW_RESPONSE)
+    rigidBody.setAngvel({ x: 0, y: angvel.y + (targetYawRate - angvel.y) * yawLerp, z: 0 }, true)
 
     const limitedVelocity = rigidBody.linvel()
     const horizontalSpeed = Math.hypot(limitedVelocity.x, limitedVelocity.z)
@@ -451,15 +457,6 @@ function World({ controlsRef }: SceneProps) {
     <>
       <color attach="background" args={['#ffd1ab']} />
       <fog attach="fog" args={['#f5b784', 70, 190]} />
-
-      <Sky
-        distance={450000}
-        sunPosition={[55, 14, -35]}
-        turbidity={6.3}
-        rayleigh={1.05}
-        mieCoefficient={0.018}
-        mieDirectionalG={0.88}
-      />
 
       <hemisphereLight args={['#ffd8b1', '#7a5839', 0.92]} />
       <ambientLight intensity={0.2} color="#ffe2c3" />
