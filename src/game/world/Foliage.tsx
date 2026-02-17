@@ -71,18 +71,18 @@ export function Foliage({ config }: FoliageProps) {
         continue
       }
 
-      const baseScale = randomRange(rng, 0.52, 1.58)
-      grassMatricesData.push(composeMatrix(x, 0.14, z, baseScale, randomRange(rng, 0.85, 1.45), baseScale, randomRange(rng, 0, Math.PI * 2)))
+      const baseScale = randomRange(rng, 0.4, 0.98)
+      grassMatricesData.push(composeMatrix(x, 0.09, z, baseScale, randomRange(rng, 0.82, 1.28), baseScale, randomRange(rng, 0, Math.PI * 2)))
 
       if (rng() > 0.7) {
-        const tallScale = baseScale * randomRange(rng, 0.55, 0.95)
+        const tallScale = baseScale * randomRange(rng, 0.56, 0.88)
         tallGrassMatricesData.push(
           composeMatrix(
             x + randomRange(rng, -0.45, 0.45),
-            0.2,
+            0.14,
             z + randomRange(rng, -0.45, 0.45),
             tallScale,
-            randomRange(rng, 1.1, 1.9),
+            randomRange(rng, 1.0, 1.42),
             tallScale,
             randomRange(rng, 0, Math.PI * 2),
           ),
@@ -116,28 +116,28 @@ export function Foliage({ config }: FoliageProps) {
         continue
       }
 
-      const baseScale = randomRange(rng, 0.7, 1.7)
+      const baseScale = randomRange(rng, 0.5, 1.05)
       grassMatricesData.push(
         composeMatrix(
           x + randomRange(rng, -0.2, 0.2),
-          0.15,
+          0.1,
           z + randomRange(rng, -0.2, 0.2),
           baseScale,
-          randomRange(rng, 0.9, 1.6),
+          randomRange(rng, 0.84, 1.3),
           baseScale,
           randomRange(rng, 0, Math.PI * 2),
         ),
       )
 
       if (rng() > 0.26) {
-        const tallScale = baseScale * randomRange(rng, 0.62, 1.02)
+        const tallScale = baseScale * randomRange(rng, 0.56, 0.9)
         tallGrassMatricesData.push(
           composeMatrix(
             x + randomRange(rng, -0.5, 0.5),
-            0.23,
+            0.15,
             z + randomRange(rng, -0.5, 0.5),
             tallScale,
-            randomRange(rng, 1.25, 2.0),
+            randomRange(rng, 1.02, 1.5),
             tallScale,
             randomRange(rng, 0, Math.PI * 2),
           ),
@@ -303,7 +303,7 @@ export function Foliage({ config }: FoliageProps) {
       </instancedMesh>
 
       <instancedMesh ref={grassRef} args={[undefined, undefined, grassMatrices.length]}>
-        <coneGeometry args={[0.38, 1.35, 6]} />
+        <coneGeometry args={[0.2, 0.82, 6]} />
         <meshMatcapMaterial
           matcap={foliageMatcap ?? undefined}
           color={config.palette.grassA}
@@ -312,7 +312,7 @@ export function Foliage({ config }: FoliageProps) {
       </instancedMesh>
 
       <instancedMesh ref={tallGrassRef} args={[undefined, undefined, tallGrassMatrices.length]}>
-        <coneGeometry args={[0.2, 1.92, 5]} />
+        <coneGeometry args={[0.14, 1.22, 5]} />
         <meshMatcapMaterial
           matcap={foliageMatcap ?? undefined}
           color="#8f9841"
