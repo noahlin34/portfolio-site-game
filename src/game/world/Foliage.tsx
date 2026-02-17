@@ -1,7 +1,7 @@
 import { useLayoutEffect, useMemo, useRef } from 'react'
 import { InstancedMesh, Matrix4 } from 'three'
 import type { ArtDirectionConfig } from '../config/artDirection'
-import { createWarmMatcapTexture } from '../materials/stylized'
+import { getSharedWarmMatcapTexture } from '../materials/stylized'
 import { composeMatrix, createRng, randomRange } from '../utils/random'
 import { isPathArea, isPathEdgeArea, isPlayableArea } from './layout'
 
@@ -42,6 +42,13 @@ export function Foliage({ config }: FoliageProps) {
   const pinkCanopyUpperRef = useRef<InstancedMesh>(null)
   const yellowCanopyUpperRef = useRef<InstancedMesh>(null)
   const greenCanopyUpperRef = useRef<InstancedMesh>(null)
+
+  const sunDirection = useMemo(() => {
+    const x = -config.lighting.sunPosition[0]
+    const z = -config.lighting.sunPosition[2]
+    const length = Math.hypot(x, z) || 1
+    return { x: x / length, z: z / length, angle: Math.atan2(z, x) }
+  }, [config.lighting.sunPosition])
 
   const { grassMatrices, tallGrassMatrices, bushMatrices, bushShadowMatrices, flowerMatrices, trees } = useMemo(() => {
     const rng = createRng(config.world.seed + 101)
@@ -168,7 +175,18 @@ export function Foliage({ config }: FoliageProps) {
 
       const scale = randomRange(rng, 1.2, 2.6)
       bushMatricesData.push(composeMatrix(x, 0.56, z, scale, scale * randomRange(rng, 0.6, 0.9), scale, randomRange(rng, 0, Math.PI * 2)))
-      bushShadowMatricesData.push(composeMatrix(x, 0.03, z, scale * 0.72, 1, scale * 0.54, randomRange(rng, 0, Math.PI * 2)))
+      const bushOffset = 0.24 + scale * 0.22
+      bushShadowMatricesData.push(
+        composeMatrix(
+          x + sunDirection.x * bushOffset,
+          0.03,
+          z + sunDirection.z * bushOffset,
+          scale * 0.94 * (1 + Math.abs(sunDirection.x) * 0.18),
+          1,
+          scale * 0.46 * (1 + Math.abs(sunDirection.z) * 0.18),
+          sunDirection.angle,
+        ),
+      )
     }
 
     let treeAttempts = 0
@@ -209,7 +227,15 @@ export function Foliage({ config }: FoliageProps) {
           canopyScale * randomRange(rng, 0.52, 0.7),
           randomRange(rng, 0, Math.PI * 2),
         ),
-        contactShadow: composeMatrix(x, 0.035, z, canopyScale * 0.86, 1, canopyScale * 0.72, randomRange(rng, 0, Math.PI * 2)),
+        contactShadow: composeMatrix(
+          x + sunDirection.x * (0.66 + trunkHeight * 0.36),
+          0.035,
+          z + sunDirection.z * (0.66 + trunkHeight * 0.36),
+          canopyScale * 1.16 * (1 + Math.abs(sunDirection.x) * 0.18),
+          1,
+          canopyScale * 0.58 * (1 + Math.abs(sunDirection.z) * 0.18),
+          sunDirection.angle,
+        ),
         color,
       })
     }
@@ -222,7 +248,7 @@ export function Foliage({ config }: FoliageProps) {
       flowerMatrices: flowerMatricesData,
       trees: treeData,
     }
-  }, [config.density.bushes, config.density.grassTufts, config.density.trees, config.world.seed, config.world.size])
+  }, [config.density.bushes, config.density.grassTufts, config.density.trees, config.world.seed, config.world.size, sunDirection.angle, sunDirection.x, sunDirection.z])
 
   const trunkMatrices = useMemo(() => trees.map((tree) => tree.trunk), [trees])
   const pinkCanopyLowerMatrices = useMemo(() => trees.filter((tree) => tree.color === 'pink').map((tree) => tree.canopyLower), [trees])
@@ -232,7 +258,7 @@ export function Foliage({ config }: FoliageProps) {
   const yellowCanopyUpperMatrices = useMemo(() => trees.filter((tree) => tree.color === 'yellow').map((tree) => tree.canopyUpper), [trees])
   const greenCanopyUpperMatrices = useMemo(() => trees.filter((tree) => tree.color === 'green').map((tree) => tree.canopyUpper), [trees])
   const treeShadowMatrices = useMemo(() => trees.map((tree) => tree.contactShadow), [trees])
-  const foliageMatcap = useMemo(() => createWarmMatcapTexture(), [])
+  const foliageMatcap = useMemo(() => getSharedWarmMatcapTexture(), [])
 
   useLayoutEffect(() => {
     applyMatrices(grassRef.current, grassMatrices)
@@ -268,12 +294,12 @@ export function Foliage({ config }: FoliageProps) {
     <group>
       <instancedMesh ref={treeShadowRef} args={[undefined, undefined, treeShadowMatrices.length]} renderOrder={1}>
         <circleGeometry args={[1, 14]} />
-        <meshBasicMaterial color="#281723" transparent opacity={0.18} depthWrite={false} />
+        <meshBasicMaterial color="#21131f" transparent opacity={0.24} depthWrite={false} />
       </instancedMesh>
 
       <instancedMesh ref={bushShadowRef} args={[undefined, undefined, bushShadowMatrices.length]} renderOrder={1}>
         <circleGeometry args={[1, 12]} />
-        <meshBasicMaterial color="#2a1a26" transparent opacity={0.16} depthWrite={false} />
+        <meshBasicMaterial color="#221520" transparent opacity={0.2} depthWrite={false} />
       </instancedMesh>
 
       <instancedMesh ref={grassRef} args={[undefined, undefined, grassMatrices.length]}>

@@ -121,6 +121,12 @@ export function LevelEntities({
 }: LevelEntitiesProps) {
   const staticEntityRefs = useRef<Record<string, Object3D | null>>({})
   const cullTimerRef = useRef(0)
+  const sunDirection = useMemo(() => {
+    const x = -config.lighting.sunPosition[0]
+    const z = -config.lighting.sunPosition[2]
+    const length = Math.hypot(x, z) || 1
+    return { x: x / length, z: z / length, angle: Math.atan2(z, x) }
+  }, [config.lighting.sunPosition])
 
   useFrame(({ camera }, delta) => {
     if (selectable) {
@@ -183,9 +189,22 @@ export function LevelEntities({
             onPointerDown={onSelect}
           >
             {!selectable ? (
-              <mesh position={[0, 0.03, 0]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={1}>
+              <mesh
+                position={[
+                  sunDirection.x * (0.22 + entity.scale[1] * 0.22),
+                  0.03,
+                  sunDirection.z * (0.22 + entity.scale[1] * 0.22),
+                ]}
+                rotation={[-Math.PI / 2, 0, sunDirection.angle]}
+                renderOrder={1}
+              >
                 <circleGeometry args={[Math.max(entity.scale[0], entity.scale[2]) * 0.62, 12]} />
-                <meshBasicMaterial color="#2c1b27" transparent opacity={0.14} depthWrite={false} />
+                <meshBasicMaterial
+                  color="#211420"
+                  transparent
+                  opacity={Math.min(0.3, 0.11 + entity.scale[1] * 0.03)}
+                  depthWrite={false}
+                />
               </mesh>
             ) : null}
 

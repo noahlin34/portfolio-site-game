@@ -89,30 +89,30 @@ export const createWaterTexture = ({ seed, size = 384, repeat = 11 }: WaterTextu
   }
 
   const rng = createRng(seed)
-  context.fillStyle = '#2a5f82'
+  context.fillStyle = '#3a8797'
   context.fillRect(0, 0, size, size)
 
   const imageData = context.getImageData(0, 0, size, size)
   const { data } = imageData
 
   for (let index = 0; index < data.length; index += 4) {
-    const n = (rng() * 2 - 1) * 18
-    const ripple = rng() > 0.9 ? 14 + rng() * 12 : 0
-    const shade = Math.max(28, Math.min(182, Math.round(85 + n + ripple)))
-    data[index] = Math.max(20, shade - 34)
-    data[index + 1] = Math.max(38, shade - 7)
-    data[index + 2] = Math.max(76, shade + 24)
+    const n = (rng() * 2 - 1) * 10
+    const ripple = rng() > 0.93 ? 8 + rng() * 10 : 0
+    const shade = Math.max(70, Math.min(178, Math.round(128 + n + ripple)))
+    data[index] = Math.max(34, shade - 52)
+    data[index + 1] = Math.max(78, shade - 12)
+    data[index + 2] = Math.max(122, shade + 8)
     data[index + 3] = 255
   }
 
   context.putImageData(imageData, 0, 0)
-  context.strokeStyle = 'rgb(224 246 255 / 18%)'
-  for (let line = 0; line < 18; line += 1) {
+  context.strokeStyle = 'rgb(236 250 255 / 20%)'
+  for (let line = 0; line < 22; line += 1) {
     const y = Math.floor(rng() * size)
-    context.lineWidth = 0.8 + rng() * 1.4
+    context.lineWidth = 0.6 + rng() * 1.1
     context.beginPath()
-    context.moveTo(0, y + (rng() - 0.5) * 8)
-    context.quadraticCurveTo(size * 0.5, y + (rng() - 0.5) * 20, size, y + (rng() - 0.5) * 8)
+    context.moveTo(0, y + (rng() - 0.5) * 6)
+    context.quadraticCurveTo(size * 0.5, y + (rng() - 0.5) * 16, size, y + (rng() - 0.5) * 6)
     context.stroke()
   }
 

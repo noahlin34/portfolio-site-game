@@ -138,7 +138,7 @@ export function VehiclePhysicsController({ controlsRef, config }: VehiclePhysics
     const carShadowMaterial = carShadowMaterialRef.current
     if (carShadowMaterial) {
       const lift = Math.max(0, translation.y - 1)
-      const opacityTarget = Math.max(0.08, 0.34 * (1 - Math.min(0.85, lift * 0.52)))
+      const opacityTarget = Math.max(0.06, 0.28 * (1 - Math.min(0.85, lift * 0.52)))
       carShadowMaterial.opacity = opacityTarget
     }
 
@@ -357,9 +357,9 @@ export function VehiclePhysicsController({ controlsRef, config }: VehiclePhysics
         <circleGeometry args={[1, 18]} />
         <meshBasicMaterial
           ref={carShadowMaterialRef}
-          color="#2a1825"
+          color="#20131d"
           transparent
-          opacity={0.34}
+          opacity={0.28}
           depthWrite={false}
         />
       </mesh>
