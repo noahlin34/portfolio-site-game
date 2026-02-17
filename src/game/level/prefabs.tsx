@@ -1,5 +1,7 @@
+import { useMemo } from 'react'
 import { Text } from '@react-three/drei'
 import type { ArtDirectionConfig } from '../config/artDirection'
+import { getSharedCoolMatcapTexture, getSharedDarkMatcapTexture, getSharedWarmMatcapTexture } from '../materials/stylized'
 import type { LevelEntity } from './schema'
 
 interface EntityVisualProps {
@@ -7,79 +9,94 @@ interface EntityVisualProps {
   config: ArtDirectionConfig
 }
 
-function TreeVisual({ canopyColor, config }: { canopyColor: string; config: ArtDirectionConfig }) {
+interface MatcapSet {
+  warm: ReturnType<typeof getSharedWarmMatcapTexture> | undefined
+  cool: ReturnType<typeof getSharedCoolMatcapTexture> | undefined
+  dark: ReturnType<typeof getSharedDarkMatcapTexture> | undefined
+}
+
+function TreeVisual({ canopyColor, config, matcaps }: { canopyColor: string; config: ArtDirectionConfig; matcaps: MatcapSet }) {
   return (
     <group>
-      <mesh castShadow receiveShadow position={[0, 1.05, 0]}>
+      <mesh position={[0, 1.05, 0]}>
         <cylinderGeometry args={[0.18, 0.34, 2.1, 6]} />
-        <meshStandardMaterial color={config.palette.trunk} roughness={0.9} metalness={0.02} flatShading />
+        <meshMatcapMaterial matcap={matcaps.dark} color={config.palette.trunk} flatShading />
       </mesh>
-      <mesh castShadow receiveShadow position={[0, 2.55, 0]}>
+      <mesh position={[0, 2.55, 0]}>
         <icosahedronGeometry args={[0.98, 0]} />
-        <meshStandardMaterial color={canopyColor} roughness={0.8} metalness={0.02} emissive={canopyColor} emissiveIntensity={0.04} flatShading />
+        <meshMatcapMaterial matcap={matcaps.warm} color={canopyColor} flatShading />
       </mesh>
-      <mesh castShadow receiveShadow position={[0.25, 3.2, -0.12]} rotation={[0, 0.4, 0]}>
+      <mesh position={[0.25, 3.2, -0.12]} rotation={[0, 0.4, 0]}>
         <dodecahedronGeometry args={[0.72, 0]} />
-        <meshStandardMaterial color={canopyColor} roughness={0.8} metalness={0.02} emissive={canopyColor} emissiveIntensity={0.03} flatShading />
+        <meshMatcapMaterial matcap={matcaps.warm} color={canopyColor} flatShading />
       </mesh>
-      <mesh castShadow receiveShadow position={[-0.28, 3.08, 0.16]} rotation={[0, -0.26, 0]}>
+      <mesh position={[-0.28, 3.08, 0.16]} rotation={[0, -0.26, 0]}>
         <dodecahedronGeometry args={[0.52, 0]} />
-        <meshStandardMaterial color={canopyColor} roughness={0.8} metalness={0.02} emissive={canopyColor} emissiveIntensity={0.03} flatShading />
+        <meshMatcapMaterial matcap={matcaps.warm} color={canopyColor} flatShading />
       </mesh>
     </group>
   )
 }
 
 export function EntityVisual({ entity, config }: EntityVisualProps) {
+  const matcaps = useMemo<MatcapSet>(
+    () => ({
+      warm: getSharedWarmMatcapTexture() ?? undefined,
+      cool: getSharedCoolMatcapTexture() ?? undefined,
+      dark: getSharedDarkMatcapTexture() ?? undefined,
+    }),
+    [],
+  )
+
   switch (entity.prefab) {
     case 'house':
       return (
         <group>
-          <mesh castShadow receiveShadow>
+          <mesh>
             <boxGeometry args={[4.5, 2.8, 3.8]} />
-            <meshStandardMaterial color="#85527f" roughness={0.78} metalness={0.05} />
+            <meshMatcapMaterial matcap={matcaps.cool} color="#85527f" />
           </mesh>
-          <mesh castShadow position={[0, 2.02, 0]}>
+          <mesh position={[0, 2.02, 0]}>
             <boxGeometry args={[4.9, 0.42, 4.2]} />
-            <meshStandardMaterial color="#c24d42" roughness={0.72} metalness={0.07} />
+            <meshMatcapMaterial matcap={matcaps.warm} color="#c24d42" />
           </mesh>
-          <mesh castShadow position={[0, 2.46, 0]}>
+          <mesh position={[0, 2.46, 0]}>
             <boxGeometry args={[4.3, 0.42, 3.6]} />
-            <meshStandardMaterial color="#c24d42" roughness={0.72} metalness={0.07} />
+            <meshMatcapMaterial matcap={matcaps.warm} color="#c24d42" />
           </mesh>
         </group>
       )
     case 'bleachers':
       return (
         <group>
-          <mesh castShadow position={[0, 1.02, 0]}>
+          <mesh position={[0, 1.02, 0]}>
             <boxGeometry args={[10, 0.24, 0.62]} />
-            <meshStandardMaterial color="#c48758" roughness={0.78} metalness={0.06} />
+            <meshMatcapMaterial matcap={matcaps.warm} color="#c48758" />
           </mesh>
-          <mesh castShadow position={[0, 0.68, 0.5]}>
+          <mesh position={[0, 0.68, 0.5]}>
             <boxGeometry args={[10, 0.24, 0.62]} />
-            <meshStandardMaterial color="#c48758" roughness={0.78} metalness={0.06} />
+            <meshMatcapMaterial matcap={matcaps.warm} color="#c48758" />
           </mesh>
-          <mesh castShadow position={[0, 0.34, 1.0]}>
+          <mesh position={[0, 0.34, 1.0]}>
             <boxGeometry args={[10, 0.24, 0.62]} />
-            <meshStandardMaterial color="#c48758" roughness={0.78} metalness={0.06} />
+            <meshMatcapMaterial matcap={matcaps.warm} color="#c48758" />
           </mesh>
         </group>
       )
     case 'scoreboard':
       return (
         <group>
-          <mesh castShadow position={[0, 1.5, 0]}>
+          <mesh position={[0, 1.5, 0]}>
             <boxGeometry args={[4.8, 3.1, 0.24]} />
-            <meshStandardMaterial color="#3b3d4f" roughness={0.42} metalness={0.38} />
+            <meshMatcapMaterial matcap={matcaps.dark} color="#3b3d4f" />
           </mesh>
-          <mesh castShadow position={[-2.3, 1.1, 0]}>
+          <mesh position={[-2.3, 1.1, 0]}>
             <boxGeometry args={[0.28, 3.9, 0.28]} />
-            <meshStandardMaterial color="#6f7184" roughness={0.44} metalness={0.34} />
+            <meshMatcapMaterial matcap={matcaps.cool} color="#6f7184" />
           </mesh>
-          <mesh castShadow position={[2.3, 1.1, 0]}>
+          <mesh position={[2.3, 1.1, 0]}>
             <boxGeometry args={[0.28, 3.9, 0.28]} />
-            <meshStandardMaterial color="#6f7184" roughness={0.44} metalness={0.34} />
+            <meshMatcapMaterial matcap={matcaps.cool} color="#6f7184" />
           </mesh>
           <Text position={[0, 2.55, 0.18]} fontSize={0.46} color="#ffffff" anchorX="center" anchorY="middle">
             RESET
@@ -89,25 +106,25 @@ export function EntityVisual({ entity, config }: EntityVisualProps) {
           </Text>
 
           <group position={[-2.8, 0.2, 0.1]} rotation={[0, 0.18, 0]}>
-            <mesh castShadow>
+            <mesh>
               <sphereGeometry args={[0.68, 18, 18]} />
-              <meshStandardMaterial color="#e74c3e" roughness={0.46} metalness={0.08} />
+              <meshMatcapMaterial matcap={matcaps.warm} color="#e74c3e" />
             </mesh>
             <mesh position={[0, 0.04, 0.64]}>
               <cylinderGeometry args={[0.42, 0.42, 0.14, 20]} />
-              <meshStandardMaterial color="#f6edf2" roughness={0.18} metalness={0.06} />
+              <meshMatcapMaterial matcap={matcaps.cool} color="#f6edf2" />
             </mesh>
             <mesh position={[0, 0.07, 0.74]} rotation={[0, 0, -Math.PI * 0.24]}>
               <boxGeometry args={[0.06, 0.24, 0.08]} />
-              <meshStandardMaterial color="#413847" roughness={0.35} metalness={0.25} />
+              <meshMatcapMaterial matcap={matcaps.dark} color="#413847" />
             </mesh>
-            <mesh position={[0.34, 0.56, 0.22]} castShadow>
+            <mesh position={[0.34, 0.56, 0.22]}>
               <sphereGeometry args={[0.18, 12, 12]} />
-              <meshStandardMaterial color="#d84337" roughness={0.46} metalness={0.08} />
+              <meshMatcapMaterial matcap={matcaps.warm} color="#d84337" />
             </mesh>
-            <mesh position={[-0.34, 0.56, 0.22]} castShadow>
+            <mesh position={[-0.34, 0.56, 0.22]}>
               <sphereGeometry args={[0.18, 12, 12]} />
-              <meshStandardMaterial color="#d84337" roughness={0.46} metalness={0.08} />
+              <meshMatcapMaterial matcap={matcaps.warm} color="#d84337" />
             </mesh>
           </group>
         </group>
@@ -115,81 +132,81 @@ export function EntityVisual({ entity, config }: EntityVisualProps) {
     case 'bench':
       return (
         <group>
-          <mesh castShadow position={[0, 0.34, 0]}>
+          <mesh position={[0, 0.34, 0]}>
             <boxGeometry args={[3, 0.18, 0.78]} />
-            <meshStandardMaterial color={config.palette.propWood} roughness={0.84} metalness={0.05} />
+            <meshMatcapMaterial matcap={matcaps.warm} color={config.palette.propWood} />
           </mesh>
-          <mesh castShadow position={[-1.36, 0.52, 0]}>
+          <mesh position={[-1.36, 0.52, 0]}>
             <boxGeometry args={[0.22, 0.52, 0.22]} />
-            <meshStandardMaterial color={config.palette.propWood} roughness={0.82} metalness={0.05} />
+            <meshMatcapMaterial matcap={matcaps.warm} color={config.palette.propWood} />
           </mesh>
-          <mesh castShadow position={[1.36, 0.52, 0]}>
+          <mesh position={[1.36, 0.52, 0]}>
             <boxGeometry args={[0.22, 0.52, 0.22]} />
-            <meshStandardMaterial color={config.palette.propWood} roughness={0.82} metalness={0.05} />
+            <meshMatcapMaterial matcap={matcaps.warm} color={config.palette.propWood} />
           </mesh>
         </group>
       )
     case 'bench_long':
       return (
         <group>
-          <mesh castShadow position={[0, 0.36, 0]}>
+          <mesh position={[0, 0.36, 0]}>
             <boxGeometry args={[7.2, 0.22, 1.16]} />
-            <meshStandardMaterial color={config.palette.propWood} roughness={0.82} metalness={0.05} />
+            <meshMatcapMaterial matcap={matcaps.warm} color={config.palette.propWood} />
           </mesh>
-          <mesh castShadow position={[-3.1, 0.62, 0]}>
+          <mesh position={[-3.1, 0.62, 0]}>
             <boxGeometry args={[0.2, 0.72, 0.2]} />
-            <meshStandardMaterial color={config.palette.propWood} roughness={0.82} metalness={0.05} />
+            <meshMatcapMaterial matcap={matcaps.warm} color={config.palette.propWood} />
           </mesh>
-          <mesh castShadow position={[3.1, 0.62, 0]}>
+          <mesh position={[3.1, 0.62, 0]}>
             <boxGeometry args={[0.2, 0.72, 0.2]} />
-            <meshStandardMaterial color={config.palette.propWood} roughness={0.82} metalness={0.05} />
+            <meshMatcapMaterial matcap={matcaps.warm} color={config.palette.propWood} />
           </mesh>
         </group>
       )
     case 'lantern':
       return (
         <group>
-          <mesh castShadow position={[0, 0.9, 0]}>
+          <mesh position={[0, 0.9, 0]}>
             <boxGeometry args={[0.16, 1.75, 0.16]} />
-            <meshStandardMaterial color="#8b7da4" roughness={0.6} metalness={0.3} />
+            <meshMatcapMaterial matcap={matcaps.cool} color="#8b7da4" />
           </mesh>
-          <mesh castShadow position={[0, 1.95, 0]}>
+          <mesh position={[0, 1.95, 0]}>
             <boxGeometry args={[0.46, 0.56, 0.46]} />
-            <meshStandardMaterial color="#6e6487" roughness={0.34} metalness={0.45} />
+            <meshMatcapMaterial matcap={matcaps.cool} color="#6e6487" />
           </mesh>
           <mesh position={[0, 1.95, 0]}>
             <boxGeometry args={[0.3, 0.42, 0.3]} />
-            <meshStandardMaterial color="#ffd89a" emissive="#ffc772" emissiveIntensity={0.85} roughness={0.2} />
+            <meshBasicMaterial color="#ffd89a" />
           </mesh>
         </group>
       )
     case 'cone':
       return (
         <group>
-          <mesh castShadow position={[0, 0.18, 0]}>
+          <mesh position={[0, 0.18, 0]}>
             <coneGeometry args={[0.34, 0.46, 6]} />
-            <meshStandardMaterial color="#df6b3a" roughness={0.56} metalness={0.04} />
+            <meshMatcapMaterial matcap={matcaps.warm} color="#df6b3a" />
           </mesh>
           <mesh position={[0, 0.13, 0]}>
             <cylinderGeometry args={[0.22, 0.26, 0.07, 14]} />
-            <meshStandardMaterial color="#f6f1f1" roughness={0.35} metalness={0.06} />
+            <meshMatcapMaterial matcap={matcaps.cool} color="#f6f1f1" />
           </mesh>
         </group>
       )
     case 'arrow_sign':
       return (
         <group>
-          <mesh castShadow position={[0, 0.95, 0]}>
+          <mesh position={[0, 0.95, 0]}>
             <boxGeometry args={[0.2, 1.9, 0.2]} />
-            <meshStandardMaterial color="#6e6988" roughness={0.58} metalness={0.24} />
+            <meshMatcapMaterial matcap={matcaps.cool} color="#6e6988" />
           </mesh>
-          <mesh castShadow position={[0, 1.8, 0]}>
+          <mesh position={[0, 1.8, 0]}>
             <coneGeometry args={[0.42, 0.76, 5]} />
-            <meshStandardMaterial color="#e96f45" roughness={0.52} metalness={0.03} />
+            <meshMatcapMaterial matcap={matcaps.warm} color="#e96f45" />
           </mesh>
-          <mesh castShadow position={[0.56, 1.4, 0]} rotation={[0, 0, Math.PI * 0.5]}>
+          <mesh position={[0.56, 1.4, 0]} rotation={[0, 0, Math.PI * 0.5]}>
             <coneGeometry args={[0.28, 0.6, 5]} />
-            <meshStandardMaterial color="#58a6d9" roughness={0.52} metalness={0.03} />
+            <meshMatcapMaterial matcap={matcaps.cool} color="#58a6d9" />
           </mesh>
         </group>
       )
@@ -211,56 +228,56 @@ export function EntityVisual({ entity, config }: EntityVisualProps) {
           </Text>
           <mesh position={[0, 0.06, 0]}>
             <boxGeometry args={[22, 0.08, 1.18]} />
-            <meshStandardMaterial color="#dcb4ed" roughness={0.54} metalness={0.03} transparent opacity={0.22} />
+            <meshMatcapMaterial matcap={matcaps.cool} color="#dcb4ed" transparent opacity={0.22} />
           </mesh>
         </group>
       )
     case 'rock':
       return (
-        <mesh castShadow receiveShadow>
+        <mesh>
           <dodecahedronGeometry args={[0.7, 0]} />
-          <meshStandardMaterial color={entity.color ?? config.palette.propStone} roughness={0.9} metalness={0.02} />
+          <meshMatcapMaterial matcap={matcaps.dark} color={entity.color ?? config.palette.propStone} />
         </mesh>
       )
     case 'push_box':
       return (
-        <mesh castShadow receiveShadow>
+        <mesh>
           <boxGeometry args={[1, 1, 1]} />
-          <meshStandardMaterial color={entity.color ?? '#aa7859'} roughness={0.7} metalness={0.06} />
+          <meshMatcapMaterial matcap={matcaps.warm} color={entity.color ?? '#aa7859'} />
         </mesh>
       )
     case 'push_ball':
       return (
-        <mesh castShadow receiveShadow>
+        <mesh>
           <sphereGeometry args={[0.5, 22, 22]} />
-          <meshStandardMaterial color={entity.color ?? '#f2d674'} roughness={0.54} metalness={0.12} />
+          <meshMatcapMaterial matcap={matcaps.warm} color={entity.color ?? '#f2d674'} />
         </mesh>
       )
     case 'tree_pink':
-      return <TreeVisual canopyColor={config.palette.foliagePink} config={config} />
+      return <TreeVisual canopyColor={config.palette.foliagePink} config={config} matcaps={matcaps} />
     case 'tree_yellow':
-      return <TreeVisual canopyColor={config.palette.foliageYellow} config={config} />
+      return <TreeVisual canopyColor={config.palette.foliageYellow} config={config} matcaps={matcaps} />
     case 'tree_green':
-      return <TreeVisual canopyColor={config.palette.foliageGreen} config={config} />
+      return <TreeVisual canopyColor={config.palette.foliageGreen} config={config} matcaps={matcaps} />
     case 'bush':
       return (
-        <mesh castShadow receiveShadow position={[0, 0.75, 0]}>
+        <mesh position={[0, 0.75, 0]}>
           <dodecahedronGeometry args={[0.75, 0]} />
-          <meshStandardMaterial color={config.palette.grassB} roughness={0.84} metalness={0.03} emissive={config.palette.grassB} emissiveIntensity={0.04} flatShading />
+          <meshMatcapMaterial matcap={matcaps.warm} color={config.palette.grassB} flatShading />
         </mesh>
       )
     case 'grass_tuft':
       return (
-        <mesh castShadow receiveShadow position={[0, 0.6, 0]}>
+        <mesh position={[0, 0.6, 0]}>
           <coneGeometry args={[0.38, 1.35, 6]} />
-          <meshStandardMaterial color={config.palette.grassA} roughness={0.95} metalness={0.01} emissive={config.palette.grassA} emissiveIntensity={0.02} flatShading />
+          <meshMatcapMaterial matcap={matcaps.warm} color={config.palette.grassA} flatShading />
         </mesh>
       )
     default:
       return (
-        <mesh castShadow receiveShadow>
+        <mesh>
           <boxGeometry args={[1, 1, 1]} />
-          <meshStandardMaterial color="#ff4b5c" roughness={0.5} metalness={0.1} />
+          <meshMatcapMaterial matcap={matcaps.warm} color="#ff4b5c" />
         </mesh>
       )
   }

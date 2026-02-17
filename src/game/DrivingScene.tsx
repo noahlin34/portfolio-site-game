@@ -1,5 +1,5 @@
 import type { MutableRefObject } from 'react'
-import { Bloom, BrightnessContrast, EffectComposer, HueSaturation, Vignette } from '@react-three/postprocessing'
+import { Bloom, BrightnessContrast, EffectComposer, HueSaturation, TiltShift2, Vignette } from '@react-three/postprocessing'
 import { Canvas } from '@react-three/fiber'
 import { ACESFilmicToneMapping } from 'three'
 import type { DriveControlsState } from '../hooks/useDriveControls'
@@ -35,6 +35,7 @@ export function DrivingScene({ controlsRef, level }: SceneProps) {
       <EnvironmentScene controlsRef={controlsRef} config={config} level={level} />
 
       <EffectComposer multisampling={0} resolutionScale={0.8} enableNormalPass={false}>
+        <TiltShift2 blur={0.06} taper={0.7} start={[0, 0.5]} end={[1, 0.5]} direction={[0, 1]} samples={6} />
         <Bloom
           intensity={config.post.bloomIntensity * 0.72}
           luminanceThreshold={config.post.bloomThreshold}

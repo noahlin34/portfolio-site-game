@@ -1,10 +1,10 @@
-import { BallCollider, CuboidCollider, RigidBody } from '@react-three/rapier'
+import { BallCollider, CuboidCollider, type RapierRigidBody, RigidBody } from '@react-three/rapier'
 import { useFrame } from '@react-three/fiber'
-import { useRef, type MutableRefObject } from 'react'
-import { type Object3D } from 'three'
+import { useMemo, useRef, type MutableRefObject } from 'react'
+import { Mesh, MeshBasicMaterial, type Object3D } from 'three'
 import type { ArtDirectionConfig } from '../config/artDirection'
 import { EntityVisual } from '../level/prefabs'
-import type { LevelData } from '../level/schema'
+import type { LevelData, LevelEntity } from '../level/schema'
 
 interface LevelEntitiesProps {
   config: ArtDirectionConfig
@@ -16,12 +16,97 @@ interface LevelEntitiesProps {
   objectRefs?: MutableRefObject<Record<string, Object3D | null>>
 }
 
+interface PushableEntityProps {
+  entity: LevelEntity
+  config: ArtDirectionConfig
+}
+
 function SelectionMarker() {
   return (
     <mesh position={[0, 0.02, 0]} rotation={[-Math.PI / 2, 0, 0]}>
       <ringGeometry args={[0.9, 1.15, 24]} />
       <meshBasicMaterial color="#fff4c3" transparent opacity={0.92} />
     </mesh>
+  )
+}
+
+function PushableEntity({ entity, config }: PushableEntityProps) {
+  const rigidBodyRef = useRef<RapierRigidBody>(null)
+  const shadowRef = useRef<Mesh>(null)
+  const shadowMaterialRef = useRef<MeshBasicMaterial>(null)
+  const sunDirection = useMemo(() => {
+    const x = -config.lighting.sunPosition[0]
+    const z = -config.lighting.sunPosition[2]
+    const length = Math.hypot(x, z) || 1
+    return { x: x / length, z: z / length }
+  }, [config.lighting.sunPosition])
+
+  useFrame(() => {
+    const rigidBody = rigidBodyRef.current
+    const shadow = shadowRef.current
+    const shadowMaterial = shadowMaterialRef.current
+    if (!rigidBody || !shadow || !shadowMaterial) {
+      return
+    }
+
+    const translation = rigidBody.translation()
+    const baseY = translation.y - entity.scale[1] * 0.5
+    const lift = Math.max(0, baseY - 0.02)
+    const offset = 0.2 + lift * 0.72
+    const baseRadius = Math.max(entity.scale[0], entity.scale[2]) * 0.56
+    const stretch = 1 + Math.min(0.72, lift * 0.55)
+    const squash = 1 + Math.min(0.36, lift * 0.3)
+    const directionAngle = Math.atan2(sunDirection.z, sunDirection.x)
+
+    shadow.position.set(
+      translation.x + sunDirection.x * offset,
+      0.03,
+      translation.z + sunDirection.z * offset,
+    )
+    shadow.rotation.z = directionAngle
+    shadow.scale.set(
+      baseRadius * (1 + Math.abs(sunDirection.x) * 0.18) * stretch,
+      baseRadius * (1 + Math.abs(sunDirection.z) * 0.18) * squash,
+      1,
+    )
+    shadowMaterial.opacity = Math.max(0.07, 0.26 * (1 - Math.min(0.88, lift * 0.82)))
+  })
+
+  const physics = entity.physics ?? {
+    shape: entity.prefab === 'push_ball' ? 'ball' : 'box',
+    mass: 1.6,
+    friction: 1,
+    restitution: 0.1,
+  }
+
+  return (
+    <>
+      <RigidBody
+        ref={rigidBodyRef}
+        colliders={false}
+        position={entity.position}
+        rotation={entity.rotation}
+        linearDamping={0.3}
+        angularDamping={0.44}
+        friction={physics.friction}
+        restitution={physics.restitution}
+        mass={physics.mass}
+      >
+        {physics.shape === 'ball' ? (
+          <BallCollider args={[Math.max(entity.scale[0], entity.scale[1], entity.scale[2]) * 0.5]} />
+        ) : (
+          <CuboidCollider args={[entity.scale[0] / 2, entity.scale[1] / 2, entity.scale[2] / 2]} />
+        )}
+        <group scale={entity.scale}>
+          <EntityVisual entity={entity} config={config} />
+        </group>
+      </RigidBody>
+
+      <mesh ref={shadowRef} position={[entity.position[0], 0.03, entity.position[2]]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={1}>
+        <circleGeometry args={[Math.max(entity.scale[0], entity.scale[2]) * 0.56, 12]} />
+        <meshBasicMaterial ref={shadowMaterialRef} color="#2b1825" transparent opacity={0.24} depthWrite={false} />
+      </mesh>
+    </>
   )
 }
 
@@ -79,42 +164,7 @@ export function LevelEntities({
         }
 
         if (entity.family === 'pushable' && simulatePhysics) {
-          const physics = entity.physics ?? {
-            shape: entity.prefab === 'push_ball' ? 'ball' : 'box',
-            mass: 1.6,
-            friction: 1,
-            restitution: 0.1,
-          }
-          return (
-            <RigidBody
-              key={entity.id}
-              colliders={false}
-              position={entity.position}
-              rotation={entity.rotation}
-              linearDamping={0.3}
-              angularDamping={0.44}
-              friction={physics.friction}
-              restitution={physics.restitution}
-              mass={physics.mass}
-            >
-              {physics.shape === 'ball' ? (
-                <BallCollider args={[Math.max(entity.scale[0], entity.scale[1], entity.scale[2]) * 0.5]} />
-              ) : (
-                <CuboidCollider args={[entity.scale[0] / 2, entity.scale[1] / 2, entity.scale[2] / 2]} />
-              )}
-              <mesh
-                position={[0, -entity.scale[1] * 0.5 + 0.03, 0]}
-                rotation={[-Math.PI / 2, 0, 0]}
-                renderOrder={1}
-              >
-                <circleGeometry args={[Math.max(entity.scale[0], entity.scale[2]) * 0.56, 12]} />
-                <meshBasicMaterial color="#2b1825" transparent opacity={0.24} depthWrite={false} />
-              </mesh>
-              <group scale={entity.scale}>
-                <EntityVisual entity={entity} config={config} />
-              </group>
-            </RigidBody>
-          )
+          return <PushableEntity key={entity.id} entity={entity} config={config} />
         }
 
         return (
@@ -132,6 +182,13 @@ export function LevelEntities({
             scale={entity.scale}
             onPointerDown={onSelect}
           >
+            {!selectable ? (
+              <mesh position={[0, 0.03, 0]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={1}>
+                <circleGeometry args={[Math.max(entity.scale[0], entity.scale[2]) * 0.62, 12]} />
+                <meshBasicMaterial color="#2c1b27" transparent opacity={0.14} depthWrite={false} />
+              </mesh>
+            ) : null}
+
             <EntityVisual entity={entity} config={config} />
 
             {isSelected ? <SelectionMarker /> : null}

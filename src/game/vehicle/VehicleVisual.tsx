@@ -1,6 +1,7 @@
-import { memo, type MutableRefObject, type RefObject, useRef } from 'react'
+import { memo, type MutableRefObject, type RefObject, useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { Group, MeshStandardMaterial } from 'three'
+import { Group, MeshBasicMaterial } from 'three'
+import { getSharedCoolMatcapTexture, getSharedDarkMatcapTexture, getSharedWarmMatcapTexture } from '../materials/stylized'
 
 export interface VehicleVisualProps {
   chassisRef: RefObject<Group | null>
@@ -15,181 +16,184 @@ export const VehicleVisual = memo(function VehicleVisual({
   frontRightSteerRef,
   brakingRef,
 }: VehicleVisualProps) {
-  const tailLeftMaterialRef = useRef<MeshStandardMaterial>(null)
-  const tailRightMaterialRef = useRef<MeshStandardMaterial>(null)
+  const warmMatcap = useMemo(() => getSharedWarmMatcapTexture() ?? undefined, [])
+  const coolMatcap = useMemo(() => getSharedCoolMatcapTexture() ?? undefined, [])
+  const darkMatcap = useMemo(() => getSharedDarkMatcapTexture() ?? undefined, [])
+  const tailLeftMaterialRef = useRef<MeshBasicMaterial>(null)
+  const tailRightMaterialRef = useRef<MeshBasicMaterial>(null)
 
   useFrame((_, delta) => {
     const lerp = 1 - Math.exp(-delta * 16)
-    const target = brakingRef.current ? 1.55 : 0.5
+    const target = brakingRef.current ? 0.95 : 0.46
 
     if (tailLeftMaterialRef.current) {
-      tailLeftMaterialRef.current.emissiveIntensity += (target - tailLeftMaterialRef.current.emissiveIntensity) * lerp
+      tailLeftMaterialRef.current.opacity += (target - tailLeftMaterialRef.current.opacity) * lerp
     }
     if (tailRightMaterialRef.current) {
-      tailRightMaterialRef.current.emissiveIntensity += (target - tailRightMaterialRef.current.emissiveIntensity) * lerp
+      tailRightMaterialRef.current.opacity += (target - tailRightMaterialRef.current.opacity) * lerp
     }
   })
 
   return (
     <group ref={chassisRef} position={[0, 0.55, 0]}>
-      <mesh castShadow receiveShadow>
+      <mesh>
         <boxGeometry args={[1.78, 0.43, 3.52]} />
-        <meshPhysicalMaterial color="#be2f3f" roughness={0.28} metalness={0.35} clearcoat={0.82} clearcoatRoughness={0.16} />
+        <meshMatcapMaterial matcap={warmMatcap} color="#be2f3f" />
       </mesh>
 
-      <mesh position={[0, 0.26, -0.23]} castShadow receiveShadow>
+      <mesh position={[0, 0.26, -0.23]}>
         <boxGeometry args={[1.58, 0.28, 2.72]} />
-        <meshPhysicalMaterial color="#cd3d47" roughness={0.24} metalness={0.32} clearcoat={0.78} clearcoatRoughness={0.14} />
+        <meshMatcapMaterial matcap={warmMatcap} color="#cd3d47" />
       </mesh>
 
-      <mesh position={[0, 0.54, -0.32]} castShadow>
+      <mesh position={[0, 0.54, -0.32]}>
         <boxGeometry args={[1.2, 0.24, 1.44]} />
-        <meshPhysicalMaterial color="#f8f5ee" roughness={0.16} metalness={0.08} clearcoat={0.38} clearcoatRoughness={0.26} />
+        <meshMatcapMaterial matcap={warmMatcap} color="#f8f5ee" />
       </mesh>
 
       <mesh position={[0, 0.61, -0.32]}>
         <boxGeometry args={[1.02, 0.2, 1.22]} />
-        <meshPhysicalMaterial color="#90a7bb" roughness={0.08} metalness={0.78} clearcoat={0.58} clearcoatRoughness={0.08} />
+        <meshMatcapMaterial matcap={coolMatcap} color="#90a7bb" />
       </mesh>
 
-      <mesh position={[0, -0.08, -1.77]} castShadow receiveShadow>
+      <mesh position={[0, -0.08, -1.77]}>
         <boxGeometry args={[1.58, 0.24, 0.26]} />
-        <meshStandardMaterial color="#24252b" roughness={0.72} metalness={0.08} />
+        <meshMatcapMaterial matcap={darkMatcap} color="#24252b" />
       </mesh>
-      <mesh position={[0, -0.08, 1.77]} castShadow receiveShadow>
+      <mesh position={[0, -0.08, 1.77]}>
         <boxGeometry args={[1.58, 0.24, 0.26]} />
-        <meshStandardMaterial color="#24252b" roughness={0.72} metalness={0.08} />
+        <meshMatcapMaterial matcap={darkMatcap} color="#24252b" />
       </mesh>
 
-      <mesh position={[-0.86, -0.08, 0]} castShadow>
+      <mesh position={[-0.86, -0.08, 0]}>
         <boxGeometry args={[0.07, 0.15, 2.86]} />
-        <meshStandardMaterial color="#23242a" roughness={0.7} metalness={0.08} />
+        <meshMatcapMaterial matcap={darkMatcap} color="#23242a" />
       </mesh>
-      <mesh position={[0.86, -0.08, 0]} castShadow>
+      <mesh position={[0.86, -0.08, 0]}>
         <boxGeometry args={[0.07, 0.15, 2.86]} />
-        <meshStandardMaterial color="#23242a" roughness={0.7} metalness={0.08} />
+        <meshMatcapMaterial matcap={darkMatcap} color="#23242a" />
       </mesh>
 
       <mesh position={[0, 0.03, -1.8]}>
         <boxGeometry args={[0.9, 0.16, 0.07]} />
-        <meshStandardMaterial color="#16181c" roughness={0.48} metalness={0.35} />
+        <meshMatcapMaterial matcap={darkMatcap} color="#16181c" />
       </mesh>
 
       <mesh position={[-0.56, 0.08, -1.78]}>
         <boxGeometry args={[0.22, 0.11, 0.09]} />
-        <meshStandardMaterial color="#ffe8b4" emissive="#ffcf77" emissiveIntensity={0.5} roughness={0.2} />
+        <meshBasicMaterial color="#ffe8b4" />
       </mesh>
       <mesh position={[0.56, 0.08, -1.78]}>
         <boxGeometry args={[0.22, 0.11, 0.09]} />
-        <meshStandardMaterial color="#ffe8b4" emissive="#ffcf77" emissiveIntensity={0.5} roughness={0.2} />
+        <meshBasicMaterial color="#ffe8b4" />
       </mesh>
 
       <mesh position={[-0.57, 0.05, 1.78]}>
         <boxGeometry args={[0.24, 0.1, 0.08]} />
-        <meshStandardMaterial ref={tailLeftMaterialRef} color="#ff5d58" emissive="#a51512" emissiveIntensity={0.5} roughness={0.24} />
+        <meshBasicMaterial ref={tailLeftMaterialRef} color="#ff6f67" transparent opacity={0.46} />
       </mesh>
       <mesh position={[0.57, 0.05, 1.78]}>
         <boxGeometry args={[0.24, 0.1, 0.08]} />
-        <meshStandardMaterial ref={tailRightMaterialRef} color="#ff5d58" emissive="#a51512" emissiveIntensity={0.5} roughness={0.24} />
+        <meshBasicMaterial ref={tailRightMaterialRef} color="#ff6f67" transparent opacity={0.46} />
       </mesh>
 
-      <mesh position={[-0.95, 0.33, -0.58]} castShadow>
+      <mesh position={[-0.95, 0.33, -0.58]}>
         <boxGeometry args={[0.09, 0.08, 0.2]} />
-        <meshStandardMaterial color="#191a1e" roughness={0.45} metalness={0.2} />
+        <meshMatcapMaterial matcap={darkMatcap} color="#191a1e" />
       </mesh>
-      <mesh position={[0.95, 0.33, -0.58]} castShadow>
+      <mesh position={[0.95, 0.33, -0.58]}>
         <boxGeometry args={[0.09, 0.08, 0.2]} />
-        <meshStandardMaterial color="#191a1e" roughness={0.45} metalness={0.2} />
+        <meshMatcapMaterial matcap={darkMatcap} color="#191a1e" />
       </mesh>
 
       <mesh position={[0, 0.34, -0.97]}>
         <boxGeometry args={[1.12, 0.04, 0.72]} />
-        <meshPhysicalMaterial color="#9cb6c8" roughness={0.08} metalness={0.72} transparent opacity={0.82} transmission={0.18} />
+        <meshMatcapMaterial matcap={coolMatcap} color="#9cb6c8" transparent opacity={0.84} />
       </mesh>
       <mesh position={[0, 0.34, 0.43]}>
         <boxGeometry args={[1.02, 0.04, 0.52]} />
-        <meshPhysicalMaterial color="#7f98ad" roughness={0.1} metalness={0.66} transparent opacity={0.7} transmission={0.14} />
+        <meshMatcapMaterial matcap={coolMatcap} color="#7f98ad" transparent opacity={0.78} />
       </mesh>
 
-      <mesh position={[0, 0.52, -1.16]} castShadow>
+      <mesh position={[0, 0.52, -1.16]}>
         <boxGeometry args={[0.68, 0.07, 0.34]} />
-        <meshStandardMaterial color="#191b1f" roughness={0.48} metalness={0.24} />
+        <meshMatcapMaterial matcap={darkMatcap} color="#191b1f" />
       </mesh>
-      <mesh position={[0, 0.52, -1.48]} castShadow>
+      <mesh position={[0, 0.52, -1.48]}>
         <boxGeometry args={[0.46, 0.05, 0.28]} />
-        <meshStandardMaterial color="#24262d" roughness={0.52} metalness={0.2} />
+        <meshMatcapMaterial matcap={darkMatcap} color="#24262d" />
       </mesh>
 
-      <mesh position={[0, 0.78, -0.62]} castShadow receiveShadow>
+      <mesh position={[0, 0.78, -0.62]}>
         <boxGeometry args={[1.24, 0.06, 0.18]} />
-        <meshStandardMaterial color="#2f333b" roughness={0.36} metalness={0.48} />
+        <meshMatcapMaterial matcap={darkMatcap} color="#2f333b" />
       </mesh>
-      <mesh position={[-0.5, 0.84, -0.62]} castShadow receiveShadow>
+      <mesh position={[-0.5, 0.84, -0.62]}>
         <boxGeometry args={[0.08, 0.12, 0.16]} />
-        <meshStandardMaterial color="#242933" roughness={0.38} metalness={0.5} />
+        <meshMatcapMaterial matcap={darkMatcap} color="#242933" />
       </mesh>
-      <mesh position={[0.5, 0.84, -0.62]} castShadow receiveShadow>
+      <mesh position={[0.5, 0.84, -0.62]}>
         <boxGeometry args={[0.08, 0.12, 0.16]} />
-        <meshStandardMaterial color="#242933" roughness={0.38} metalness={0.5} />
+        <meshMatcapMaterial matcap={darkMatcap} color="#242933" />
       </mesh>
 
       <group position={[-0.86, -0.17, 1.08]}>
-        <mesh rotation={[0, 0, Math.PI / 2]} castShadow receiveShadow>
-          <cylinderGeometry args={[0.33, 0.33, 0.24, 28]} />
-          <meshStandardMaterial color="#14161a" roughness={0.95} metalness={0.03} />
-        </mesh>
-        <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
-          <cylinderGeometry args={[0.2, 0.2, 0.14, 22]} />
-          <meshPhysicalMaterial color="#db535d" roughness={0.24} metalness={0.74} clearcoat={0.62} clearcoatRoughness={0.14} />
+        <mesh rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.33, 0.33, 0.24, 24]} />
+          <meshMatcapMaterial matcap={darkMatcap} color="#14161a" />
         </mesh>
         <mesh rotation={[0, 0, Math.PI / 2]}>
-          <cylinderGeometry args={[0.1, 0.1, 0.15, 14]} />
-          <meshStandardMaterial color="#2a2b34" roughness={0.42} metalness={0.34} />
+          <cylinderGeometry args={[0.2, 0.2, 0.14, 20]} />
+          <meshMatcapMaterial matcap={warmMatcap} color="#db535d" />
+        </mesh>
+        <mesh rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.1, 0.1, 0.15, 12]} />
+          <meshMatcapMaterial matcap={darkMatcap} color="#2a2b34" />
         </mesh>
       </group>
 
       <group position={[0.86, -0.17, 1.08]}>
-        <mesh rotation={[0, 0, Math.PI / 2]} castShadow receiveShadow>
-          <cylinderGeometry args={[0.33, 0.33, 0.24, 28]} />
-          <meshStandardMaterial color="#14161a" roughness={0.95} metalness={0.03} />
-        </mesh>
-        <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
-          <cylinderGeometry args={[0.2, 0.2, 0.14, 22]} />
-          <meshPhysicalMaterial color="#db535d" roughness={0.24} metalness={0.74} clearcoat={0.62} clearcoatRoughness={0.14} />
+        <mesh rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.33, 0.33, 0.24, 24]} />
+          <meshMatcapMaterial matcap={darkMatcap} color="#14161a" />
         </mesh>
         <mesh rotation={[0, 0, Math.PI / 2]}>
-          <cylinderGeometry args={[0.1, 0.1, 0.15, 14]} />
-          <meshStandardMaterial color="#2a2b34" roughness={0.42} metalness={0.34} />
+          <cylinderGeometry args={[0.2, 0.2, 0.14, 20]} />
+          <meshMatcapMaterial matcap={warmMatcap} color="#db535d" />
+        </mesh>
+        <mesh rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.1, 0.1, 0.15, 12]} />
+          <meshMatcapMaterial matcap={darkMatcap} color="#2a2b34" />
         </mesh>
       </group>
 
       <group ref={frontLeftSteerRef} position={[-0.86, -0.17, -1.08]}>
-        <mesh rotation={[0, 0, Math.PI / 2]} castShadow receiveShadow>
-          <cylinderGeometry args={[0.33, 0.33, 0.24, 28]} />
-          <meshStandardMaterial color="#14161a" roughness={0.95} metalness={0.03} />
-        </mesh>
-        <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
-          <cylinderGeometry args={[0.2, 0.2, 0.14, 22]} />
-          <meshPhysicalMaterial color="#db535d" roughness={0.24} metalness={0.74} clearcoat={0.62} clearcoatRoughness={0.14} />
+        <mesh rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.33, 0.33, 0.24, 24]} />
+          <meshMatcapMaterial matcap={darkMatcap} color="#14161a" />
         </mesh>
         <mesh rotation={[0, 0, Math.PI / 2]}>
-          <cylinderGeometry args={[0.1, 0.1, 0.15, 14]} />
-          <meshStandardMaterial color="#2a2b34" roughness={0.42} metalness={0.34} />
+          <cylinderGeometry args={[0.2, 0.2, 0.14, 20]} />
+          <meshMatcapMaterial matcap={warmMatcap} color="#db535d" />
+        </mesh>
+        <mesh rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.1, 0.1, 0.15, 12]} />
+          <meshMatcapMaterial matcap={darkMatcap} color="#2a2b34" />
         </mesh>
       </group>
 
       <group ref={frontRightSteerRef} position={[0.86, -0.17, -1.08]}>
-        <mesh rotation={[0, 0, Math.PI / 2]} castShadow receiveShadow>
-          <cylinderGeometry args={[0.33, 0.33, 0.24, 28]} />
-          <meshStandardMaterial color="#14161a" roughness={0.95} metalness={0.03} />
-        </mesh>
-        <mesh rotation={[0, 0, Math.PI / 2]} castShadow>
-          <cylinderGeometry args={[0.2, 0.2, 0.14, 22]} />
-          <meshPhysicalMaterial color="#db535d" roughness={0.24} metalness={0.74} clearcoat={0.62} clearcoatRoughness={0.14} />
+        <mesh rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.33, 0.33, 0.24, 24]} />
+          <meshMatcapMaterial matcap={darkMatcap} color="#14161a" />
         </mesh>
         <mesh rotation={[0, 0, Math.PI / 2]}>
-          <cylinderGeometry args={[0.1, 0.1, 0.15, 14]} />
-          <meshStandardMaterial color="#2a2b34" roughness={0.42} metalness={0.34} />
+          <cylinderGeometry args={[0.2, 0.2, 0.14, 20]} />
+          <meshMatcapMaterial matcap={warmMatcap} color="#db535d" />
+        </mesh>
+        <mesh rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.1, 0.1, 0.15, 12]} />
+          <meshMatcapMaterial matcap={darkMatcap} color="#2a2b34" />
         </mesh>
       </group>
     </group>

@@ -56,6 +56,12 @@ export function VehiclePhysicsController({ controlsRef, config }: VehiclePhysics
     () => new Vector3(config.camera.offset[0], config.camera.offset[1], config.camera.offset[2]),
     [config.camera.offset],
   )
+  const sunDirection = useMemo(() => {
+    const x = -config.lighting.sunPosition[0]
+    const z = -config.lighting.sunPosition[2]
+    const length = Math.hypot(x, z) || 1
+    return { x: x / length, z: z / length }
+  }, [config.lighting.sunPosition])
 
   useFrame((_, frameDelta) => {
     const delta = Math.min(frameDelta, 0.05)
@@ -113,11 +119,21 @@ export function VehiclePhysicsController({ controlsRef, config }: VehiclePhysics
     const carShadow = carShadowRef.current
     if (carShadow) {
       const lift = Math.max(0, translation.y - 1)
+      const offset = 0.36 + lift * 0.82
       const speedStretch = Math.min(0.42, Math.abs(forwardSpeed) / config.vehicle.maxSpeed * 0.42)
       const liftStretch = Math.min(0.5, lift * 0.24)
       const shadowScale = 1 + speedStretch + liftStretch
-      carShadow.position.set(translation.x, 0.032, translation.z)
-      carShadow.scale.set(2.05 * shadowScale, 1.38 * shadowScale, 1)
+      carShadow.position.set(
+        translation.x + sunDirection.x * offset,
+        0.032,
+        translation.z + sunDirection.z * offset,
+      )
+      carShadow.rotation.z = Math.atan2(sunDirection.z, sunDirection.x)
+      carShadow.scale.set(
+        2.05 * shadowScale * (1 + Math.abs(sunDirection.x) * 0.16),
+        1.38 * shadowScale * (1 + Math.abs(sunDirection.z) * 0.16),
+        1,
+      )
     }
     const carShadowMaterial = carShadowMaterialRef.current
     if (carShadowMaterial) {

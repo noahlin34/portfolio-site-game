@@ -1,4 +1,4 @@
-import { CanvasTexture, LinearFilter, RepeatWrapping, SRGBColorSpace } from 'three'
+import { CanvasTexture, LinearFilter, type Texture, RepeatWrapping, SRGBColorSpace } from 'three'
 import { createRng } from '../utils/random'
 
 interface PathTileTextureOptions {
@@ -29,6 +29,10 @@ interface MatcapTextureOptions {
   shadow?: string
   highlight?: string
 }
+
+let cachedWarmMatcap: Texture | null | undefined
+let cachedCoolMatcap: Texture | null | undefined
+let cachedDarkMatcap: Texture | null | undefined
 
 export const createPathTileTexture = ({ seed, size = 512, repeat = 18 }: PathTileTextureOptions) => {
   const canvas = document.createElement('canvas')
@@ -199,4 +203,43 @@ export const createWarmMatcapTexture = ({
   texture.magFilter = LinearFilter
   texture.needsUpdate = true
   return texture
+}
+
+export const createCoolMatcapTexture = (options: MatcapTextureOptions = {}) =>
+  createWarmMatcapTexture({
+    base: '#5f7da0',
+    mid: '#98b1cf',
+    shadow: '#2d3658',
+    highlight: '#eef6ff',
+    ...options,
+  })
+
+export const createDarkMatcapTexture = (options: MatcapTextureOptions = {}) =>
+  createWarmMatcapTexture({
+    base: '#343441',
+    mid: '#5c5d73',
+    shadow: '#171722',
+    highlight: '#b9bed0',
+    ...options,
+  })
+
+export const getSharedWarmMatcapTexture = () => {
+  if (cachedWarmMatcap === undefined) {
+    cachedWarmMatcap = createWarmMatcapTexture()
+  }
+  return cachedWarmMatcap
+}
+
+export const getSharedCoolMatcapTexture = () => {
+  if (cachedCoolMatcap === undefined) {
+    cachedCoolMatcap = createCoolMatcapTexture()
+  }
+  return cachedCoolMatcap
+}
+
+export const getSharedDarkMatcapTexture = () => {
+  if (cachedDarkMatcap === undefined) {
+    cachedDarkMatcap = createDarkMatcapTexture()
+  }
+  return cachedDarkMatcap
 }
