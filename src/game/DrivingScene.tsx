@@ -34,18 +34,18 @@ export function DrivingScene({ controlsRef, level }: SceneProps) {
     >
       <EnvironmentScene controlsRef={controlsRef} config={config} level={level} />
 
-      <EffectComposer multisampling={0} resolutionScale={0.8} enableNormalPass={false}>
-        <TiltShift2 blur={0.06} taper={0.7} start={[0, 0.5]} end={[1, 0.5]} direction={[0, 1]} samples={6} />
+      <EffectComposer multisampling={0} resolutionScale={0.85} enableNormalPass={false}>
+        <TiltShift2 blur={0.05} taper={0.82} start={[0, 0.44]} end={[1, 0.44]} direction={[0, 1]} samples={5} />
         <Bloom
-          intensity={config.post.bloomIntensity * 0.72}
+          intensity={config.post.bloomIntensity * 0.62}
           luminanceThreshold={config.post.bloomThreshold}
           luminanceSmoothing={0.35}
           mipmapBlur
           radius={config.post.bloomRadius}
         />
-        <BrightnessContrast brightness={config.post.colorBrightness * 0.8} contrast={config.post.colorContrast * 0.92} />
-        <HueSaturation hue={0.006} saturation={config.post.colorSaturation * 0.9} />
-        <Vignette eskil={false} offset={config.post.vignetteOffset} darkness={config.post.vignetteDarkness * 0.88} />
+        <BrightnessContrast brightness={config.post.colorBrightness * 0.72} contrast={config.post.colorContrast * 0.86} />
+        <HueSaturation hue={0.002} saturation={config.post.colorSaturation * 0.72} />
+        <Vignette eskil={false} offset={config.post.vignetteOffset} darkness={config.post.vignetteDarkness * 0.82} />
       </EffectComposer>
     </Canvas>
   )

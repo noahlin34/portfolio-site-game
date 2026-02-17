@@ -260,13 +260,11 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
           {waterPlaneDefaultPatches.length > 0 ? (
             <instancedMesh ref={waterPlaneDefaultRef} args={[undefined, undefined, waterPlaneDefaultPatches.length]} renderOrder={2}>
               <planeGeometry args={[1, 1, 1, 1]} />
-              <meshLambertMaterial
+              <meshBasicMaterial
                 map={waterTexture ?? undefined}
                 color="#4f98a8"
-                emissive="#2f6f80"
-                emissiveIntensity={0.12}
-                onBeforeCompile={terrainGroundBounce}
-                customProgramCacheKey={() => terrainGroundBounceKey}
+                transparent
+                opacity={0.9}
                 polygonOffset
                 polygonOffsetFactor={-1}
                 polygonOffsetUnits={-1}
@@ -277,13 +275,11 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
           {waterPlaneAltPatches.length > 0 ? (
             <instancedMesh ref={waterPlaneAltRef} args={[undefined, undefined, waterPlaneAltPatches.length]} renderOrder={2}>
               <planeGeometry args={[1, 1, 1, 1]} />
-              <meshLambertMaterial
+              <meshBasicMaterial
                 map={waterTexture ?? undefined}
                 color="#5ca5b4"
-                emissive="#327385"
-                emissiveIntensity={0.12}
-                onBeforeCompile={terrainGroundBounce}
-                customProgramCacheKey={() => terrainGroundBounceKey}
+                transparent
+                opacity={0.9}
                 polygonOffset
                 polygonOffsetFactor={-1}
                 polygonOffsetUnits={-1}
@@ -294,13 +290,11 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
           {waterCircleDefaultPatches.length > 0 ? (
             <instancedMesh ref={waterCircleDefaultRef} args={[undefined, undefined, waterCircleDefaultPatches.length]} renderOrder={2}>
               <circleGeometry args={[1, 18]} />
-              <meshLambertMaterial
+              <meshBasicMaterial
                 map={waterTexture ?? undefined}
                 color="#4f98a8"
-                emissive="#2f6f80"
-                emissiveIntensity={0.12}
-                onBeforeCompile={terrainGroundBounce}
-                customProgramCacheKey={() => terrainGroundBounceKey}
+                transparent
+                opacity={0.9}
                 polygonOffset
                 polygonOffsetFactor={-1}
                 polygonOffsetUnits={-1}
@@ -311,13 +305,11 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
           {waterCircleAltPatches.length > 0 ? (
             <instancedMesh ref={waterCircleAltRef} args={[undefined, undefined, waterCircleAltPatches.length]} renderOrder={2}>
               <circleGeometry args={[1, 18]} />
-              <meshLambertMaterial
+              <meshBasicMaterial
                 map={waterTexture ?? undefined}
                 color="#5ca5b4"
-                emissive="#327385"
-                emissiveIntensity={0.12}
-                onBeforeCompile={terrainGroundBounce}
-                customProgramCacheKey={() => terrainGroundBounceKey}
+                transparent
+                opacity={0.9}
                 polygonOffset
                 polygonOffsetFactor={-1}
                 polygonOffsetUnits={-1}
@@ -329,19 +321,19 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
             <>
               <instancedMesh ref={waterDepthRef} args={[undefined, undefined, waterCirclePatches.length]} renderOrder={2}>
                 <circleGeometry args={[1, 18]} />
-                <meshBasicMaterial color="#143e66" transparent opacity={0.52} depthWrite={false} />
+                <meshBasicMaterial color="#164873" transparent opacity={0.3} depthWrite={false} />
               </instancedMesh>
               <instancedMesh ref={waterShoreRef} args={[undefined, undefined, waterCirclePatches.length]} renderOrder={3}>
                 <ringGeometry args={[0.78, 1.08, 22]} />
-                <meshBasicMaterial color="#89d7d3" transparent opacity={0.22} depthWrite={false} />
+                <meshBasicMaterial color="#9ddfda" transparent opacity={0.18} depthWrite={false} />
               </instancedMesh>
               <instancedMesh ref={waterFoamRefA} args={[undefined, undefined, waterCirclePatches.length]} renderOrder={3}>
                 <ringGeometry args={[0.985, 1.01, 22, 1, 0.12, Math.PI * 0.52]} />
-                <meshBasicMaterial color="#fff8f4" transparent opacity={0.68} depthWrite={false} />
+                <meshBasicMaterial color="#fff8f4" transparent opacity={0.48} depthWrite={false} />
               </instancedMesh>
               <instancedMesh ref={waterFoamRefB} args={[undefined, undefined, waterCirclePatches.length]} renderOrder={3}>
                 <ringGeometry args={[0.972, 1.0, 20, 1, Math.PI * 1.14, Math.PI * 0.42]} />
-                <meshBasicMaterial color="#edf9fc" transparent opacity={0.44} depthWrite={false} />
+                <meshBasicMaterial color="#edf9fc" transparent opacity={0.3} depthWrite={false} />
               </instancedMesh>
             </>
           ) : null}

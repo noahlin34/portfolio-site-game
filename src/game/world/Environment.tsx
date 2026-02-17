@@ -28,7 +28,7 @@ export function Environment({ config }: EnvironmentProps) {
         color={config.lighting.fillColor}
         position={config.lighting.fillPosition}
       />
-      <directionalLight intensity={0.2} color="#ffc5d5" position={[-32, 16, -70]} />
+      <directionalLight intensity={0.1} color="#ffc0cf" position={[-32, 16, -70]} />
     </>
   )
 }

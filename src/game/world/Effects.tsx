@@ -26,7 +26,7 @@ export function Effects({ config }: EffectsProps) {
     for (let index = 0; index < config.density.glowPoints; index += 1) {
       points.push({
         position: [randomRange(rng, -half * 0.72, half * 0.72), randomRange(rng, 0.9, 1.5), randomRange(rng, -half * 0.72, half * 0.72)],
-        speed: randomRange(rng, 0.6, 1.2),
+        speed: randomRange(rng, 0.44, 0.9),
         phase: randomRange(rng, 0, Math.PI * 2),
       })
     }
@@ -51,9 +51,9 @@ export function Effects({ config }: EffectsProps) {
     }
 
     const gradient = context.createRadialGradient(128, 128, 10, 128, 128, 128)
-    gradient.addColorStop(0, 'rgba(255, 250, 226, 0.82)')
-    gradient.addColorStop(0.4, 'rgba(255, 203, 146, 0.46)')
-    gradient.addColorStop(0.72, 'rgba(255, 142, 88, 0.18)')
+    gradient.addColorStop(0, 'rgba(255, 246, 224, 0.72)')
+    gradient.addColorStop(0.4, 'rgba(255, 198, 142, 0.34)')
+    gradient.addColorStop(0.72, 'rgba(255, 142, 88, 0.12)')
     gradient.addColorStop(1, 'rgba(255, 118, 72, 0)')
     context.fillStyle = gradient
     context.fillRect(0, 0, 256, 256)
@@ -81,9 +81,9 @@ export function Effects({ config }: EffectsProps) {
     const flare = flareRef.current
     if (flare) {
       flare.position.set(camera.position.x - 54, 22, camera.position.z - 42)
-      flare.scale.setScalar(58)
+      flare.scale.setScalar(62)
       const material = flare.material as SpriteMaterial
-      material.opacity = 0.44
+      material.opacity = 0.3
     }
   })
 
@@ -101,11 +101,11 @@ export function Effects({ config }: EffectsProps) {
         >
           <mesh>
             <octahedronGeometry args={[0.33, 0]} />
-            <meshStandardMaterial color="#ff83d4" emissive="#d325ff" emissiveIntensity={1.8} roughness={0.2} metalness={0.05} />
+            <meshBasicMaterial color="#ff8dd8" transparent opacity={0.84} />
           </mesh>
           <mesh>
             <octahedronGeometry args={[0.18, 0]} />
-            <meshStandardMaterial color="#ffe0f8" emissive="#ff9df5" emissiveIntensity={2.2} roughness={0.15} metalness={0.02} />
+            <meshBasicMaterial color="#fff2fc" transparent opacity={0.82} />
           </mesh>
         </group>
       ))}
@@ -116,9 +116,9 @@ export function Effects({ config }: EffectsProps) {
         </bufferGeometry>
         <pointsMaterial
           size={0.085}
-          color="#fff7df"
+          color="#fff3df"
           transparent
-          opacity={0.78}
+          opacity={0.6}
           blending={AdditiveBlending}
           depthWrite={false}
         />
@@ -130,7 +130,7 @@ export function Effects({ config }: EffectsProps) {
             map={flareTexture}
             color="#ffd7a4"
             transparent
-            opacity={0.44}
+            opacity={0.3}
             blending={AdditiveBlending}
             depthWrite={false}
           />
