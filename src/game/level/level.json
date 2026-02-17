@@ -82,18 +82,18 @@
       "kind": "track",
       "shape": "plane",
       "position": [
-        13.5,
+        28,
         0.0076,
-        6
+        -2
       ],
       "rotation": [
         -1.5707963267948966,
         0,
-        -0.21
+        -0.28
       ],
       "size": [
-        82,
-        33
+        62,
+        11.2
       ],
       "collider": {
         "enabled": true,

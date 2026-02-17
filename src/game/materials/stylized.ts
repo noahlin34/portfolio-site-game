@@ -22,6 +22,12 @@ interface GroundGradientTextureOptions {
   bottomRight?: string
 }
 
+interface GrassTextureOptions {
+  seed: number
+  size?: number
+  repeat?: number
+}
+
 interface MatcapTextureOptions {
   size?: number
   base?: string
@@ -113,6 +119,55 @@ export const createWaterTexture = ({ seed, size = 384, repeat = 11 }: WaterTextu
     context.beginPath()
     context.moveTo(0, y + (rng() - 0.5) * 6)
     context.quadraticCurveTo(size * 0.5, y + (rng() - 0.5) * 16, size, y + (rng() - 0.5) * 6)
+    context.stroke()
+  }
+
+  const texture = new CanvasTexture(canvas)
+  texture.wrapS = RepeatWrapping
+  texture.wrapT = RepeatWrapping
+  texture.repeat.set(repeat, repeat)
+  texture.colorSpace = SRGBColorSpace
+  texture.needsUpdate = true
+  return texture
+}
+
+export const createGrassTexture = ({ seed, size = 384, repeat = 14 }: GrassTextureOptions) => {
+  const canvas = document.createElement('canvas')
+  canvas.width = size
+  canvas.height = size
+  const context = canvas.getContext('2d')
+
+  if (!context) {
+    return null
+  }
+
+  const rng = createRng(seed)
+  context.fillStyle = '#9ca74e'
+  context.fillRect(0, 0, size, size)
+
+  const imageData = context.getImageData(0, 0, size, size)
+  const { data } = imageData
+
+  for (let index = 0; index < data.length; index += 4) {
+    const grain = (rng() * 2 - 1) * 14
+    const bright = rng() > 0.92 ? 12 + rng() * 14 : 0
+    const shade = Math.max(66, Math.min(176, Math.round(124 + grain + bright)))
+    data[index] = Math.max(66, shade - 26)
+    data[index + 1] = Math.max(82, shade)
+    data[index + 2] = Math.max(40, shade - 54)
+    data[index + 3] = 255
+  }
+
+  context.putImageData(imageData, 0, 0)
+
+  context.strokeStyle = 'rgb(198 210 118 / 18%)'
+  for (let stroke = 0; stroke < 120; stroke += 1) {
+    const x = rng() * size
+    const y = rng() * size
+    context.lineWidth = 0.4 + rng() * 0.8
+    context.beginPath()
+    context.moveTo(x, y)
+    context.lineTo(x + (rng() - 0.5) * 4, y - (2 + rng() * 8))
     context.stroke()
   }
 

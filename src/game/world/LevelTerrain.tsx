@@ -6,7 +6,7 @@ import { Euler, Matrix4, Quaternion, Vector3, type InstancedMesh, type Object3D 
 import type { ArtDirectionConfig } from '../config/artDirection'
 import { createAsphaltTexture } from '../materials/asphalt'
 import { createGroundBounceCompiler, createGroundBounceProgramKey } from '../materials/fakeLighting'
-import { createGroundGradientTexture, createPathTileTexture, createWaterTexture } from '../materials/stylized'
+import { createGrassTexture, createGroundGradientTexture, createPathTileTexture, createWaterTexture } from '../materials/stylized'
 import type { LevelData, TerrainPatch } from '../level/schema'
 
 interface LevelTerrainProps {
@@ -26,7 +26,7 @@ const getPatchMaterialProps = (patch: TerrainPatch, config: ArtDirectionConfig) 
       }
     case 'track':
       return {
-        color: patch.materialVariant === 'alt' ? '#35374a' : '#2f303f',
+        color: patch.materialVariant === 'alt' ? '#696c86' : '#5f627d',
       }
     case 'water':
       return {
@@ -97,11 +97,15 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
     [],
   )
   const trackTexture = useMemo(
-    () => createAsphaltTexture({ seed: config.world.seed + 31, repeat: 24 }),
+    () => createAsphaltTexture({ seed: config.world.seed + 31, repeat: 14 }),
     [config.world.seed],
   )
   const pathTexture = useMemo(
     () => createPathTileTexture({ seed: config.world.seed + 21, repeat: 20 }),
+    [config.world.seed],
+  )
+  const grassTexture = useMemo(
+    () => createGrassTexture({ seed: config.world.seed + 11, repeat: 12 }),
     [config.world.seed],
   )
   const waterTexture = useMemo(
@@ -360,6 +364,8 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
             ? pathTexture
             : patch.kind === 'track'
               ? trackTexture
+              : patch.kind === 'grass'
+                ? grassTexture
               : undefined
 
         return (
@@ -396,8 +402,8 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
               <meshLambertMaterial
                 map={map ?? undefined}
                 color={selectedPatchId === patch.id ? '#f6d39c' : materialProps.color}
-                emissive={patch.kind === 'water' ? '#163558' : '#000000'}
-                emissiveIntensity={patch.kind === 'water' ? 0.18 : 0}
+                emissive={patch.kind === 'water' ? '#163558' : patch.kind === 'track' ? '#34374f' : '#000000'}
+                emissiveIntensity={patch.kind === 'water' ? 0.18 : patch.kind === 'track' ? 0.08 : 0}
                 onBeforeCompile={terrainGroundBounce}
                 customProgramCacheKey={() => terrainGroundBounceKey}
                 polygonOffset
