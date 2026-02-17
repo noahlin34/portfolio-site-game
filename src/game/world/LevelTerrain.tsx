@@ -26,7 +26,7 @@ const getPatchMaterialProps = (patch: TerrainPatch, config: ArtDirectionConfig) 
       }
     case 'track':
       return {
-        color: patch.materialVariant === 'alt' ? '#423751' : '#352f49',
+        color: patch.materialVariant === 'alt' ? '#35374a' : '#2f303f',
       }
     case 'water':
       return {

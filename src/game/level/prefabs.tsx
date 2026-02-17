@@ -183,13 +183,25 @@ export function EntityVisual({ entity, config }: EntityVisualProps) {
     case 'cone':
       return (
         <group>
-          <mesh position={[0, 0.18, 0]}>
-            <coneGeometry args={[0.34, 0.46, 6]} />
-            <meshMatcapMaterial matcap={matcaps.warm} color="#df6b3a" />
+          <mesh position={[0, 0.23, 0]}>
+            <cylinderGeometry args={[0.3, 0.38, 0.44, 16]} />
+            <meshMatcapMaterial matcap={matcaps.warm} color="#d36835" />
           </mesh>
-          <mesh position={[0, 0.13, 0]}>
-            <cylinderGeometry args={[0.22, 0.26, 0.07, 14]} />
-            <meshMatcapMaterial matcap={matcaps.cool} color="#f6f1f1" />
+          <mesh position={[0, 0.14, 0]}>
+            <cylinderGeometry args={[0.36, 0.42, 0.08, 16]} />
+            <meshMatcapMaterial matcap={matcaps.warm} color="#986134" />
+          </mesh>
+          <mesh position={[0, 0.29, 0]}>
+            <cylinderGeometry args={[0.29, 0.35, 0.06, 16]} />
+            <meshBasicMaterial color="#f5e8ed" />
+          </mesh>
+          <mesh position={[0, 0.19, 0]}>
+            <cylinderGeometry args={[0.33, 0.38, 0.06, 16]} />
+            <meshBasicMaterial color="#f5e8ed" />
+          </mesh>
+          <mesh position={[0, 0.46, 0]}>
+            <cylinderGeometry args={[0.1, 0.13, 0.08, 10]} />
+            <meshMatcapMaterial matcap={matcaps.warm} color="#c15f2f" />
           </mesh>
         </group>
       )
