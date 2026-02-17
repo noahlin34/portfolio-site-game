@@ -320,7 +320,7 @@ export function VehiclePhysicsController({ controlsRef, config }: VehiclePhysics
       <RigidBody
         ref={rigidBodyRef}
         colliders={false}
-        position={[4, 4.2, 18]}
+        position={[18, 4.2, 16]}
         mass={2.1}
         linearDamping={0.32}
         angularDamping={0.72}
