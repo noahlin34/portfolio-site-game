@@ -321,11 +321,11 @@ export function LevelTerrain({ config, level, selectable, selectedPatchId, onSel
             <>
               <instancedMesh ref={waterDepthRef} args={[undefined, undefined, waterCirclePatches.length]} renderOrder={2}>
                 <circleGeometry args={[1, 18]} />
-                <meshBasicMaterial color="#164873" transparent opacity={0.3} depthWrite={false} />
+                <meshBasicMaterial color="#1e537f" transparent opacity={0.22} depthWrite={false} />
               </instancedMesh>
               <instancedMesh ref={waterShoreRef} args={[undefined, undefined, waterCirclePatches.length]} renderOrder={3}>
                 <ringGeometry args={[0.78, 1.08, 22]} />
-                <meshBasicMaterial color="#9ddfda" transparent opacity={0.18} depthWrite={false} />
+                <meshBasicMaterial color="#a9e4de" transparent opacity={0.14} depthWrite={false} />
               </instancedMesh>
               <instancedMesh ref={waterFoamRefA} args={[undefined, undefined, waterCirclePatches.length]} renderOrder={3}>
                 <ringGeometry args={[0.985, 1.01, 22, 1, 0.12, Math.PI * 0.52]} />

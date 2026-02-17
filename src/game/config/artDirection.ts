@@ -152,8 +152,8 @@ export const artDirectionDefaults: ArtDirectionConfig = {
     trees: 30,
     bushes: 66,
     rocks: 56,
-    glowPoints: 3,
-    sparkles: 120,
+    glowPoints: 2,
+    sparkles: 60,
   },
   vehicle: {
     maxSpeed: 22,

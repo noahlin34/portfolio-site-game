@@ -26,7 +26,7 @@ export function Effects({ config }: EffectsProps) {
     for (let index = 0; index < config.density.glowPoints; index += 1) {
       points.push({
         position: [randomRange(rng, -half * 0.72, half * 0.72), randomRange(rng, 0.9, 1.5), randomRange(rng, -half * 0.72, half * 0.72)],
-        speed: randomRange(rng, 0.44, 0.9),
+        speed: randomRange(rng, 0.36, 0.7),
         phase: randomRange(rng, 0, Math.PI * 2),
       })
     }
@@ -80,10 +80,10 @@ export function Effects({ config }: EffectsProps) {
 
     const flare = flareRef.current
     if (flare) {
-      flare.position.set(camera.position.x - 54, 22, camera.position.z - 42)
-      flare.scale.setScalar(62)
+      flare.position.set(camera.position.x - 58, 20, camera.position.z - 46)
+      flare.scale.setScalar(54)
       const material = flare.material as SpriteMaterial
-      material.opacity = 0.3
+      material.opacity = 0.22
     }
   })
 
@@ -101,11 +101,11 @@ export function Effects({ config }: EffectsProps) {
         >
           <mesh>
             <octahedronGeometry args={[0.33, 0]} />
-            <meshBasicMaterial color="#ff8dd8" transparent opacity={0.84} />
+            <meshBasicMaterial color="#ff8dd8" transparent opacity={0.72} />
           </mesh>
           <mesh>
             <octahedronGeometry args={[0.18, 0]} />
-            <meshBasicMaterial color="#fff2fc" transparent opacity={0.82} />
+            <meshBasicMaterial color="#fff2fc" transparent opacity={0.66} />
           </mesh>
         </group>
       ))}
@@ -118,7 +118,7 @@ export function Effects({ config }: EffectsProps) {
           size={0.085}
           color="#fff3df"
           transparent
-          opacity={0.6}
+          opacity={0.42}
           blending={AdditiveBlending}
           depthWrite={false}
         />
@@ -130,7 +130,7 @@ export function Effects({ config }: EffectsProps) {
             map={flareTexture}
             color="#ffd7a4"
             transparent
-            opacity={0.3}
+            opacity={0.22}
             blending={AdditiveBlending}
             depthWrite={false}
           />
