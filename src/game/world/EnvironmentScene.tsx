@@ -7,6 +7,7 @@ import { VehiclePhysicsController } from '../vehicle/VehiclePhysicsController'
 import { Effects } from './Effects'
 import { Environment } from './Environment'
 import { Foliage } from './Foliage'
+import { GroundInstructions } from './GroundInstructions'
 import { LevelEntities } from './LevelEntities'
 import { LevelTerrain } from './LevelTerrain'
 
@@ -25,6 +26,7 @@ export function EnvironmentScene({ controlsRef, config, level }: EnvironmentScen
         <Physics gravity={[0, -9.81, 0]} colliders={false} timeStep={1 / 60}>
           <LevelTerrain config={config} level={level} />
           <Foliage config={config} />
+          <GroundInstructions />
           <LevelEntities config={config} level={level} simulatePhysics />
           <VehiclePhysicsController controlsRef={controlsRef} config={config} />
         </Physics>
