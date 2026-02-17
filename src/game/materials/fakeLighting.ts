@@ -30,10 +30,17 @@ varying vec3 vGroundBounceWorldPosition;
 varying vec3 vGroundBounceWorldNormal;`,
       )
       .replace(
-        '#include <worldpos_vertex>',
-        `#include <worldpos_vertex>
-vGroundBounceWorldPosition = worldPosition.xyz;
-vGroundBounceWorldNormal = normalize(mat3(modelMatrix) * objectNormal);`,
+        '#include <begin_vertex>',
+        `#include <begin_vertex>
+vec4 groundBounceLocalPosition = vec4(transformed, 1.0);
+vec3 groundBounceLocalNormal = normal;
+#ifdef USE_INSTANCING
+groundBounceLocalPosition = instanceMatrix * groundBounceLocalPosition;
+groundBounceLocalNormal = mat3(instanceMatrix) * groundBounceLocalNormal;
+#endif
+vec4 groundBounceWorldPosition = modelMatrix * groundBounceLocalPosition;
+vGroundBounceWorldPosition = groundBounceWorldPosition.xyz;
+vGroundBounceWorldNormal = normalize(mat3(modelMatrix) * groundBounceLocalNormal);`,
       )
 
     shader.fragmentShader = shader.fragmentShader
